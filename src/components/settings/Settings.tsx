@@ -64,7 +64,7 @@ export default function Settings() {
   }
 
   if (!session?.user) {
-    return <div>Please sign in to access settings.</div>
+    return <div className="text-black dark:text-white font-light text-center">Please sign in to access settings.</div>
   }
 
   return (
