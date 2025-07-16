@@ -2,13 +2,21 @@
 
 import { Github } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { authClient } from '@/lib/auth-client'
+import { useAuthModal } from '@/components/providers/AuthModalProvider'
 import Button from './ui/Button'
 
 export default function Hero() {
   const router = useRouter()
+  const { data: session } = authClient.useSession()
+  const { openLogin } = useAuthModal()
   
   const handleGetStarted = () => {
-    router.push('/dashboard')
+    if (session) {
+      router.push('/dashboard')
+    } else {
+      openLogin()
+    }
   }
 
   return (

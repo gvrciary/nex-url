@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { AuthModalProvider } from "@/components/providers/AuthModalProvider";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -14,13 +16,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <Header />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+        <ThemeProvider>
+          <AuthModalProvider>
+            <Header />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </AuthModalProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
