@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { LogOut, Settings } from 'lucide-react'
+import { LogOut, Settings, LayoutDashboard } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -34,6 +34,11 @@ export default function UserMenu() {
     router.push('/')
   }
 
+  const handleDashboard = () => {
+    router.push('/dashboard')
+    setIsOpen(false)
+  }
+
   if (!session?.user) return null
 
   return (
@@ -52,6 +57,16 @@ export default function UserMenu() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-black border border-gray-200 dark:border-white/20 rounded-lg shadow-lg py-2 z-50">
+          <button
+            onClick={handleDashboard}
+            className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-light text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
+          >
+            <LayoutDashboard size={16} />
+            <span>Dashboard</span>
+          </button>
+          
+          <hr className="my-2 border-gray-200 dark:border-white/20" />
+          
           <button
             onClick={handleSettings}
             className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-light text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
