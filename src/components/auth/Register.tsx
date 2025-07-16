@@ -7,7 +7,7 @@ import { authClient } from '@/lib/auth-client'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
 import Card from '../ui/Card'
-import { signUp } from '@/server/auth'
+import { signUp } from '@/server/actions/auth'
 
 interface RegisterProps {
   onClose: () => void
