@@ -7,60 +7,99 @@ import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
+import { useLinksContext } from '@/components/providers/LinksProvider'
+import { updateUserProfile, deleteUserAccount } from '@/server/actions/user'
 
 export default function Settings() {
   const { data: session } = authClient.useSession()
+  const { links, loading } = useLinksContext()
   const router = useRouter()
   const [isEditing, setIsEditing] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
+  const [saveSuccess, setSaveSuccess] = useState(false)
   const [formData, setFormData] = useState({
     name: session?.user?.name || '',
     email: session?.user?.email || ''
   })
 
-  const handleSave = () => {
-    console.log('Saving changes:', formData)
-    setIsEditing(false)
+  const handleSave = async () => {
+    setIsSaving(true)
+    setSaveError('')
+    setSaveSuccess(false)
+    
+    try {
+      await updateUserProfile(formData.name, formData.email)
+      setSaveSuccess(true)
+      setIsEditing(false)
+      
+      setTimeout(() => {
+        setSaveSuccess(false)
+      }, 3000)
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : 'Failed to update profile')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
-  const handleExportLinks = () => {
-    const mockLinks = [
-      {
-        id: '1',
-        originalUrl: 'https://www.example.com/very-long-article-about-technology',
-        shortUrl: 'https://nex.ly/abc123',
-        alias: 'abc123',
-        clicks: 1247,
-        createdAt: '2024-01-15',
-        status: 'active'
-      },
-      {
-        id: '2',
-        originalUrl: 'https://www.github.com/username/important-repository',
-        shortUrl: 'https://nex.ly/gh456',
-        alias: 'gh456',
-        clicks: 892,
-        createdAt: '2024-01-10',
-        status: 'active'
-      }
-    ]
+  const handleExportLinks = async () => {
+    if (loading || links.length === 0) return
+    
+    setIsExporting(true)
+    
+    try {
+      const exportData = links.map(link => ({
+        id: link.id,
+        originalUrl: link.originalUrl,
+        shortUrl: `${window.location.origin}/${link.customAlias}`,
+        alias: link.customAlias,
+        clicks: link.clicks,
+        createdAt: link.createdAt.toISOString(),
+        updatedAt: link.updatedAt.toISOString(),
+        exportedAt: new Date().toISOString()
+      }))
 
-    const dataStr = JSON.stringify(mockLinks, null, 2)
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
-    
-    const exportFileDefaultName = `nex-url-links-${new Date().toISOString().split('T')[0]}.json`
-    
-    const linkElement = document.createElement('a')
-    linkElement.setAttribute('href', dataUri)
-    linkElement.setAttribute('download', exportFileDefaultName)
-    linkElement.click()
+      const exportStats = {
+        totalLinks: links.length,
+        totalClicks: links.reduce((sum, link) => sum + link.clicks, 0),
+        exportedBy: session?.user?.email,
+        exportedAt: new Date().toISOString()
+      }
+
+      const fullExport = {
+        metadata: exportStats,
+        links: exportData
+      }
+
+      const dataStr = JSON.stringify(fullExport, null, 2)
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
+      
+      const exportFileDefaultName = `nex-url-export-${new Date().toISOString().split('T')[0]}.json`
+      
+      const linkElement = document.createElement('a')
+      linkElement.setAttribute('href', dataUri)
+      linkElement.setAttribute('download', exportFileDefaultName)
+      linkElement.click()
+    } catch (error) {
+      console.error('Export failed:', error)
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   const handleDeleteAccount = async () => {
-    console.log('Deleting account...')
-    await authClient.signOut()
-    router.push('/')
-    setShowDeleteConfirm(false)
+    try {
+      await deleteUserAccount()
+      await authClient.signOut()
+      router.push('/')
+    } catch (error) {
+      console.error('Failed to delete account:', error)
+    } finally {
+      setShowDeleteConfirm(false)
+    }
   }
 
   if (!session?.user) {
@@ -84,11 +123,33 @@ export default function Settings() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => {
+              if (isEditing) {
+                setFormData({
+                  name: session?.user?.name || '',
+                  email: session?.user?.email || ''
+                })
+                setSaveError('')
+                setSaveSuccess(false)
+              }
+              setIsEditing(!isEditing)
+            }}
           >
             {isEditing ? 'Cancel' : 'Edit'}
           </Button>
         </div>
+
+        {saveError && (
+          <div className="mb-6 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-red-600 dark:text-red-400 text-sm font-light">{saveError}</p>
+          </div>
+        )}
+
+        {saveSuccess && (
+          <div className="mb-6 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <p className="text-green-600 dark:text-green-400 text-sm font-light">Profile updated successfully!</p>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -124,9 +185,13 @@ export default function Settings() {
 
         {isEditing && (
           <div className="mt-6 flex justify-end">
-            <Button onClick={handleSave} className="flex items-center space-x-2">
+            <Button 
+              onClick={handleSave} 
+              disabled={isSaving}
+              className="flex items-center space-x-2"
+            >
               <Save size={16} />
-              <span>Save Changes</span>
+              <span>{isSaving ? 'Saving...' : 'Save Changes'}</span>
             </Button>
           </div>
         )}
@@ -142,16 +207,17 @@ export default function Settings() {
             <div>
               <h3 className="font-light text-black dark:text-white">Export Links</h3>
               <p className="text-sm text-black/70 dark:text-white/70 font-light">
-                Download all your shortened links as JSON
+                Download all your shortened links as JSON ({links.length} links, {links.reduce((sum, link) => sum + link.clicks, 0)} total clicks)
               </p>
             </div>
             <Button
               variant="outline"
               onClick={handleExportLinks}
+              disabled={loading || links.length === 0 || isExporting}
               className="flex items-center space-x-2"
             >
               <Download size={16} />
-              <span>Export</span>
+              <span>{isExporting ? 'Exporting...' : 'Export'}</span>
             </Button>
           </div>
         </div>

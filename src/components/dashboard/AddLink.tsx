@@ -6,30 +6,44 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
 import CopyButton from '@/components/ui/CopyButton'
+import { checkAliasAvailability } from '@/server/actions/user'
+import { useLinksContext } from '@/components/providers/LinksProvider'
 
 export default function AddLink() {
+  const { addLink } = useLinksContext()
   const [url, setUrl] = useState('')
   const [shortenedUrl, setShortenedUrl] = useState('')
   const [customAlias, setCustomAlias] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [aliasChecking, setAliasChecking] = useState(false)
   const [aliasStatus, setAliasStatus] = useState<'available' | 'taken' | null>(null)
+  const [aliasMessage, setAliasMessage] = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (!customAlias.trim()) {
       setAliasStatus(null)
       setAliasChecking(false)
+      setAliasMessage('')
       return
     }
 
     setAliasChecking(true)
     setAliasStatus(null)
+    setAliasMessage('')
 
-    const timer = setTimeout(() => {
-      const isAvailable = Math.random() > 0.3
-      setAliasStatus(isAvailable ? 'available' : 'taken')
-      setAliasChecking(false)
-    }, 1000)
+    const timer = setTimeout(async () => {
+      try {
+        const result = await checkAliasAvailability(customAlias)
+        setAliasStatus(result.available ? 'available' : 'taken')
+        setAliasMessage(result.message)
+      } catch (error) {
+        setAliasStatus('taken')
+        setAliasMessage('Error checking alias availability')
+      } finally {
+        setAliasChecking(false)
+      }
+    }, 500)
 
     return () => clearTimeout(timer)
   }, [customAlias])
@@ -39,12 +53,16 @@ export default function AddLink() {
     if (customAlias && aliasStatus === 'taken') return
     
     setIsLoading(true)
+    setError('')
     
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    const alias = customAlias || Math.random().toString(36).substring(2, 8)
-    setShortenedUrl(`https://nex.ly/${alias}`)
-    setIsLoading(false)
+    try {
+      const newLink = await addLink(url, customAlias || undefined)
+      setShortenedUrl(`${window.location.origin}/${newLink.customAlias}`)
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to create link')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const resetForm = () => {
@@ -53,6 +71,8 @@ export default function AddLink() {
     setShortenedUrl('')
     setAliasStatus(null)
     setAliasChecking(false)
+    setAliasMessage('')
+    setError('')
   }
 
   const getAliasIcon = () => {
@@ -64,8 +84,7 @@ export default function AddLink() {
 
   const getAliasMessage = () => {
     if (aliasChecking) return 'Checking availability...'
-    if (aliasStatus === 'available') return 'Alias is available'
-    if (aliasStatus === 'taken') return 'Alias is already taken'
+    if (aliasMessage) return aliasMessage
     return 'If you don&apos;t specify an alias, one will be generated automatically'
   }
 
@@ -90,6 +109,12 @@ export default function AddLink() {
 
         <Card className="p-6 mb-8">
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <p className="text-red-600 dark:text-red-400 text-sm font-light">{error}</p>
+              </div>
+            )}
+            
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-light text-black/70 dark:text-white/70 mb-2">
