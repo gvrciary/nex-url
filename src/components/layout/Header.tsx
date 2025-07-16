@@ -4,10 +4,11 @@ import { Github, Sun, Moon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
-import Button from '../ui/Button'
-import UserMenu from '../UserMenu'
+import Button from '@/components/ui/Button'
+import UserMenu from '@/components/user-menu'
 import Link from 'next/link'
 import { useAuthModal } from '@/components/providers/AuthModalProvider'
+import Image from 'next/image'
 
 export default function Header() {
   const { theme, setTheme } = useTheme()
@@ -32,10 +33,10 @@ export default function Header() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center">
-                <span className="text-white dark:text-black font-bold text-sm">NX</span>
+                <Image src="/images/logo.webp" alt="Nex URL" width={32} height={32} />
               </div>
               <span className="text-xl font-light tracking-wide text-black dark:text-white">
-                Nex URL
+                NexURL
               </span>
             </Link>
           </div>

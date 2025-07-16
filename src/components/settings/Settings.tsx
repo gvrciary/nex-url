@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { User, Download, Trash2, Save, AlertTriangle } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
-import Button from './ui/Button'
-import Input from './ui/Input'
-import Card from './ui/Card'
+import Button from '@/components/ui/Button'
+import Input from '@/components/ui/Input'
+import Card from '@/components/ui/Card'
 
 export default function Settings() {
   const { data: session } = authClient.useSession()

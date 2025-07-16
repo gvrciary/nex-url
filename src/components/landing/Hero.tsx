@@ -4,7 +4,7 @@ import { Github } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 import { useAuthModal } from '@/components/providers/AuthModalProvider'
-import Button from './ui/Button'
+import Button from '@/components/ui/Button'
 
 export default function Hero() {
   const router = useRouter()

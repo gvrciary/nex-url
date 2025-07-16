@@ -5,7 +5,6 @@ import { AuthModalProvider } from "@/components/providers/AuthModalProvider";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import localFont from "next/font/local";
-import { cn } from "@/lib/utils";
 
 const geistMonoVariable = localFont({
   variable: "--font-geist-mono",
@@ -48,10 +47,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(
-          `font-sans ${geistMonoVariable.variable}`,
-          "selection:bg-neutral-200 dark:selection:bg-neutral-700",
-        )}>
+      <body className={`font-sans ${geistMonoVariable.variable}`}>
         <ThemeProvider>
           <AuthModalProvider>
             <Header />

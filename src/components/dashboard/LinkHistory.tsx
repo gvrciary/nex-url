@@ -2,11 +2,11 @@
 
 import { useState, useMemo } from 'react'
 import { Calendar, Eye, ExternalLink, Search } from 'lucide-react'
-import Button from './ui/Button'
-import Card from './ui/Card'
-import Input from './ui/Input'
-import CopyButton from './ui/CopyButton'
-import DeleteButton from './ui/DeleteButton'
+import Button from '@/components/ui/Button'
+import Card from '@/components/ui/Card'
+import Input from '@/components/ui/Input'
+import CopyButton from '@/components/ui/CopyButton'
+import DeleteButton from '@/components/ui/DeleteButton'
 
 interface LinkData {
   id: string

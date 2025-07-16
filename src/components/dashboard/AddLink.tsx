@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Link, Plus, Loader2, Check, X } from 'lucide-react'
-import Button from './ui/Button'
-import Input from './ui/Input'
-import Card from './ui/Card'
-import CopyButton from './ui/CopyButton'
+import Button from '@/components/ui/Button'
+import Input from '@/components/ui/Input'
+import Card from '@/components/ui/Card'
+import CopyButton from '@/components/ui/CopyButton'
 
 export default function AddLink() {
   const [url, setUrl] = useState('')
