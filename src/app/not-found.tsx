@@ -4,7 +4,7 @@ import { Home } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 
-export default function NotFound() {
+export default function NotFoundPage() {
   const router = useRouter()
 
   const handleGoHome = () => {
