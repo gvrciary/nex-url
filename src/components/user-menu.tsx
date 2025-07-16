@@ -48,7 +48,7 @@ export default function UserMenu() {
         className="flex items-center space-x-2 text-sm font-light text-black dark:text-white hover:text-black/70 dark:hover:text-white/70 transition-colors"
       >
         <Image
-          src={session.user.image || '/profile.webp'}
+          src={session.user.image || '/images/profile.webp'}
           alt={session.user.name || 'User'}
           className="w-8 h-8 rounded-full"
         />
