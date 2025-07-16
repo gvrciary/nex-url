@@ -1,45 +1,32 @@
 'use client'
 
 import { Github, Sun, Moon } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import Button from '../ui/Button'
 import UserMenu from '../UserMenu'
-import Login from '../auth/Login'
-import Register from '../auth/Register'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useAuthModal } from '@/components/providers/AuthModalProvider'
 
 export default function Header() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
-  const [showLogin, setShowLogin] = useState(false)
-  const [showRegister, setShowRegister] = useState(false)
+  const { theme, setTheme } = useTheme()
   const { data: session } = authClient.useSession()
+  const { openLogin } = useAuthModal()
+  const [mounted, setMounted] = useState(false)
 
-  const handleShowLogin = () => {
-    setShowLogin(true)
-    setShowRegister(false)
-  }
-
-  const handleShowRegister = () => {
-    setShowRegister(true)
-    setShowLogin(false)
-  }
-
-  const handleCloseModals = () => {
-    setShowLogin(false)
-    setShowRegister(false)
-  }
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const toggleTheme = () => {
-    setTheme((prev) => {
-      const newTheme = prev === 'dark' ? 'light' : 'dark'
-      document.documentElement.classList.toggle('dark', newTheme === 'dark')
-      return newTheme
-    })
+    setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
+  if (!mounted) return null;
+
   return (
-    <header className="border-b border-gray-200 dark:border-white/20">
+    <header className="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-white/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
@@ -73,27 +60,13 @@ export default function Header() {
             {session ? (
               <UserMenu />
             ) : (
-              <Button variant="outline" onClick={handleShowLogin}>
+              <Button variant="outline" onClick={openLogin}>
                 Sign In
               </Button>
             )}
           </div>
         </div>
       </div>
-
-      {showLogin && (
-        <Login
-          onClose={handleCloseModals}
-          onSwitchToRegister={handleShowRegister}
-        />
-      )}
-
-      {showRegister && (
-        <Register
-          onClose={handleCloseModals}
-          onSwitchToLogin={handleShowLogin}
-        />
-      )}
     </header>
   )
 } 
