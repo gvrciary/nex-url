@@ -25,7 +25,6 @@
 body {
   color: rgb(var(--foreground));
   background: rgb(var(--background));
-  font-family: 'Roboto', sans-serif;
   letter-spacing: 0.02em;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
