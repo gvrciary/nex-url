@@ -1,7 +1,13 @@
 'use client'
 
-import Dashboard from '@/components/Dashboard'
+import AddLink from '@/components/AddLink'
+import LinkHistory from '@/components/LinkHistory'
 
 export default function DashboardPage() {
-  return <Dashboard />
+  return (
+    <>
+      <AddLink />
+      <LinkHistory />
+    </>
+  )
 }

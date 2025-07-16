@@ -2,10 +2,10 @@
 
 import { Github, Sun, Moon } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
-import Button from './ui/Button'
-import UserMenu from './UserMenu'
-import Login from './auth/Login'
-import Register from './auth/Register'
+import Button from '../ui/Button'
+import UserMenu from '../UserMenu'
+import Login from '../auth/Login'
+import Register from '../auth/Register'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -37,7 +37,6 @@ export default function Header() {
       return newTheme
     })
   }
-  
 
   return (
     <header className="border-b border-gray-200 dark:border-white/20">
@@ -58,7 +57,7 @@ export default function Header() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => window.open('https://github.com/leontercero/nex-url', '_blank')}
+              onClick={() => window.open('https://github.com/alexisgxrcia/nex-url', '_blank')}
             >
               <Github className="h-4 w-4" />
             </Button>

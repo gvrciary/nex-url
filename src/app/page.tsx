@@ -1,6 +1,6 @@
 'use client'
 
-import Landing from '@/components/Landing'
+import Landing from '@/components/Hero'
 
 export default function Home() {
   return (
