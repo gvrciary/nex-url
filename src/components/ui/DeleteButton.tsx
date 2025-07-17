@@ -10,17 +10,20 @@ interface DeleteButtonProps {
   size?: 'sm' | 'md' | 'lg'
   className?: string
   confirmText?: string
+  disabled?: boolean
 }
 
 export default function DeleteButton({ 
   onDelete, 
   size = 'sm', 
   className,
-  confirmText = "Delete?"
+  confirmText = "Delete?",
+  disabled = false
 }: DeleteButtonProps) {
   const [showConfirm, setShowConfirm] = useState(false)
 
   const handleDelete = () => {
+    if (disabled) return
     setShowConfirm(true)
   }
 
@@ -40,6 +43,7 @@ export default function DeleteButton({
           variant="ghost"
           size={size}
           onClick={handleConfirm}
+          disabled={disabled}
           title="Confirm deletion"
           className={cn(
             'text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-green-100 dark:hover:bg-green-400/10 transition-all duration-200',
@@ -58,6 +62,7 @@ export default function DeleteButton({
           variant="ghost"
           size={size}
           onClick={handleCancel}
+          disabled={disabled}
           title="Cancel"
           className={cn(
             'text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-400/10 transition-all duration-200',
@@ -80,9 +85,11 @@ export default function DeleteButton({
       variant="ghost"
       size={size}
       onClick={handleDelete}
-      title="Delete link"
+      disabled={disabled}
+      title={disabled ? "Deleting..." : "Delete link"}
       className={cn(
         'text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-400/10 transition-all duration-200 hover:scale-105',
+        disabled && 'opacity-50 cursor-not-allowed',
         className
       )}
     >

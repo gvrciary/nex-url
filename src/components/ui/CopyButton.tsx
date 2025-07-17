@@ -9,16 +9,20 @@ interface CopyButtonProps {
   textToCopy: string
   size?: 'sm' | 'md' | 'lg'
   className?: string
+  disabled?: boolean
 }
 
 export default function CopyButton({ 
   textToCopy, 
   size = 'sm', 
-  className 
+  className,
+  disabled = false
 }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
+    if (disabled) return
+    
     try {
       await navigator.clipboard.writeText(textToCopy)
       setCopied(true)
@@ -33,10 +37,12 @@ export default function CopyButton({
       variant="ghost"
       size={size}
       onClick={handleCopy}
-      title="Copy link"
+      disabled={disabled}
+      title={disabled ? "Deleting..." : copied ? "Copied!" : "Copy link"}
       className={cn(
         'transition-all duration-300 relative overflow-hidden',
         copied && 'text-green-600 dark:text-green-400',
+        disabled && 'opacity-50 cursor-not-allowed',
         className
       )}
     >
