@@ -17,6 +17,13 @@ const interVariable = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexurl.vercel.app"),
+  title: {
+    default: "Nex URL - Shorten your Links",
+    template: "%s | Nex URL",
+  },
+  description:
+    "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
+  manifest: "/manifest.json",
   icons: [
     {
       rel: "icon",
@@ -37,9 +44,44 @@ export const metadata: Metadata = {
       url: "/images/apple-touch-icon.png",
     },
   ],
-  title: "Nex URL - Shorten your Links",
-  description:
-    "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://nexurl.vercel.app",
+    title: "Nex URL - Professional URL Shortener",
+    description:
+      "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
+    siteName: "Nex URL",
+    images: [
+      {
+        url: "/images/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Nex URL - URL Shortener Platform",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nex URL - Professional URL Shortener",
+    description:
+      "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
+    creator: "@alexisgqrcia",
+  },
+  alternates: {
+    canonical: "https://nexurl.vercel.app",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -55,7 +97,7 @@ export default function RootLayout({
             <Header />
             <main className="min-h-screen">{children}</main>
             <Footer />
-            <Toaster/>
+            <Toaster />
           </AuthModalProvider>
         </ThemeProvider>
       </body>
