@@ -37,7 +37,7 @@ export default function AddLink() {
         const result = await checkAliasAvailability(customAlias)
         setAliasStatus(result.available ? 'available' : 'taken')
         setAliasMessage(result.message)
-      } catch (error) {
+      } catch {
         setAliasStatus('taken')
         setAliasMessage('Error checking alias availability')
       } finally {

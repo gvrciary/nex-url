@@ -25,8 +25,8 @@ export default function LinkHistory() {
   const handleDeleteLink = async (linkId: string) => {
     try {
       await deleteLink(linkId)
-    } catch (error) {
-      console.error('Failed to delete link:', error)
+    } catch {
+      console.error('Failed to delete link')
     }
   }
 
