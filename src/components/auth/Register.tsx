@@ -56,13 +56,12 @@ export default function Register({ onClose, onSwitchToLogin }: RegisterProps) {
     setIsLoading(true)
     
     try {
-      await signUp(email, password, name)
+        await signUp(email, password, name)
       
         onClose()
         router.push('/dashboard')
-    } catch (error) {
+    } catch {
       setErrors({ general: 'Registration failed. Please try again.' })
-      console.error(error)
     } finally {
       setIsLoading(false)
     }

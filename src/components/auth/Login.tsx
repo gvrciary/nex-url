@@ -31,9 +31,8 @@ export default function Login({ onClose, onSwitchToRegister }: LoginProps) {
         await signIn(email, password)
         onClose()
         router.push('/dashboard')
-    } catch (error) {
+    } catch {
       setError('Login failed. Please try again.')
-      console.error(error)
     } finally {
       setIsLoading(false)
     }
@@ -51,9 +50,8 @@ export default function Login({ onClose, onSwitchToRegister }: LoginProps) {
       }
       onClose()
       router.push('/dashboard')
-    } catch (error) {
+    } catch {
       setError(`${provider} login failed. Please try again.`)
-      console.error(error)
     } finally {
       setIsLoading(false)
     }

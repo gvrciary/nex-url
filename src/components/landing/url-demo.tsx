@@ -36,7 +36,7 @@ export default function UrlDemo() {
   };
 
   return (
-    <div
+    <section
       ref={ref}
       className="flex flex-col items-center justify-center gap-8 max-w-6xl mx-auto py-16"
     >
@@ -122,6 +122,6 @@ export default function UrlDemo() {
           </div>
         </motion.div>
       </div>
-    </div>
+    </section>
   );
 }
