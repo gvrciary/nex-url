@@ -12,6 +12,7 @@ import { useLinksContext } from '@/components/providers/LinksProvider'
 export default function LinkHistory() {
   const { links, loading, error, deleteLink } = useLinksContext()
   const [searchTerm, setSearchTerm] = useState('')
+  const [deletingLinks, setDeletingLinks] = useState<Set<string>>(new Set())
 
   const filteredLinks = useMemo(() => {
     if (!searchTerm) return links
@@ -23,10 +24,18 @@ export default function LinkHistory() {
   }, [links, searchTerm])
 
   const handleDeleteLink = async (linkId: string) => {
+    setDeletingLinks(prev => new Set([...prev, linkId]))
+    
     try {
       await deleteLink(linkId)
-    } catch {
-      console.error('Failed to delete link')
+    } catch (error) {
+      console.error('Failed to delete link:', error)
+    } finally {
+      setDeletingLinks(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(linkId)
+        return newSet
+      })
     }
   }
 
@@ -89,10 +98,18 @@ export default function LinkHistory() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {filteredLinks.map((link) => (
-              <Card key={link.id} className="p-6 group">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
+            {filteredLinks.map((link) => {
+              const isDeleting = deletingLinks.has(link.id)
+              
+              return (
+                <Card 
+                  key={link.id} 
+                  className={`p-6 group transition-opacity duration-200 ${
+                    isDeleting ? 'opacity-50 pointer-events-none' : ''
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-4 mb-3">
                       <h3 className="text-lg font-light text-black dark:text-white truncate">
                         {window.location.origin}/{link.customAlias}
@@ -115,24 +132,34 @@ export default function LinkHistory() {
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2 ml-4 opacity-60 group-hover:opacity-100 transition-opacity duration-200">
-                    <CopyButton textToCopy={`${window.location.origin}/${link.customAlias}`} />
+                  <div className={`flex items-center space-x-2 ml-4 opacity-60 group-hover:opacity-100 transition-opacity duration-200 ${
+                    isDeleting ? 'pointer-events-none opacity-30' : ''
+                  }`}>
+                    <CopyButton 
+                      textToCopy={`${window.location.origin}/${link.customAlias}`}
+                      disabled={isDeleting}
+                    />
                     
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => window.open(link.originalUrl, '_blank')}
-                      title="Open original link"
+                      disabled={isDeleting}
+                      title={isDeleting ? "Deleting..." : "Open original link"}
                       className="hover:scale-105 transition-transform duration-200"
                     >
                       <ExternalLink className="h-4 w-4" />
                     </Button>
 
-                    <DeleteButton onDelete={() => handleDeleteLink(link.id)} />
+                    <DeleteButton 
+                      onDelete={() => handleDeleteLink(link.id)} 
+                      disabled={isDeleting}
+                    />
                   </div>
                 </div>
               </Card>
-            ))}
+              )
+            })}
           </div>
         )}
 
