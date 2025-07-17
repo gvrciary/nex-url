@@ -28,8 +28,7 @@ export default function Login({ onClose, onSwitchToRegister }: LoginProps) {
     setError('')
     
     try {
-      await signIn(email, password)
-      
+        await signIn(email, password)
         onClose()
         router.push('/dashboard')
     } catch (error) {

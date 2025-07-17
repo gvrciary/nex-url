@@ -12,13 +12,13 @@ import { useLinksContext } from '@/components/providers/LinksProvider'
 export default function AddLink() {
   const { addLink } = useLinksContext()
   const [url, setUrl] = useState('')
-  const [shortenedUrl, setShortenedUrl] = useState('')
-  const [customAlias, setCustomAlias] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [aliasChecking, setAliasChecking] = useState(false)
+  const [shortenedUrl, setShortenedUrl] = useState<string>('')
+  const [customAlias, setCustomAlias] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [aliasChecking, setAliasChecking] = useState<boolean>(false)
   const [aliasStatus, setAliasStatus] = useState<'available' | 'taken' | null>(null)
-  const [aliasMessage, setAliasMessage] = useState('')
-  const [error, setError] = useState('')
+  const [aliasMessage, setAliasMessage] = useState<string>('')
+  const [error, setError] = useState<string>('')
 
   useEffect(() => {
     if (!customAlias.trim()) {
@@ -126,7 +126,15 @@ export default function AddLink() {
                   type="url"
                   placeholder="https://example.com/very-long-link"
                   value={url}
-                  onChange={(e) => setUrl(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (shortenedUrl.length > 0) {
+                      setShortenedUrl('');
+                    }
+
+                    setUrl(value);
+                  }}
                   required
                   icon={<Link className="h-4 w-4" />}
                 />

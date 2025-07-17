@@ -11,7 +11,7 @@ import { useLinksContext } from '@/components/providers/LinksProvider'
 
 export default function LinkHistory() {
   const { links, loading, error, deleteLink } = useLinksContext()
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const [deletingLinks, setDeletingLinks] = useState<Set<string>>(new Set())
 
   const filteredLinks = useMemo(() => {
@@ -46,9 +46,6 @@ export default function LinkHistory() {
           <h2 className="text-3xl font-extralight mb-4 text-black dark:text-white">
             My Links
           </h2>
-          <p className="text-black/70 dark:text-white/70 font-light">
-            Manage and analyze the performance of your shortened links
-          </p>
         </div>
 
         <div className="mb-6">
