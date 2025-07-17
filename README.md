@@ -1,8 +1,10 @@
-![Nex URL Platform](https://nexurl.vercel.app/images/screenshot.png)
+<div align="center">
+  <img src="public/images/screenshot.png" alt="Nex URL screenshot" width="1024" height="1024">
+  
+  # Nex URL - Professional URL Shortener
 
-# Nex URL - Professional URL Shortener
-
-Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.
+  Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.
+</div>
 
 ## 🚀 Features
 
@@ -69,6 +71,10 @@ TURSO_AUTH_TOKEN=your_turso_auth_token
 # Authentication
 BETTER_AUTH_SECRET=your_random_secret_key
 BETTER_AUTH_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_github_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
 
 # App Configuration
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -133,5 +139,7 @@ nex-url/
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-Built with ❤️ by [Alexis García](https://github.com/alexisgqrcia)
+ 
+<div align="center">
+    Built with ❤️ by [Alexis García](https://github.com/alexigxrcia)
+</div>
