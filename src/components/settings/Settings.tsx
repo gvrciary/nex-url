@@ -1,106 +1,111 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { User, Download, Trash2, Save, AlertTriangle } from 'lucide-react'
-import { authClient } from '@/lib/auth-client'
-import { useRouter } from 'next/navigation'
-import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
-import Card from '@/components/ui/Card'
-import { useLinks } from '@/hooks/useLinks'
-import { updateUserProfile, deleteUserAccount } from '@/server/actions/user'
+import { useState } from "react";
+import { User, Download, Trash2, Save, AlertTriangle } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import Card from "@/components/ui/Card";
+import { useLinks } from "@/hooks/useLinks";
+import { updateUserProfile, deleteUserAccount } from "@/server/actions/user";
 
 export default function Settings() {
-  const { data: session } = authClient.useSession()
+  const { data: session } = authClient.useSession();
   const { links, loading } = useLinks();
-  const router = useRouter()
-  const [isEditing, setIsEditing] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const [isExporting, setIsExporting] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [saveError, setSaveError] = useState('')
-  const [saveSuccess, setSaveSuccess] = useState(false)
+  const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
-    name: session?.user?.name || '',
-  })
+    name: session?.user?.name || "",
+  });
 
   const handleSave = async () => {
-    setIsSaving(true)
-    setSaveError('')
-    setSaveSuccess(false)
-    
+    setIsSaving(true);
+
     try {
-      await updateUserProfile(formData.name)
-      setSaveSuccess(true)
-      setIsEditing(false)
-      
-      setTimeout(() => {
-        setSaveSuccess(false)
-      }, 2000)
+      await updateUserProfile(formData.name);
+      toast.success("Profile updated successfully!");
+      setIsEditing(false);
     } catch (error) {
-      setSaveError(error instanceof Error ? error.message : 'Failed to update profile')
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update profile",
+      );
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleExportLinks = async () => {
-    if (loading || links.length === 0) return
-    
-    setIsExporting(true)
-    
+    if (loading || links.length === 0) return;
+
+    setIsExporting(true);
+
     try {
-      const exportData = links.map(link => ({
+      const exportData = links.map((link) => ({
         id: link.id,
         originalUrl: link.originalUrl,
         shortUrl: `${window.location.origin}/${link.customAlias}`,
         alias: link.customAlias,
         clicks: link.clicks,
-        createdAt: link.createdAt.toISOString()
-      }))
+        createdAt: link.createdAt.toISOString(),
+      }));
 
       const exportStats = {
         totalLinks: links.length,
         totalClicks: links.reduce((sum, link) => sum + link.clicks, 0),
         exportedBy: session?.user?.email,
-        exportedAt: new Date().toISOString()
-      }
+        exportedAt: new Date().toISOString(),
+      };
 
       const fullExport = {
         metadata: exportStats,
-        links: exportData
-      }
+        links: exportData,
+      };
 
-      const dataStr = JSON.stringify(fullExport, null, 2)
-      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
-      
-      const exportFileDefaultName = `nex-url-export-${new Date().toISOString().split('T')[0]}.json`
-      
-      const linkElement = document.createElement('a')
-      linkElement.setAttribute('href', dataUri)
-      linkElement.setAttribute('download', exportFileDefaultName)
-      linkElement.click()
+      const dataStr = JSON.stringify(fullExport, null, 2);
+      const dataUri =
+        "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+
+      const exportFileDefaultName = `nex-url-export-${new Date().toISOString().split("T")[0]}.json`;
+
+      const linkElement = document.createElement("a");
+      linkElement.setAttribute("href", dataUri);
+      linkElement.setAttribute("download", exportFileDefaultName);
+      linkElement.click();
+
+      toast.success("Links exported successfully!");
     } catch (error) {
-      console.error('Export failed:', error)
+      console.error("Export failed:", error);
+      toast.error("Failed to export links");
     } finally {
-      setIsExporting(false)
+      setIsExporting(false);
     }
-  }
+  };
 
   const handleDeleteAccount = async () => {
     try {
-      await deleteUserAccount()
-      await authClient.signOut()
-      router.push('/')
+      await deleteUserAccount();
+      await authClient.signOut();
+      toast.success("Account deleted successfully");
+      router.push("/");
     } catch (error) {
-      console.error('Failed to delete account:', error)
+      console.error("Failed to delete account:", error);
+      toast.error("Failed to delete account");
     } finally {
-      setShowDeleteConfirm(false)
+      setShowDeleteConfirm(false);
     }
-  }
+  };
 
   if (!session?.user) {
-    return <div className="text-black dark:text-white font-light text-center">Please sign in to access settings.</div>
+    return (
+      <div className="text-black dark:text-white font-light text-center">
+        Please sign in to access settings.
+      </div>
+    );
   }
 
   return (
@@ -123,29 +128,15 @@ export default function Settings() {
             onClick={() => {
               if (isEditing) {
                 setFormData({
-                  name: session?.user?.name || ''
-                })
-                setSaveError('')
-                setSaveSuccess(false)
+                  name: session?.user?.name || "",
+                });
               }
-              setIsEditing(!isEditing)
+              setIsEditing(!isEditing);
             }}
           >
-            {isEditing ? 'Cancel' : 'Edit'}
+            {isEditing ? "Cancel" : "Edit"}
           </Button>
         </div>
-
-        {saveError && (
-          <div className="mb-6 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <p className="text-red-600 dark:text-red-400 text-sm font-light">{saveError}</p>
-          </div>
-        )}
-
-        {saveSuccess && (
-          <div className="mb-6 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-            <p className="text-green-600 dark:text-green-400 text-sm font-light">Profile updated successfully!</p>
-          </div>
-        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -155,31 +146,40 @@ export default function Settings() {
             {isEditing ? (
               <Input
                 value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                }
                 className="w-full"
               />
             ) : (
-              <p className="text-black dark:text-white font-light">{session.user.name}</p>
+              <p className="text-black dark:text-white font-light">
+                {session.user.name}
+              </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="" className="block text-sm font-light text-black/70 dark:text-white/70 mb-2">
+            <label
+              htmlFor=""
+              className="block text-sm font-light text-black/70 dark:text-white/70 mb-2"
+            >
               Email Address
             </label>
-            <p className="text-black dark:text-white font-light">{session.user.email}</p>
+            <p className="text-black dark:text-white font-light">
+              {session.user.email}
+            </p>
           </div>
         </div>
 
         {isEditing && (
           <div className="mt-6 flex justify-end">
-            <Button 
-              onClick={handleSave} 
+            <Button
+              onClick={handleSave}
               disabled={isSaving}
               className="flex items-center space-x-2"
             >
               <Save size={16} />
-              <span>{isSaving ? 'Saving...' : 'Save Changes'}</span>
+              <span>{isSaving ? "Saving..." : "Save Changes"}</span>
             </Button>
           </div>
         )}
@@ -189,13 +189,17 @@ export default function Settings() {
         <h2 className="text-xl font-light text-black dark:text-white mb-6">
           Data Management
         </h2>
-        
+
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-white/20 rounded-lg">
             <div>
-              <h3 className="font-light text-black dark:text-white">Export Links</h3>
+              <h3 className="font-light text-black dark:text-white">
+                Export Links
+              </h3>
               <p className="text-sm text-black/70 dark:text-white/70 font-light">
-                Download all your shortened links as JSON ({links.length} links, {links.reduce((sum, link) => sum + link.clicks, 0)} total clicks)
+                Download all your shortened links as JSON ({links.length} links,{" "}
+                {links.reduce((sum, link) => sum + link.clicks, 0)} total
+                clicks)
               </p>
             </div>
             <Button
@@ -205,7 +209,7 @@ export default function Settings() {
               className="flex items-center space-x-2"
             >
               <Download size={16} />
-              <span>{isExporting ? 'Exporting...' : 'Export'}</span>
+              <span>{isExporting ? "Exporting..." : "Export"}</span>
             </Button>
           </div>
         </div>
@@ -216,20 +220,22 @@ export default function Settings() {
           <AlertTriangle size={20} />
           <span>Danger Zone</span>
         </h2>
-        
+
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 border border-red-200 dark:border-red-800 rounded-lg">
             <div>
-              <h3 className="font-light text-red-600 dark:text-red-400">Delete Account</h3>
+              <h3 className="font-light text-red-600 dark:text-red-400">
+                Delete Account
+              </h3>
               <p className="text-sm text-red-600/70 dark:text-red-400/70 font-light">
                 Permanently delete your account and all associated data
               </p>
             </div>
-                         <Button
-               variant="outline"
-               onClick={() => setShowDeleteConfirm(true)}
-               className="flex items-center space-x-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-             >
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteConfirm(true)}
+              className="flex items-center space-x-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+            >
               <Trash2 size={16} />
               <span>Delete Account</span>
             </Button>
@@ -246,11 +252,12 @@ export default function Settings() {
                 Delete Account
               </h3>
             </div>
-            
+
             <p className="text-black/70 dark:text-white/70 font-light mb-6">
-              Are you sure you want to delete your account? This action cannot be undone and will permanently remove all your data.
+              Are you sure you want to delete your account? This action cannot
+              be undone and will permanently remove all your data.
             </p>
-            
+
             <div className="flex space-x-3">
               <Button
                 variant="outline"
@@ -259,11 +266,11 @@ export default function Settings() {
               >
                 Cancel
               </Button>
-                             <Button
-                 variant="outline"
-                 onClick={handleDeleteAccount}
-                 className="flex-1 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-               >
+              <Button
+                variant="outline"
+                onClick={handleDeleteAccount}
+                className="flex-1 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+              >
                 Delete Account
               </Button>
             </div>
@@ -271,5 +278,5 @@ export default function Settings() {
         </div>
       )}
     </div>
-  )
-} 
+  );
+}

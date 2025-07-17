@@ -5,6 +5,7 @@ import { AuthModalProvider } from "@/components/providers/AuthModalProvider";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import localFont from "next/font/local";
+import { Toaster } from "sonner";
 
 const interVariable = localFont({
   variable: "--font-inter-variable",
@@ -54,6 +55,7 @@ export default function RootLayout({
             <Header />
             <main className="min-h-screen">{children}</main>
             <Footer />
+            <Toaster/>
           </AuthModalProvider>
         </ThemeProvider>
       </body>

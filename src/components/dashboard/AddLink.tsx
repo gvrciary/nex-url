@@ -1,101 +1,107 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { Link, Plus, Loader2, Check, X } from 'lucide-react'
-import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
-import Card from '@/components/ui/Card'
-import CopyButton from '@/components/ui/CopyButton'
-import { checkAliasAvailability } from '@/server/actions/user'
-import { useLinks } from '@/hooks/useLinks'
+import { useState, useEffect } from "react";
+import { Link, Plus, Loader2, Check, X } from "lucide-react";
+import { toast } from "sonner";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import Card from "@/components/ui/Card";
+import CopyButton from "@/components/ui/CopyButton";
+import { checkAliasAvailability } from "@/server/actions/user";
+import { useLinks } from "@/hooks/useLinks";
 
 export default function AddLink() {
   const { addLink } = useLinks();
-  const [url, setUrl] = useState('')
-  const [shortenedUrl, setShortenedUrl] = useState<string>('')
-  const [customAlias, setCustomAlias] = useState<string>('')
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [aliasChecking, setAliasChecking] = useState<boolean>(false)
-  const [aliasStatus, setAliasStatus] = useState<'available' | 'taken' | null>(null)
-  const [aliasMessage, setAliasMessage] = useState<string>('')
-  const [error, setError] = useState<string>('')
+  const [url, setUrl] = useState("");
+  const [shortenedUrl, setShortenedUrl] = useState<string>("");
+  const [customAlias, setCustomAlias] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [aliasChecking, setAliasChecking] = useState<boolean>(false);
+  const [aliasStatus, setAliasStatus] = useState<"available" | "taken" | null>(
+    null,
+  );
+  const [aliasMessage, setAliasMessage] = useState<string>("");
 
   useEffect(() => {
     if (!customAlias.trim()) {
-      setAliasStatus(null)
-      setAliasChecking(false)
-      setAliasMessage('')
-      return
+      setAliasStatus(null);
+      setAliasChecking(false);
+      setAliasMessage("");
+      return;
     }
 
-    setAliasChecking(true)
-    setAliasStatus(null)
-    setAliasMessage('')
+    setAliasChecking(true);
+    setAliasStatus(null);
+    setAliasMessage("");
 
     const timer = setTimeout(async () => {
       try {
-        const result = await checkAliasAvailability(customAlias)
-        setAliasStatus(result.available ? 'available' : 'taken')
-        setAliasMessage(result.message)
+        const result = await checkAliasAvailability(customAlias);
+        setAliasStatus(result.available ? "available" : "taken");
+        setAliasMessage(result.message);
       } catch {
-        setAliasStatus('taken')
-        setAliasMessage('Error checking alias availability')
+        setAliasStatus("taken");
+        setAliasMessage("Error checking alias availability");
       } finally {
-        setAliasChecking(false)
+        setAliasChecking(false);
       }
-    }, 500)
+    }, 500);
 
-    return () => clearTimeout(timer)
-  }, [customAlias])
+    return () => clearTimeout(timer);
+  }, [customAlias]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (customAlias && aliasStatus === 'taken') return
-    
-    setIsLoading(true)
-    setError('')
-    
+    e.preventDefault();
+    if (customAlias && aliasStatus === "taken") return;
+
+    setIsLoading(true);
+
     try {
-      const newLink = await addLink(url, customAlias || undefined)
-      setShortenedUrl(`${window.location.origin}/${newLink.customAlias}`)
-      setUrl('')
-      setCustomAlias('')
+      const newLink = await addLink(url, customAlias || undefined);
+      setShortenedUrl(`${window.location.origin}/${newLink.customAlias}`);
+      toast.success("Link created successfully!");
+      setUrl("");
+      setCustomAlias("");
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to create link')
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create link",
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const resetForm = () => {
-    setUrl('')
-    setCustomAlias('')
-    setShortenedUrl('')
-    setAliasStatus(null)
-    setAliasChecking(false)
-    setAliasMessage('')
-    setError('')
-  }
-  
+    setUrl("");
+    setCustomAlias("");
+    setShortenedUrl("");
+    setAliasStatus(null);
+    setAliasChecking(false);
+    setAliasMessage("");
+  };
+
   const getAliasIcon = () => {
-    if (aliasChecking) return <Loader2 className="h-4 w-4 animate-spin" />
-    if (aliasStatus === 'available') return <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
-    if (aliasStatus === 'taken') return <X className="h-4 w-4 text-red-600 dark:text-red-400" />
-    return null
-  }
+    if (aliasChecking) return <Loader2 className="h-4 w-4 animate-spin" />;
+    if (aliasStatus === "available")
+      return <Check className="h-4 w-4 text-green-600 dark:text-green-400" />;
+    if (aliasStatus === "taken")
+      return <X className="h-4 w-4 text-red-600 dark:text-red-400" />;
+    return null;
+  };
 
   const getAliasMessage = () => {
-    if (aliasChecking) return 'Checking availability...'
-    if (aliasMessage) return aliasMessage
-    return "If you don't specify an alias, one will be generated automatically"
-  }
+    if (aliasChecking) return "Checking availability...";
+    if (aliasMessage) return aliasMessage;
+    return "If you don't specify an alias, one will be generated automatically";
+  };
 
   const getAliasMessageColor = () => {
-    if (aliasChecking) return 'text-black/50 dark:text-white/50'
-    if (aliasStatus === 'available') return 'text-green-600 dark:text-green-400'
-    if (aliasStatus === 'taken') return 'text-red-600 dark:text-red-400'
-    return 'text-black/50 dark:text-white/50'
-  }
+    if (aliasChecking) return "text-black/50 dark:text-white/50";
+    if (aliasStatus === "available")
+      return "text-green-600 dark:text-green-400";
+    if (aliasStatus === "taken") return "text-red-600 dark:text-red-400";
+    return "text-black/50 dark:text-white/50";
+  };
 
   return (
     <section className="py-8 px-4 sm:px-6 lg:px-8">
@@ -111,12 +117,6 @@ export default function AddLink() {
 
         <Card className="p-6 mb-8">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-red-600 dark:text-red-400 text-sm font-light">{error}</p>
-              </div>
-            )}
-            
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-light text-black/70 dark:text-white/70 mb-2">
@@ -130,7 +130,7 @@ export default function AddLink() {
                     const value = e.target.value;
 
                     if (shortenedUrl.length > 0) {
-                      setShortenedUrl('');
+                      setShortenedUrl("");
                     }
 
                     setUrl(value);
@@ -165,21 +165,22 @@ export default function AddLink() {
             </div>
 
             <div className="flex gap-4">
-              <Button 
-                type="submit" 
-                disabled={!url || isLoading || aliasChecking || (customAlias.trim() !== '' && aliasStatus === 'taken')}
+              <Button
+                type="submit"
+                disabled={
+                  !url ||
+                  isLoading ||
+                  aliasChecking ||
+                  (customAlias.trim() !== "" && aliasStatus === "taken")
+                }
                 className="flex-1"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                {isLoading ? 'Creating...' : 'Create Link'}
+                {isLoading ? "Creating..." : "Create Link"}
               </Button>
-              
+
               {shortenedUrl && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={resetForm}
-                >
+                <Button type="button" variant="outline" onClick={resetForm}>
                   New
                 </Button>
               )}
@@ -199,7 +200,7 @@ export default function AddLink() {
                     </p>
                   </div>
                   <div className="ml-4">
-                    <CopyButton 
+                    <CopyButton
                       textToCopy={shortenedUrl}
                       size="md"
                       className="px-4 py-2"
@@ -212,5 +213,5 @@ export default function AddLink() {
         </Card>
       </div>
     </section>
-  )
-} 
+  );
+}
