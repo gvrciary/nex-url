@@ -9,7 +9,6 @@ interface DeleteButtonProps {
   onDelete: () => void
   size?: 'sm' | 'md' | 'lg'
   className?: string
-  confirmText?: string
   disabled?: boolean
 }
 
@@ -17,7 +16,6 @@ export default function DeleteButton({
   onDelete, 
   size = 'sm', 
   className,
-  confirmText = "Delete?",
   disabled = false
 }: DeleteButtonProps) {
   const [showConfirm, setShowConfirm] = useState(false)
