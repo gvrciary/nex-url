@@ -16,7 +16,7 @@ const interVariable = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nexurl.com"),
+  metadataBase: new URL("https://nexurl.vercel.app"),
   icons: [
     {
       rel: "icon",
