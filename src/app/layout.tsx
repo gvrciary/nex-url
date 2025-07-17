@@ -37,7 +37,8 @@ export const metadata: Metadata = {
     },
   ],
   title: "Nex URL - Shorten your Links",
-  description: "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
+  description:
+    "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
 };
 
 export default function RootLayout({
@@ -51,9 +52,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthModalProvider>
             <Header />
-            <main className="min-h-screen">
-              {children}
-            </main>
+            <main className="min-h-screen">{children}</main>
             <Footer />
           </AuthModalProvider>
         </ThemeProvider>

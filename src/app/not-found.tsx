@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import { Home } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import Button from '@/components/ui/Button'
+import { Home } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 export default function NotFoundPage() {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleGoHome = () => {
-    router.push('/')
-  }
+    router.push("/");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -22,20 +22,18 @@ export default function NotFoundPage() {
             Page Not Found
           </h2>
           <p className="text-xl font-light text-black/70 dark:text-white/70 leading-relaxed">
-            The page you&apos;re looking for doesn&apos;t exist or has been moved.
+            The page you&apos;re looking for doesn&apos;t exist or has been
+            moved.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button 
-            onClick={handleGoHome}
-            className="px-8 font-light"
-          >
+          <Button onClick={handleGoHome} className="px-8 font-light">
             <Home className="h-4 w-4 mr-2" />
             Go Home
           </Button>
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

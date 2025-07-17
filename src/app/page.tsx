@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import Hero from '@/components/landing/Hero'
-import UrlDemo from '@/components/landing/url-demo'
+import Hero from "@/components/landing/Hero";
+import UrlDemo from "@/components/landing/url-demo";
 
 export default function Home() {
   return (
@@ -9,5 +9,5 @@ export default function Home() {
       <Hero />
       <UrlDemo />
     </>
-  )
+  );
 }

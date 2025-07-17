@@ -1,45 +1,45 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
-import { LogOut, Settings, LayoutDashboard } from 'lucide-react'
-import { authClient } from '@/lib/auth-client'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+import { useState, useRef, useEffect } from "react";
+import { LogOut, Settings, LayoutDashboard } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function UserMenu() {
-  const { data: session } = authClient.useSession()
-  const [isOpen, setIsOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-  const router = useRouter()
+  const { data: session } = authClient.useSession();
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSettings = () => {
-    router.push('/settings')
-    setIsOpen(false)
-  }
+    router.push("/settings");
+    setIsOpen(false);
+  };
 
   const handleLogout = async () => {
-    await authClient.signOut()
-    setIsOpen(false)
-    router.push('/')
-  }
+    await authClient.signOut();
+    setIsOpen(false);
+    router.push("/");
+  };
 
   const handleDashboard = () => {
-    router.push('/dashboard')
-    setIsOpen(false)
-  }
+    router.push("/dashboard");
+    setIsOpen(false);
+  };
 
-  if (!session?.user) return null
+  if (!session?.user) return null;
 
   return (
     <div className="relative" ref={menuRef}>
@@ -48,8 +48,8 @@ export default function UserMenu() {
         className="flex items-center space-x-2 text-sm font-light text-black dark:text-white hover:text-black/70 dark:hover:text-white/70 transition-colors"
       >
         <Image
-          src={'/images/profile.webp'}
-          alt={session.user.name || 'User'}
+          src={"/images/profile.webp"}
+          alt={session.user.name || "User"}
           className="w-8 h-8 rounded-full"
           width={32}
           height={32}
@@ -73,9 +73,9 @@ export default function UserMenu() {
             <Settings size={16} />
             <span>Settings</span>
           </button>
-          
+
           <hr className="my-2 border-gray-200 dark:border-white/20" />
-          
+
           <button
             onClick={handleLogout}
             className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-light text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
@@ -86,5 +86,5 @@ export default function UserMenu() {
         </div>
       )}
     </div>
-  )
-} 
+  );
+}
