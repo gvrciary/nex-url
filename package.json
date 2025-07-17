@@ -1,7 +1,11 @@
 {
   "name": "nex-url",
   "version": "0.1.0",
+  "author": "@alexisgqrcia",
+  "description": "Transform long URLs into short and elegant links",
+  "license": "MIT",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
