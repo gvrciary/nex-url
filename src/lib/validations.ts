@@ -30,8 +30,8 @@ export function validateAlias(alias: string): { valid: boolean; message: string 
     return { valid: false, message: "Alias can only contain letters, numbers, hyphens, and underscores" };
   }
 
-  if (alias.startsWith(ROUTES.API) || alias.startsWith(ROUTES.NOT_FOUND) || alias.startsWith(ROUTES.DASHBOARD) || alias.startsWith(ROUTES.SETTINGS)) {
-    return { valid: false, message: "Alias cannot start with /api, /not-found, /dashboard, or /settings" };
+  if (alias.toLowerCase() === ROUTES.API.toLowerCase() || alias.toLowerCase() === ROUTES.NOT_FOUND.toLowerCase() || alias.toLowerCase() === ROUTES.DASHBOARD.toLowerCase() || alias.toLowerCase() === ROUTES.SETTINGS.toLowerCase()) {
+    return { valid: false, message: "Alias cannot be " + ROUTES.API + ", " + ROUTES.NOT_FOUND + ", " + ROUTES.DASHBOARD + ", or " + ROUTES.SETTINGS };
   }
 
   return { valid: true, message: "Valid alias" };

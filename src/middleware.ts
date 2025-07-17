@@ -5,8 +5,9 @@ import { ROUTES } from "./constants/route";
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+    const pathnameWithoutSlash = pathname.slice(1);
 
-    if (pathname === "/dashboard" || pathname === "/settings") {
+    if (pathnameWithoutSlash.toLowerCase() === ROUTES.DASHBOARD.toLowerCase() || pathnameWithoutSlash.toLowerCase() === ROUTES.SETTINGS.toLowerCase()) {
         const sessionCookie = getSessionCookie(request);
 
         if (!sessionCookie) {
@@ -16,7 +17,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    if (pathname.startsWith("/") && pathname.length > 1 && !pathname.startsWith(ROUTES.NOT_FOUND)) {
+    if (pathname.startsWith("/") && pathname.length > 1 && pathnameWithoutSlash.toLowerCase() !== ROUTES.NOT_FOUND.toLowerCase()) {
         const alias = pathname.slice(1);
         return handleRedirect(request, alias);
     }
