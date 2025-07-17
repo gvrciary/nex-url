@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, Download, Trash2, Save, AlertTriangle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -22,12 +22,21 @@ export default function Settings() {
   const [formData, setFormData] = useState({
     name: session?.user?.name || "",
   });
+  
+  useEffect(() => {
+    if (session?.user?.name) {
+      setFormData({ name: session.user.name });
+    }
+  }, [session?.user?.name]);
 
   const handleSave = async () => {
     setIsSaving(true);
 
     try {
       await updateUserProfile(formData.name);
+      await authClient.updateUser({
+        name: formData.name,
+      });
       toast.success("Profile updated successfully!");
       setIsEditing(false);
     } catch (error) {
