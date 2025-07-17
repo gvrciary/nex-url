@@ -4,8 +4,8 @@ import { motion, Variants } from "framer-motion"
 import { Github } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
-import { useAuthModal } from "@/components/providers/AuthModalProvider"
-import Button from "@/components/ui/Button"
+import { useAuthModal } from "@/components/providers/auth-provider"
+import Button from "@/components/ui/ButtonT"
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

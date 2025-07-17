@@ -4,10 +4,10 @@ import { Github, Sun, Moon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
-import Button from '@/components/ui/Button'
+import Button from '@/components/ui/ButtonT'
 import UserMenu from '@/components/user-menu'
 import Link from 'next/link'
-import { useAuthModal } from '@/components/providers/AuthModalProvider'
+import { useAuthModal } from '@/components/providers/auth-provider'
 import Image from 'next/image'
 
 export default function Header() {

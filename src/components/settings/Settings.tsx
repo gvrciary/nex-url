@@ -5,9 +5,9 @@ import { User, Download, Trash2, Save, AlertTriangle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
-import Card from "@/components/ui/Card";
+import Button from "@/components/ui/ButtonT";
+import Input from "@/components/ui/InputT";
+import Card from "@/components/ui/CardT";
 import { updateUserProfile, deleteUserAccount } from "@/server/actions/user";
 import { useLinksContext } from "@/components/providers/links-provider";
 

@@ -3,11 +3,11 @@
 import { useState, useMemo } from "react";
 import { Calendar, Eye, ExternalLink, Search } from "lucide-react";
 import { toast } from "sonner";
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
-import Input from "@/components/ui/Input";
-import CopyButton from "@/components/ui/CopyButton";
-import DeleteButton from "@/components/ui/DeleteButton";
+import Button from "@/components/ui/ButtonT";
+import Card from "@/components/ui/CardT";
+import Input from "@/components/ui/InputT";
+import CopyButton from "@/components/ui/CopyButtonT";
+import DeleteButton from "@/components/ui/DeleteButtonT";
 import { useLinksContext } from "@/components/providers/links-provider";
 
 export default function LinkHistory() {
