@@ -1,8 +1,9 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import Login from '@/components/auth/Login'
 import Register from '@/components/auth/Register'
+import { authClient } from '@/lib/auth-client'
 
 interface AuthModalContextType {
   openLogin: () => void
@@ -13,6 +14,7 @@ interface AuthModalContextType {
 export const AuthModalContext = createContext<AuthModalContextType | undefined>(undefined)
 
 export function AuthModalProvider({ children }: { children: ReactNode }) {
+  const { data: session } = authClient.useSession()
   const [showLogin, setShowLogin] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
 
@@ -30,6 +32,12 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
     setShowLogin(false)
     setShowRegister(false)
   }
+  
+  useEffect(() => {
+    if (session) {
+      closeModal()
+    }
+  }, [session])
 
   return (
     <AuthModalContext.Provider value={{ openLogin, openRegister, closeModal }}>
