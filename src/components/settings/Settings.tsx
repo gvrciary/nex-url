@@ -7,12 +7,12 @@ import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
-import { useLinksContext } from '@/components/providers/LinksProvider'
+import { useLinks } from '@/hooks/useLinks'
 import { updateUserProfile, deleteUserAccount } from '@/server/actions/user'
 
 export default function Settings() {
   const { data: session } = authClient.useSession()
-  const { links, loading } = useLinksContext()
+  const { links, loading } = useLinks();
   const router = useRouter()
   const [isEditing, setIsEditing] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -36,7 +36,7 @@ export default function Settings() {
       
       setTimeout(() => {
         setSaveSuccess(false)
-      }, 3000)
+      }, 2000)
     } catch (error) {
       setSaveError(error instanceof Error ? error.message : 'Failed to update profile')
     } finally {

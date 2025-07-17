@@ -7,10 +7,10 @@ import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
 import CopyButton from '@/components/ui/CopyButton'
 import { checkAliasAvailability } from '@/server/actions/user'
-import { useLinksContext } from '@/components/providers/LinksProvider'
+import { useLinks } from '@/hooks/useLinks'
 
 export default function AddLink() {
-  const { addLink } = useLinksContext()
+  const { addLink } = useLinks();
   const [url, setUrl] = useState('')
   const [shortenedUrl, setShortenedUrl] = useState<string>('')
   const [customAlias, setCustomAlias] = useState<string>('')
