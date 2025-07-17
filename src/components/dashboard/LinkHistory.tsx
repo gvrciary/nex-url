@@ -30,6 +30,7 @@ export default function LinkHistory() {
 
     try {
       await deleteLink(linkId);
+      toast.success("Link deleted successfully");
     } catch {
       toast.error("Failed to delete link");
     } finally {
