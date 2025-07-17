@@ -10,7 +10,7 @@ import Input from "@/components/ui/input";
 import Card from "@/components/ui/card";
 import { updateUserProfile, deleteUserAccount } from "@/server/actions/user";
 import { useLinksContext } from "@/components/providers/links-provider";
-import { baseUrl } from "@/constants/url";
+import { BASE_URL } from "@/constants/url";
 
 export default function Settings() {
   const { data: session } = authClient.useSession();
@@ -58,7 +58,7 @@ export default function Settings() {
       const exportData = links.map((link) => ({
         id: link.id,
         originalUrl: link.originalUrl,
-        shortUrl: `${baseUrl}/${link.customAlias}`,
+        shortUrl: `${BASE_URL}/${link.customAlias}`,
         alias: link.customAlias,
         clicks: link.clicks,
         createdAt: link.createdAt.toISOString(),

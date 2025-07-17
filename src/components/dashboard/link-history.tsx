@@ -9,7 +9,7 @@ import Input from "@/components/ui/input";
 import CopyButton from "@/components/ui/copy-button";
 import DeleteButton from "@/components/ui/delete-button";
 import { useLinksContext } from "@/components/providers/links-provider";
-import { baseUrl } from "@/constants/url";
+import { BASE_URL } from "@/constants/url";
 
 export default function LinkHistory() {
   const { links, loading, error, deleteLink } = useLinksContext();
@@ -113,7 +113,7 @@ export default function LinkHistory() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-4 mb-3">
                         <h3 className="text-lg font-light text-black dark:text-white truncate">
-                          {baseUrl}/{link.customAlias}
+                          {BASE_URL}/{link.customAlias}
                         </h3>
                       </div>
 
@@ -139,7 +139,7 @@ export default function LinkHistory() {
                       }`}
                     >
                       <CopyButton
-                        textToCopy={`${baseUrl}/${link.customAlias}`}
+                        textToCopy={`${BASE_URL}/${link.customAlias}`}
                         disabled={isDeleting}
                       />
 

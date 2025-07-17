@@ -9,7 +9,7 @@ import Card from "@/components/ui/card";
 import CopyButton from "@/components/ui/copy-button";
 import { checkAliasAvailability } from "@/server/actions/user";
 import { useLinksContext } from "@/components/providers/links-provider";
-import { baseUrl } from "@/constants/url";
+import { BASE_URL } from "@/constants/url";
 
 export default function AddLink() {
   const { addLink } = useLinksContext();
@@ -59,7 +59,7 @@ export default function AddLink() {
 
     try {
       const newLink = await addLink(url, customAlias || undefined);
-      setShortenedUrl(`${baseUrl}/${newLink.customAlias}`);
+      setShortenedUrl(`${BASE_URL}/${newLink.customAlias}`);
       toast.success("Link created successfully!");
       setUrl("");
       setCustomAlias("");
