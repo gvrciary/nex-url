@@ -58,6 +58,8 @@ export default function AddLink() {
     try {
       const newLink = await addLink(url, customAlias || undefined)
       setShortenedUrl(`${window.location.origin}/${newLink.customAlias}`)
+      setUrl('')
+      setCustomAlias('')
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to create link')
     } finally {
@@ -74,7 +76,7 @@ export default function AddLink() {
     setAliasMessage('')
     setError('')
   }
-
+  
   const getAliasIcon = () => {
     if (aliasChecking) return <Loader2 className="h-4 w-4 animate-spin" />
     if (aliasStatus === 'available') return <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
@@ -85,7 +87,7 @@ export default function AddLink() {
   const getAliasMessage = () => {
     if (aliasChecking) return 'Checking availability...'
     if (aliasMessage) return aliasMessage
-    return 'If you don&apos;t specify an alias, one will be generated automatically'
+    return "If you don't specify an alias, one will be generated automatically"
   }
 
   const getAliasMessageColor = () => {
@@ -157,7 +159,7 @@ export default function AddLink() {
             <div className="flex gap-4">
               <Button 
                 type="submit" 
-                disabled={!url || isLoading || (customAlias.trim() !== '' && aliasStatus === 'taken')}
+                disabled={!url || isLoading || aliasChecking || (customAlias.trim() !== '' && aliasStatus === 'taken')}
                 className="flex-1"
               >
                 <Plus className="h-4 w-4 mr-2" />
