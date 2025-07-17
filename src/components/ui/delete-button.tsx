@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Trash2, Check, X } from 'lucide-react'
-import Button from './ButtonT'
+import Button from './button'
 import { cn } from '@/lib/utils'
 
 interface DeleteButtonProps {

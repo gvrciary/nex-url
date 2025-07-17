@@ -5,7 +5,7 @@ import { Github } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 import { useAuthModal } from "@/components/providers/auth-provider"
-import Button from "@/components/ui/ButtonT"
+import Button from "@/components/ui/button"
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

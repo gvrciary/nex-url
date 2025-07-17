@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { X, Github, Chrome, Eye, EyeOff } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
-import Button from '../ui/ButtonT'
-import Input from '../ui/InputT'
-import Card from '../ui/CardT'
+import Button from '../ui/button'
+import Input from '../ui/input'
+import Card from '../ui/card'
 import { signIn } from '@/server/actions/auth'
 
 interface LoginProps {

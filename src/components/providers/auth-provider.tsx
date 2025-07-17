@@ -1,8 +1,8 @@
 'use client'
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
-import Login from '@/components/auth/LoginT'
-import Register from '@/components/auth/RegisterT'
+import Login from '@/components/auth/login'
+import Register from '@/components/auth/register'
 import { authClient } from '@/lib/auth-client'
 
 interface AuthModalContextType {

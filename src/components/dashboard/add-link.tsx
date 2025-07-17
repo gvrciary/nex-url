@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { Link, Plus, Loader2, Check, X } from "lucide-react";
 import { toast } from "sonner";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
-import Card from "@/components/ui/Card";
-import CopyButton from "@/components/ui/CopyButton";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import Card from "@/components/ui/card";
+import CopyButton from "@/components/ui/copy-button";
 import { checkAliasAvailability } from "@/server/actions/user";
 import { useLinksContext } from "@/components/providers/links-provider";
 
