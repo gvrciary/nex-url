@@ -6,9 +6,9 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import localFont from "next/font/local";
 
-const geistMonoVariable = localFont({
-  variable: "--font-geist-mono",
-  src: "../fonts/GeistMonoVF.woff2",
+const interVariable = localFont({
+  variable: "--font-inter-variable",
+  src: "../fonts/InterVariable.woff2",
   weight: "100 900",
   display: "swap",
   preload: true,
@@ -47,7 +47,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans ${geistMonoVariable.variable}`}>
+      <body className={`${interVariable.variable} antialiased`}>
         <ThemeProvider>
           <AuthModalProvider>
             <Header />
