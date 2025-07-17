@@ -8,12 +8,12 @@ import { toast } from "sonner";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card from "@/components/ui/Card";
-import { useLinks } from "@/hooks/useLinks";
 import { updateUserProfile, deleteUserAccount } from "@/server/actions/user";
+import { useLinksContext } from "@/components/providers/links-provider";
 
 export default function Settings() {
   const { data: session } = authClient.useSession();
-  const { links, loading } = useLinks();
+  const { links, loading } = useLinksContext()
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);

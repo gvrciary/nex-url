@@ -8,10 +8,10 @@ import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import CopyButton from "@/components/ui/CopyButton";
 import DeleteButton from "@/components/ui/DeleteButton";
-import { useLinks } from "@/hooks/useLinks";
+import { useLinksContext } from "@/components/providers/links-provider";
 
 export default function LinkHistory() {
-  const { links, loading, error, deleteLink } = useLinks();
+  const { links, loading, error, deleteLink } = useLinksContext();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [deletingLinks, setDeletingLinks] = useState<Set<string>>(new Set());
 

@@ -8,10 +8,10 @@ import Input from "@/components/ui/Input";
 import Card from "@/components/ui/Card";
 import CopyButton from "@/components/ui/CopyButton";
 import { checkAliasAvailability } from "@/server/actions/user";
-import { useLinks } from "@/hooks/useLinks";
+import { useLinksContext } from "@/components/providers/links-provider";
 
 export default function AddLink() {
-  const { addLink } = useLinks();
+  const { addLink } = useLinksContext();
   const [url, setUrl] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState<string>("");
   const [customAlias, setCustomAlias] = useState<string>("");

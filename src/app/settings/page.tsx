@@ -1,9 +1,12 @@
 "use client";
 
 import Settings from "@/components/settings/Settings";
+import { LinksProvider } from "@/components/providers/links-provider";
 
 export default function SettingsPage() {
   return (
-    <Settings />
+    <LinksProvider>
+      <Settings />
+    </LinksProvider>
   );
 }
