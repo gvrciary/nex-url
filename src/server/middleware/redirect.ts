@@ -5,6 +5,7 @@ import { link } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { isValidAlias } from "@/lib/validations";
+import { ROUTES } from "@/constants/route";
 
 const db = drizzle({
   connection: {
@@ -16,7 +17,7 @@ const db = drizzle({
 export async function handleRedirect(request: NextRequest, alias: string) {
   try {
     if (!alias || !isValidAlias(alias)) {
-      return NextResponse.redirect(new URL("/not-found", request.url));
+      return NextResponse.redirect(new URL(ROUTES.NOT_FOUND, request.url));
     }
 
     const [linkData] = await db
@@ -26,7 +27,7 @@ export async function handleRedirect(request: NextRequest, alias: string) {
       .limit(1);
 
     if (!linkData) {
-      return NextResponse.redirect(new URL("/not-found", request.url));
+      return NextResponse.redirect(new URL(ROUTES.NOT_FOUND, request.url));
     }
 
     await db
@@ -38,8 +39,7 @@ export async function handleRedirect(request: NextRequest, alias: string) {
       .where(eq(link.customAlias, alias));
 
     return NextResponse.redirect(linkData.originalUrl);
-  } catch (error) {
-    console.error("Redirect error:", error);
-    return NextResponse.redirect(new URL("/not-found", request.url));
+  } catch {
+    return NextResponse.redirect(new URL(ROUTES.NOT_FOUND, request.url));
   }
 }

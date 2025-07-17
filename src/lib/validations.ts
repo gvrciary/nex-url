@@ -1,3 +1,5 @@
+import { ROUTES } from "@/constants/route";
+
 export function isValidUrl(string: string): boolean {
   try {
     const url = new URL(string);
@@ -26,6 +28,10 @@ export function validateAlias(alias: string): { valid: boolean; message: string 
 
   if (!isValidAlias(alias)) {
     return { valid: false, message: "Alias can only contain letters, numbers, hyphens, and underscores" };
+  }
+
+  if (alias.startsWith(ROUTES.API) || alias.startsWith(ROUTES.NOT_FOUND) || alias.startsWith(ROUTES.DASHBOARD) || alias.startsWith(ROUTES.SETTINGS)) {
+    return { valid: false, message: "Alias cannot start with /api, /not-found, /dashboard, or /settings" };
   }
 
   return { valid: true, message: "Valid alias" };
