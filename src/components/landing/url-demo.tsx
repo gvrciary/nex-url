@@ -1,13 +1,13 @@
-'use client'
+"use client";
 
+import { motion, type Variants } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { motion, Variants } from "framer-motion";
 import { BASE_URL } from "@/constants/url";
 
 export default function UrlDemo() {
   const longUrl =
     "https://www.amazon.com.mx/Bose-SoundLink-Revolve-Serie-Inal%C3%A1mbrico/dp/B08VLD15ZL?pd_rd_w=m4ro8&content-id=amzn1.sym.5b9d40c5-ea58-491d-97a3-88a3fd0ab0ae&pf_rd_p=5b9d40c5-ea58-491d-97a3-88a3fd0ab0ae&pf_rd_r=ATWS93BTDR7TJYZWFXJX&pd_rd_wg=3qxtf&pd_rd_r=7c6ab236-8b5d-4de2-9591-e297568ebf89&pd_rd_i=B08VL5S148&th=1";
-  const shortUrl = `${BASE_URL}/bose`
+  const shortUrl = `${BASE_URL}/bose`;
   const animationDelay = 2;
   const transformDuration = 1.5;
   const [showTransform, setShowTransform] = useState(false);
@@ -19,7 +19,7 @@ export default function UrlDemo() {
     }, animationDelay * 1000);
 
     return () => clearTimeout(timer);
-  }, [animationDelay]);
+  }, []);
 
   const arrowVariants: Variants = {
     hidden: {

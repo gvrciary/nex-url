@@ -1,20 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { User, Download, Trash2, Save, AlertTriangle } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
+import { AlertTriangle, Download, Save, Trash2, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import Button from "@/components/ui/button";
-import Input from "@/components/ui/input";
-import Card from "@/components/ui/card";
-import { updateUserProfile, deleteUserAccount } from "@/server/actions/user";
 import { useLinksContext } from "@/components/providers/links-provider";
+import Button from "@/components/ui/button";
+import Card from "@/components/ui/card";
+import Input from "@/components/ui/input";
 import { BASE_URL } from "@/constants/url";
+import { authClient } from "@/lib/auth-client";
+import { deleteUserAccount, updateUserProfile } from "@/server/actions/user";
 
 export default function Settings() {
   const { data: session } = authClient.useSession();
-  const { links, loading } = useLinksContext()
+  const { links, loading } = useLinksContext();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -23,7 +23,7 @@ export default function Settings() {
   const [formData, setFormData] = useState({
     name: session?.user?.name || "",
   });
-  
+
   useEffect(() => {
     if (session?.user?.name) {
       setFormData({ name: session.user.name });
@@ -77,8 +77,7 @@ export default function Settings() {
       };
 
       const dataStr = JSON.stringify(fullExport, null, 2);
-      const dataUri =
-        "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+      const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
 
       const exportFileDefaultName = `nex-url-export-${new Date().toISOString().split("T")[0]}.json`;
 
@@ -150,7 +149,10 @@ export default function Settings() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-light text-black/70 dark:text-white/70 mb-2">
+            <label
+              htmlFor=""
+              className="block text-sm font-light text-black/70 dark:text-white/70 mb-2"
+            >
               Full Name
             </label>
             {isEditing ? (

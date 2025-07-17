@@ -1,17 +1,17 @@
 "use server";
 
-import { db } from "@/db";
-import { link, user } from "@/db/schema";
-import { getSession } from "./auth";
-import { eq, desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
-import { AliasAvailabilityResult } from "@/types/link";
+import { db } from "@/db";
+import { link, user } from "@/db/schema";
 import { isValidUrl, validateAlias } from "@/lib/validations";
+import type { AliasAvailabilityResult } from "@/types/link";
+import { getSession } from "./auth";
 
 export async function createLink(originalUrl: string, customAlias?: string) {
   const session = await getSession();
-  
+
   if (!session?.user) {
     throw new Error("Not authenticated");
   }
@@ -22,7 +22,7 @@ export async function createLink(originalUrl: string, customAlias?: string) {
 
   const alias = customAlias?.trim() || nanoid(8);
 
-  if (customAlias && customAlias.trim()) {
+  if (customAlias?.trim()) {
     const existingLink = await db
       .select()
       .from(link)
@@ -49,7 +49,7 @@ export async function createLink(originalUrl: string, customAlias?: string) {
 
 export async function getUserLinks() {
   const session = await getSession();
-  
+
   if (!session?.user) {
     throw new Error("Not authenticated");
   }
@@ -65,7 +65,7 @@ export async function getUserLinks() {
 
 export async function deleteLink(linkId: string) {
   const session = await getSession();
-  
+
   if (!session?.user) {
     throw new Error("Not authenticated");
   }
@@ -85,13 +85,15 @@ export async function deleteLink(linkId: string) {
   }
 
   await db.delete(link).where(eq(link.id, linkId));
-  
+
   revalidatePath("/dashboard");
 }
 
-export async function checkAliasAvailability(alias: string): Promise<AliasAvailabilityResult> {
+export async function checkAliasAvailability(
+  alias: string,
+): Promise<AliasAvailabilityResult> {
   const validation = validateAlias(alias);
-  
+
   if (!validation.valid) {
     return { available: false, message: validation.message };
   }
@@ -102,9 +104,12 @@ export async function checkAliasAvailability(alias: string): Promise<AliasAvaila
     .where(eq(link.customAlias, alias.trim()))
     .limit(1);
 
-  return { 
+  return {
     available: existingLink.length === 0,
-    message: existingLink.length === 0 ? "Alias is available" : "Alias is already taken"
+    message:
+      existingLink.length === 0
+        ? "Alias is available"
+        : "Alias is already taken",
   };
 }
 
@@ -121,9 +126,9 @@ export async function incrementLinkClicks(alias: string) {
 
   const [updatedLink] = await db
     .update(link)
-    .set({ 
+    .set({
       clicks: currentLink.clicks + 1,
-      updatedAt: new Date() 
+      updatedAt: new Date(),
     })
     .where(eq(link.customAlias, alias))
     .returning();
@@ -133,7 +138,7 @@ export async function incrementLinkClicks(alias: string) {
 
 export async function updateUserProfile(name: string) {
   const session = await getSession();
-  
+
   if (!session?.user) {
     throw new Error("Not authenticated");
   }
@@ -144,9 +149,9 @@ export async function updateUserProfile(name: string) {
 
   const [updatedUser] = await db
     .update(user)
-    .set({ 
+    .set({
       name: name.trim(),
-      updatedAt: new Date() 
+      updatedAt: new Date(),
     })
     .where(eq(user.id, session.user.id))
     .returning();
@@ -156,12 +161,10 @@ export async function updateUserProfile(name: string) {
 
 export async function deleteUserAccount() {
   const session = await getSession();
-  
+
   if (!session?.user) {
     throw new Error("Not authenticated");
   }
 
   await db.delete(user).where(eq(user.id, session.user.id));
 }
-
-

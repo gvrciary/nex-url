@@ -1,50 +1,46 @@
-import { useState, useEffect, useCallback } from 'react'
-import { getUserLinks, deleteLink as deleteUserLink, createLink } from '@/server/actions/user'
-import { Link } from '@/types/link'
+import { useCallback, useEffect, useState } from "react";
+import {
+  createLink,
+  deleteLink as deleteUserLink,
+  getUserLinks,
+} from "@/server/actions/user";
+import type { Link } from "@/types/link";
 
 export function useLinks() {
-  const [links, setLinks] = useState<Link[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [links, setLinks] = useState<Link[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const fetchLinks = useCallback(async () => {
     try {
-      setLoading(true)
-      setError('')
-      const userLinks = await getUserLinks()
-      setLinks(userLinks)
-    } catch (error) {
-      setError('Failed to load links')
-      console.error(error)
+      setLoading(true);
+      setError("");
+      const userLinks = await getUserLinks();
+      setLinks(userLinks);
+    } catch {
+      setError("Failed to load links");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   const deleteLink = useCallback(async (linkId: string) => {
-    try {
-      await deleteUserLink(linkId)
-      setLinks(prev => prev.filter(link => link.id !== linkId))
-    } catch (error) {
-      console.error('Failed to delete link:', error)
-      throw error
-    }
-  }, [])
+    await deleteUserLink(linkId);
+    setLinks((prev) => prev.filter((link) => link.id !== linkId));
+  }, []);
 
-  const addLink = useCallback(async (originalUrl: string, customAlias?: string) => {
-    try {
-      const newLink = await createLink(originalUrl, customAlias)
-      setLinks(prev => [newLink, ...prev])
-      return newLink
-    } catch (error) {
-      console.error('Failed to create link:', error)
-      throw error
-    }
-  }, [])
+  const addLink = useCallback(
+    async (originalUrl: string, customAlias?: string) => {
+      const newLink = await createLink(originalUrl, customAlias);
+      setLinks((prev) => [newLink, ...prev]);
+      return newLink;
+    },
+    [],
+  );
 
   useEffect(() => {
-    fetchLinks()
-  }, [fetchLinks])
+    fetchLinks();
+  }, [fetchLinks]);
 
   return {
     links,
@@ -52,6 +48,6 @@ export function useLinks() {
     error,
     deleteLink,
     addLink,
-    refetch: fetchLinks
-  }
-} 
+    refetch: fetchLinks,
+  };
+}

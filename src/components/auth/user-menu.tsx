@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { LogOut, Settings, LayoutDashboard } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { LayoutDashboard, LogOut, Settings } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 export default function UserMenu() {
   const { data: session } = authClient.useSession();
@@ -44,6 +44,7 @@ export default function UserMenu() {
   return (
     <div className="relative" ref={menuRef}>
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center space-x-2 text-sm font-light text-black dark:text-white hover:text-black/70 dark:hover:text-white/70 transition-colors"
       >
@@ -60,6 +61,7 @@ export default function UserMenu() {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-black border border-gray-200 dark:border-white/20 rounded-lg shadow-lg py-2 z-50">
           <button
+            type="button"
             onClick={handleDashboard}
             className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-light text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
           >
@@ -67,6 +69,7 @@ export default function UserMenu() {
             <span>Dashboard</span>
           </button>
           <button
+            type="button"
             onClick={handleSettings}
             className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-light text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
           >
@@ -77,6 +80,7 @@ export default function UserMenu() {
           <hr className="my-2 border-gray-200 dark:border-white/20" />
 
           <button
+            type="button"
             onClick={handleLogout}
             className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-light text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >

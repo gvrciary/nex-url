@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Link, Plus, Loader2, Check, X } from "lucide-react";
+import { Check, Link, Loader2, Plus, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useLinksContext } from "@/components/providers/links-provider";
 import Button from "@/components/ui/button";
-import Input from "@/components/ui/input";
 import Card from "@/components/ui/card";
 import CopyButton from "@/components/ui/copy-button";
-import { checkAliasAvailability } from "@/server/actions/user";
-import { useLinksContext } from "@/components/providers/links-provider";
+import Input from "@/components/ui/input";
 import { BASE_URL } from "@/constants/url";
+import { checkAliasAvailability } from "@/server/actions/user";
 
 export default function AddLink() {
   const { addLink } = useLinksContext();
@@ -120,7 +120,10 @@ export default function AddLink() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-light text-black/70 dark:text-white/70 mb-2">
+                <label
+                  htmlFor=""
+                  className="block text-sm font-light text-black/70 dark:text-white/70 mb-2"
+                >
                   URL to shorten *
                 </label>
                 <Input
@@ -142,7 +145,10 @@ export default function AddLink() {
               </div>
 
               <div>
-                <label className="block text-sm font-light text-black/70 dark:text-white/70 mb-2">
+                <label
+                  htmlFor=""
+                  className="block text-sm font-light text-black/70 dark:text-white/70 mb-2"
+                >
                   Custom alias (optional)
                 </label>
                 <div className="relative">

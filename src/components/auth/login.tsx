@@ -1,45 +1,44 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { X, Github, Chrome } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { authClient } from '@/lib/auth-client'
-import Button from '../ui/button'
-import Card from '../ui/card'
-import { toast } from 'sonner'
+import { Chrome, Github, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
+import Button from "../ui/button";
+import Card from "../ui/card";
 
 interface LoginProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 export default function Login({ onClose }: LoginProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSocialLogin = async (provider: 'github' | 'google') => {
-    setIsLoading(true)
-    
+  const handleSocialLogin = async (provider: "github" | "google") => {
+    setIsLoading(true);
+
     try {
-      if (provider === 'github') {
-        await authClient.signIn.social({ provider: 'github' })
+      if (provider === "github") {
+        await authClient.signIn.social({ provider: "github" });
       } else {
-        await authClient.signIn.social({ provider: 'google' })
+        await authClient.signIn.social({ provider: "google" });
       }
-      onClose()
-      router.push('/dashboard')
+      onClose();
+      router.push("/dashboard");
     } catch {
-      toast.error(
-        `Failed to sign in with ${provider}. Please try again.`,
-      );
+      toast.error(`Failed to sign in with ${provider}. Please try again.`);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-md p-8 relative bg-white dark:bg-black">
         <button
+          type="button"
           onClick={onClose}
           className="absolute right-4 top-4 text-black/50 hover:text-black dark:text-white/50 dark:hover:text-white transition-colors"
         >
@@ -57,7 +56,7 @@ export default function Login({ onClose }: LoginProps) {
 
         <div className="space-y-4 mb-8">
           <Button
-            onClick={() => handleSocialLogin('github')}
+            onClick={() => handleSocialLogin("github")}
             disabled={isLoading}
             variant="outline"
             className="w-full font-light"
@@ -67,7 +66,7 @@ export default function Login({ onClose }: LoginProps) {
           </Button>
 
           <Button
-            onClick={() => handleSocialLogin('google')}
+            onClick={() => handleSocialLogin("google")}
             disabled={isLoading}
             variant="outline"
             className="w-full font-light"
@@ -78,5 +77,5 @@ export default function Login({ onClose }: LoginProps) {
         </div>
       </Card>
     </div>
-  )
-} 
+  );
+}

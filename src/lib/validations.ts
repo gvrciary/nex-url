@@ -13,7 +13,10 @@ export function isValidAlias(alias: string): boolean {
   return /^[a-zA-Z0-9-_]+$/.test(alias);
 }
 
-export function validateAlias(alias: string): { valid: boolean; message: string } {
+export function validateAlias(alias: string): {
+  valid: boolean;
+  message: string;
+} {
   if (!alias.trim()) {
     return { valid: false, message: "Alias cannot be empty" };
   }
@@ -27,11 +30,31 @@ export function validateAlias(alias: string): { valid: boolean; message: string 
   }
 
   if (!isValidAlias(alias)) {
-    return { valid: false, message: "Alias can only contain letters, numbers, hyphens, and underscores" };
+    return {
+      valid: false,
+      message:
+        "Alias can only contain letters, numbers, hyphens, and underscores",
+    };
   }
 
-  if (alias.toLowerCase() === ROUTES.API.toLowerCase() || alias.toLowerCase() === ROUTES.NOT_FOUND.toLowerCase() || alias.toLowerCase() === ROUTES.DASHBOARD.toLowerCase() || alias.toLowerCase() === ROUTES.SETTINGS.toLowerCase()) {
-    return { valid: false, message: "Alias cannot be " + ROUTES.API + ", " + ROUTES.NOT_FOUND + ", " + ROUTES.DASHBOARD + ", or " + ROUTES.SETTINGS };
+  if (
+    alias.toLowerCase() === ROUTES.API.toLowerCase() ||
+    alias.toLowerCase() === ROUTES.NOT_FOUND.toLowerCase() ||
+    alias.toLowerCase() === ROUTES.DASHBOARD.toLowerCase() ||
+    alias.toLowerCase() === ROUTES.SETTINGS.toLowerCase()
+  ) {
+    return {
+      valid: false,
+      message:
+        "Alias cannot be " +
+        ROUTES.API +
+        ", " +
+        ROUTES.NOT_FOUND +
+        ", " +
+        ROUTES.DASHBOARD +
+        ", or " +
+        ROUTES.SETTINGS,
+    };
   }
 
   return { valid: true, message: "Valid alias" };
@@ -47,4 +70,4 @@ export function validateUrl(url: string): { valid: boolean; message: string } {
   }
 
   return { valid: true, message: "Valid URL" };
-} 
+}

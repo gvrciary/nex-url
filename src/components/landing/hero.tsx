@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { motion, Variants } from "framer-motion"
-import { Github } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { authClient } from "@/lib/auth-client"
-import { useAuthModal } from "@/components/providers/auth-provider"
-import Button from "@/components/ui/button"
+import { motion, type Variants } from "framer-motion";
+import { Github } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAuthModal } from "@/components/providers/auth-provider";
+import Button from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -15,8 +15,8 @@ const containerVariants: Variants = {
       staggerChildren: 0.2,
       delayChildren: 0.1,
     },
-  }
-}
+  },
+};
 
 const itemVariants: Variants = {
   hidden: {
@@ -30,21 +30,21 @@ const itemVariants: Variants = {
       duration: 0.6,
       ease: [0.25, 0.25, 0.25, 0.75],
     },
-  }
-}
+  },
+};
 
 export default function Hero() {
-  const router = useRouter()
-  const { data: session } = authClient.useSession()
-  const { openLogin } = useAuthModal()
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+  const { openLogin } = useAuthModal();
 
   const handleGetStarted = () => {
     if (session) {
-      router.push("/dashboard")
+      router.push("/dashboard");
     } else {
-      openLogin()
+      openLogin();
     }
-  }
+  };
 
   return (
     <section className="py-32 px-4 sm:px-6 lg:px-8">
@@ -67,11 +67,14 @@ export default function Hero() {
           className="text-xl font-light text-black/70 dark:text-white/70 mb-16 max-w-2xl mx-auto leading-relaxed"
           variants={itemVariants}
         >
-          Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links
-          professionally.
+          Transform long URLs into short and elegant links. Track clicks,
+          analyze audience and manage your links professionally.
         </motion.p>
 
-        <motion.div className="flex flex-col sm:flex-row gap-6 justify-center" variants={itemVariants}>
+        <motion.div
+          className="flex flex-col sm:flex-row gap-6 justify-center"
+          variants={itemVariants}
+        >
           <Button size="lg" className="px-12" onClick={handleGetStarted}>
             Get Started
           </Button>
@@ -79,7 +82,9 @@ export default function Hero() {
             variant="outline"
             size="lg"
             className="px-12 bg-transparent"
-            onClick={() => window.open("https://github.com/alexisgxrcia/nex-url", "_blank")}
+            onClick={() =>
+              window.open("https://github.com/alexisgxrcia/nex-url", "_blank")
+            }
           >
             <Github className="h-4 w-4 mr-2" />
             View Repository
@@ -87,5 +92,5 @@ export default function Hero() {
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }
