@@ -14,7 +14,7 @@ export default function Button({
   children,
   ...props
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-light transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black disabled:pointer-events-none disabled:opacity-50'
+  const baseStyles = 'cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-light transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black disabled:pointer-events-none disabled:opacity-50'
   
   const variants = {
     primary: 'bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90',
