@@ -131,7 +131,7 @@ export async function incrementLinkClicks(alias: string) {
   return updatedLink;
 }
 
-export async function updateUserProfile(name: string, email: string) {
+export async function updateUserProfile(name: string) {
   const session = await getSession();
   
   if (!session?.user) {
@@ -142,15 +142,10 @@ export async function updateUserProfile(name: string, email: string) {
     throw new Error("Name must be at least 2 characters");
   }
 
-  if (!email.trim() || !email.includes('@')) {
-    throw new Error("Please enter a valid email");
-  }
-
   const [updatedUser] = await db
     .update(user)
     .set({ 
       name: name.trim(),
-      email: email.trim(),
       updatedAt: new Date() 
     })
     .where(eq(user.id, session.user.id))

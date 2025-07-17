@@ -22,7 +22,6 @@ export default function Settings() {
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [formData, setFormData] = useState({
     name: session?.user?.name || '',
-    email: session?.user?.email || ''
   })
 
   const handleSave = async () => {
@@ -31,7 +30,7 @@ export default function Settings() {
     setSaveSuccess(false)
     
     try {
-      await updateUserProfile(formData.name, formData.email)
+      await updateUserProfile(formData.name)
       setSaveSuccess(true)
       setIsEditing(false)
       
@@ -57,9 +56,7 @@ export default function Settings() {
         shortUrl: `${window.location.origin}/${link.customAlias}`,
         alias: link.customAlias,
         clicks: link.clicks,
-        createdAt: link.createdAt.toISOString(),
-        updatedAt: link.updatedAt.toISOString(),
-        exportedAt: new Date().toISOString()
+        createdAt: link.createdAt.toISOString()
       }))
 
       const exportStats = {
@@ -126,8 +123,7 @@ export default function Settings() {
             onClick={() => {
               if (isEditing) {
                 setFormData({
-                  name: session?.user?.name || '',
-                  email: session?.user?.email || ''
+                  name: session?.user?.name || ''
                 })
                 setSaveError('')
                 setSaveSuccess(false)
@@ -168,18 +164,10 @@ export default function Settings() {
           </div>
 
           <div>
-            <label className="block text-sm font-light text-black/70 dark:text-white/70 mb-2">
+            <label htmlFor="" className="block text-sm font-light text-black/70 dark:text-white/70 mb-2">
               Email Address
             </label>
-            {isEditing ? (
-              <Input
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full"
-              />
-            ) : (
-              <p className="text-black dark:text-white font-light">{session.user.email}</p>
-            )}
+            <p className="text-black dark:text-white font-light">{session.user.email}</p>
           </div>
         </div>
 
