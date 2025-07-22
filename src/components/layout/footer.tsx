@@ -3,7 +3,7 @@ import { Heart } from "lucide-react";
 export default function Footer() {
   return (
     <footer className="border-t border-gray-200 dark:border-white/10 py-16 px-4 sm:px-6 lg:px-8">
-      <div className="text-center text-sm text-black/50 dark:text-white/50 font-light">
+      <div className="text-center text-sm text-black/50 dark:text-white/50 font-normal">
         <p>
           Made with <Heart className="inline-block h-4 w-4" /> by{" "}
           <a

@@ -96,7 +96,7 @@ export default function UrlDemo() {
           transition={{ duration: 0.6 }}
         >
           <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 p-4 backdrop-blur-sm">
-            <p className="text-sm font-light text-gray-600 dark:text-gray-300 break-all leading-relaxed">
+            <p className="text-sm font-normal text-gray-600 dark:text-gray-300 break-all leading-relaxed">
               {longUrl}
             </p>
           </div>
@@ -114,7 +114,7 @@ export default function UrlDemo() {
         >
           <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 p-4 backdrop-blur-sm">
             <motion.p
-              className="text-sm font-light text-gray-800 dark:text-gray-100 text-center"
+              className="text-sm font-normal text-gray-800 dark:text-gray-100 text-center"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.2 }}
             >

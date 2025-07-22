@@ -108,10 +108,10 @@ export default function AddLink() {
     <section className="py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extralight mb-4 text-black dark:text-white">
+          <h2 className="text-3xl font-semibold mb-4 text-black dark:text-white">
             Create New Link
           </h2>
-          <p className="text-black/70 dark:text-white/70 font-light">
+          <p className="text-black/70 dark:text-white/70 font-normal">
             Transform your long URL into a short and elegant link
           </p>
         </div>
@@ -122,7 +122,7 @@ export default function AddLink() {
               <div>
                 <label
                   htmlFor=""
-                  className="block text-sm font-light text-black/70 dark:text-white/70 mb-2"
+                  className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
                 >
                   URL to shorten *
                 </label>
@@ -147,7 +147,7 @@ export default function AddLink() {
               <div>
                 <label
                   htmlFor=""
-                  className="block text-sm font-light text-black/70 dark:text-white/70 mb-2"
+                  className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
                 >
                   Custom alias (optional)
                 </label>
@@ -164,7 +164,7 @@ export default function AddLink() {
                   </div>
                 </div>
                 <div className="flex items-center mt-2">
-                  <p className={`text-xs font-light ${getAliasMessageColor()}`}>
+                  <p className={`text-xs font-normal ${getAliasMessageColor()}`}>
                     {getAliasMessage()}
                   </p>
                 </div>
@@ -202,7 +202,7 @@ export default function AddLink() {
                     <p className="text-sm text-black/70 dark:text-white/70 mb-1">
                       Your shortened link:
                     </p>
-                    <p className="text-lg font-light text-black dark:text-white break-all">
+                    <p className="text-lg font-normal text-black dark:text-white break-all">
                       {shortenedUrl}
                     </p>
                   </div>

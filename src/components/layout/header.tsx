@@ -40,7 +40,7 @@ export default function Header() {
                   height={32}
                 />
               </div>
-              <span className="text-xl font-light tracking-wide text-black dark:text-white">
+              <span className="text-xl font-normal tracking-wide text-black dark:text-white">
                 NexURL
               </span>
             </Link>

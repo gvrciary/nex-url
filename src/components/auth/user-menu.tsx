@@ -46,7 +46,7 @@ export default function UserMenu() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 text-sm font-light text-black dark:text-white hover:text-black/70 dark:hover:text-white/70 transition-colors"
+        className="flex items-center space-x-2 text-sm font-normal text-black dark:text-white hover:text-black/70 dark:hover:text-white/70 transition-colors"
       >
         <Image
           src={"/images/profile.webp"}
@@ -63,7 +63,7 @@ export default function UserMenu() {
           <button
             type="button"
             onClick={handleDashboard}
-            className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-light text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
+            className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-normal text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
           >
             <LayoutDashboard size={16} />
             <span>Dashboard</span>
@@ -71,7 +71,7 @@ export default function UserMenu() {
           <button
             type="button"
             onClick={handleSettings}
-            className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-light text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
+            className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-normal text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
           >
             <Settings size={16} />
             <span>Settings</span>
@@ -82,7 +82,7 @@ export default function UserMenu() {
           <button
             type="button"
             onClick={handleLogout}
-            className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-light text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+            className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-normal text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             <LogOut size={16} />
             <span>Sign Out</span>

@@ -18,20 +18,21 @@
     --accent: 248 250 252;
 }
 
-* {
-    border-color: rgb(var(--border));
-}
-
-body {
-    color: rgb(var(--foreground));
-    background: rgb(var(--background));
-    font-family: var(--font-inter-variable), sans-serif;
-    letter-spacing: 0.02em;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
-    -webkit-tap-highlight-color: transparent;
+@layer utilities {
+    *{
+        border-color: rgb(var(--border));
+    }
+    
+    body {
+        color: rgb(var(--foreground));
+        background: rgb(var(--background));
+        font-family: var(--font-inter-variable), sans-serif;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+    }
 }
 
 @layer utilities {

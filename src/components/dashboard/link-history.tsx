@@ -47,7 +47,7 @@ export default function LinkHistory() {
     <section className="py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-3xl font-extralight mb-4 text-black dark:text-white">
+          <h2 className="text-3xl font-semibold mb-4 text-black dark:text-white">
             My Links
           </h2>
         </div>
@@ -65,13 +65,13 @@ export default function LinkHistory() {
 
         {loading ? (
           <Card className="p-12 text-center">
-            <p className="text-black/70 dark:text-white/70 font-light text-lg">
+            <p className="text-black/70 dark:text-white/70 font-normal text-lg">
               Loading your links...
             </p>
           </Card>
         ) : error ? (
           <Card className="p-12 text-center">
-            <p className="text-red-600 dark:text-red-400 font-light text-lg">
+            <p className="text-red-600 dark:text-red-400 font-normal text-lg">
               {error}
             </p>
           </Card>
@@ -79,19 +79,19 @@ export default function LinkHistory() {
           <Card className="p-12 text-center">
             {searchTerm ? (
               <>
-                <p className="text-black/70 dark:text-white/70 font-light text-lg">
+                <p className="text-black/70 dark:text-white/70 font-normal text-lg">
                   No links found
                 </p>
-                <p className="text-black/50 dark:text-white/50 font-light text-sm mt-2">
+                <p className="text-black/50 dark:text-white/50 font-normal text-sm mt-2">
                   Try different search terms
                 </p>
               </>
             ) : (
               <>
-                <p className="text-black/70 dark:text-white/70 font-light text-lg">
+                <p className="text-black/70 dark:text-white/70 font-normal text-lg">
                   You haven&apos;t created any links yet
                 </p>
-                <p className="text-black/50 dark:text-white/50 font-light text-sm mt-2">
+                <p className="text-black/50 dark:text-white/50 font-normal text-sm mt-2">
                   Create your first link using the form above
                 </p>
               </>
@@ -112,16 +112,16 @@ export default function LinkHistory() {
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-4 mb-3">
-                        <h3 className="text-lg font-light text-black dark:text-white truncate">
+                        <h3 className="text-lg font-normal text-black dark:text-white truncate">
                           {BASE_URL}/{link.customAlias}
                         </h3>
                       </div>
 
-                      <p className="text-black/70 dark:text-white/70 mb-3 font-light truncate">
+                      <p className="text-black/70 dark:text-white/70 mb-3 font-normal truncate">
                         {link.originalUrl}
                       </p>
 
-                      <div className="flex items-center space-x-6 text-sm text-black/50 dark:text-white/50 font-light">
+                      <div className="flex items-center space-x-6 text-sm text-black/50 dark:text-white/50 font-normal">
                         <span className="flex items-center">
                           <Calendar className="h-4 w-4 mr-2" />
                           {new Date(link.createdAt).toLocaleDateString("en-US")}
@@ -170,7 +170,7 @@ export default function LinkHistory() {
 
         {searchTerm && filteredLinks.length > 0 && (
           <div className="mt-6 text-center">
-            <p className="text-black/50 dark:text-white/50 font-light text-sm">
+            <p className="text-black/50 dark:text-white/50 font-normal text-sm">
               Showing {filteredLinks.length} of {links.length} links
             </p>
           </div>

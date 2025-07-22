@@ -46,10 +46,10 @@ export default function Login({ onClose }: LoginProps) {
         </button>
 
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extralight tracking-tight mb-3 text-black dark:text-white">
+          <h2 className="text-3xl font-light tracking-tight mb-3 text-black dark:text-white">
             Sign In
           </h2>
-          <p className="text-black/70 dark:text-white/70 font-light">
+          <p className="text-black/70 dark:text-white/70 font-normal">
             Welcome back to Nex URL
           </p>
         </div>
@@ -59,7 +59,7 @@ export default function Login({ onClose }: LoginProps) {
             onClick={() => handleSocialLogin("github")}
             disabled={isLoading}
             variant="outline"
-            className="w-full font-light"
+            className="w-full font-normal"
           >
             <Github size={18} className="mr-3" />
             Continue with GitHub
@@ -69,7 +69,7 @@ export default function Login({ onClose }: LoginProps) {
             onClick={() => handleSocialLogin("google")}
             disabled={isLoading}
             variant="outline"
-            className="w-full font-light"
+            className="w-full font-normal"
           >
             <Chrome size={18} className="mr-3" />
             Continue with Google

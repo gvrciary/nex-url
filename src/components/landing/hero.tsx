@@ -55,16 +55,16 @@ export default function Hero() {
         animate="visible"
       >
         <motion.h1
-          className="text-6xl sm:text-7xl font-extralight tracking-tight mb-8 text-black dark:text-white"
+          className="text-6xl sm:text-7xl font-semibold tracking-tight mb-8 text-black dark:text-white"
           variants={itemVariants}
         >
           Shorten
           <br />
-          <span className="font-light">your Links</span>
+          <span className="font-semibold">your Links</span>
         </motion.h1>
 
         <motion.p
-          className="text-xl font-light text-black/70 dark:text-white/70 mb-16 max-w-2xl mx-auto leading-relaxed"
+          className="text-xl font-normal text-black/70 dark:text-white/70 mb-16 max-w-2xl mx-auto leading-relaxed"
           variants={itemVariants}
         >
           Transform long URLs into short and elegant links. Track clicks,

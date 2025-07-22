@@ -111,7 +111,7 @@ export default function Settings() {
 
   if (!session?.user) {
     return (
-      <div className="text-black dark:text-white font-light text-center">
+      <div className="text-black dark:text-white font-normal text-center">
         Please sign in to access settings.
       </div>
     );
@@ -121,14 +121,14 @@ export default function Settings() {
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <div className="flex items-center space-x-3 mb-8">
         <User className="h-8 w-8 text-black dark:text-white" />
-        <h1 className="text-3xl font-extralight tracking-tight text-black dark:text-white">
+        <h1 className="text-3xl font-light tracking-tight text-black dark:text-white">
           Account Settings
         </h1>
       </div>
 
       <Card className="p-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-light text-black dark:text-white">
+          <h2 className="text-xl font-normal text-black dark:text-white">
             Profile Information
           </h2>
           <Button
@@ -151,7 +151,7 @@ export default function Settings() {
           <div>
             <label
               htmlFor=""
-              className="block text-sm font-light text-black/70 dark:text-white/70 mb-2"
+              className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
             >
               Full Name
             </label>
@@ -164,7 +164,7 @@ export default function Settings() {
                 className="w-full"
               />
             ) : (
-              <p className="text-black dark:text-white font-light">
+              <p className="text-black dark:text-white font-normal">
                 {session.user.name}
               </p>
             )}
@@ -173,11 +173,11 @@ export default function Settings() {
           <div>
             <label
               htmlFor=""
-              className="block text-sm font-light text-black/70 dark:text-white/70 mb-2"
+              className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
             >
               Email Address
             </label>
-            <p className="text-black dark:text-white font-light">
+            <p className="text-black dark:text-white font-normal">
               {session.user.email}
             </p>
           </div>
@@ -198,17 +198,17 @@ export default function Settings() {
       </Card>
 
       <Card className="p-8">
-        <h2 className="text-xl font-light text-black dark:text-white mb-6">
+        <h2 className="text-xl font-normal text-black dark:text-white mb-6">
           Data Management
         </h2>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-white/20 rounded-lg">
             <div>
-              <h3 className="font-light text-black dark:text-white">
+              <h3 className="font-normal text-black dark:text-white">
                 Export Links
               </h3>
-              <p className="text-sm text-black/70 dark:text-white/70 font-light">
+              <p className="text-sm text-black/70 dark:text-white/70 font-normal">
                 Download all your shortened links as JSON ({links.length} links,{" "}
                 {links.reduce((sum, link) => sum + link.clicks, 0)} total
                 clicks)
@@ -228,7 +228,7 @@ export default function Settings() {
       </Card>
 
       <Card className="p-8 border-red-200 dark:border-red-800">
-        <h2 className="text-xl font-light text-red-600 dark:text-red-400 mb-6 flex items-center space-x-2">
+        <h2 className="text-xl font-normal text-red-600 dark:text-red-400 mb-6 flex items-center space-x-2">
           <AlertTriangle size={20} />
           <span>Danger Zone</span>
         </h2>
@@ -236,10 +236,10 @@ export default function Settings() {
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 border border-red-200 dark:border-red-800 rounded-lg">
             <div>
-              <h3 className="font-light text-red-600 dark:text-red-400">
+              <h3 className="font-normal text-red-600 dark:text-red-400">
                 Delete Account
               </h3>
-              <p className="text-sm text-red-600/70 dark:text-red-400/70 font-light">
+              <p className="text-sm text-red-600/70 dark:text-red-400/70 font-normal">
                 Permanently delete your account and all associated data
               </p>
             </div>
@@ -260,12 +260,12 @@ export default function Settings() {
           <Card className="w-full max-w-md p-6 bg-white dark:bg-black">
             <div className="flex items-center space-x-3 mb-4">
               <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
-              <h3 className="text-lg font-light text-black dark:text-white">
+              <h3 className="text-lg font-normal text-black dark:text-white">
                 Delete Account
               </h3>
             </div>
 
-            <p className="text-black/70 dark:text-white/70 font-light mb-6">
+            <p className="text-black/70 dark:text-white/70 font-normal mb-6">
               Are you sure you want to delete your account? This action cannot
               be undone and will permanently remove all your data.
             </p>
