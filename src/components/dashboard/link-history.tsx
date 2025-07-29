@@ -11,6 +11,7 @@ import DeleteButton from "@/components/ui/delete-button";
 import Input from "@/components/ui/input";
 import AddLink from "./add-link";
 import { BASE_URL } from "@/constants/url";
+import LinkHistorySkeleton from "@/components/ui/link-history-skeleton";
 
 export default function LinkHistory() {
   const { links, loading, error, deleteLink } = useLinksContext();
@@ -131,11 +132,7 @@ export default function LinkHistory() {
 
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <Card className="p-12 text-center">
-            <p className="text-black/70 dark:text-white/70 font-normal text-lg">
-              Loading your links...
-            </p>
-          </Card>
+          <LinkHistorySkeleton />
         ) : error ? (
           <Card className="p-12 text-center">
             <p className="text-red-600 dark:text-red-400 font-normal text-lg">
