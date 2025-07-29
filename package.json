@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@libsql/client": "^0.15.10",
+    "@react-three/fiber": "^9.3.0",
     "better-auth": "^1.2.12",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.0",
@@ -26,7 +27,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sonner": "^2.0.6",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "three": "^0.178.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -34,6 +36,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.178.1",
     "drizzle-kit": "^0.31.4",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",

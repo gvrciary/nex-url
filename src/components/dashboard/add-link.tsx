@@ -3,7 +3,7 @@
 import { Check, Link, Loader2, Plus, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useLinksContext } from "@/components/providers/links-provider";
+import { useLinksContext } from "@/providers/links-provider";
 import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
 import CopyButton from "@/components/ui/copy-button";

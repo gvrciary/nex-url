@@ -18,15 +18,15 @@
     --accent: 248 250 252;
 }
 
-@layer utilities {
-    *{
+@layer base {
+    * {
         border-color: rgb(var(--border));
     }
-    
+
     body {
         color: rgb(var(--foreground));
         background: rgb(var(--background));
-        font-family: var(--font-inter-variable), sans-serif;
+        font-family: var(--font-general-variable), sans-serif;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;

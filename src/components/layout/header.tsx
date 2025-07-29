@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import UserMenu from "@/components/auth/user-menu";
-import { useAuthModal } from "@/components/providers/auth-provider";
+import { useAuthModal } from "@/providers/auth-provider";
 import Button from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 
@@ -34,7 +34,7 @@ export default function Header() {
             <Link href="/" className="flex items-center space-x-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center">
                 <Image
-                  src="/images/logo.webp"
+                  src="/icon.svg"
                   alt="Nex URL"
                   width={32}
                   height={32}

@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { AuthModalProvider } from "@/components/providers/auth-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
+import { AuthModalProvider } from "@/providers/auth-provider";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
 
-const interVariable = localFont({
-  variable: "--font-inter-variable",
-  src: "../fonts/InterVariable.woff2",
+const generalSansVariable = localFont({
+  variable: "--font-general-variable",
+  src: "../fonts/GeneralSansVariable.woff2",
   weight: "100 900",
   display: "swap",
   preload: true,
@@ -91,7 +91,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${interVariable.variable} antialiased`}>
+      <body className={`${generalSansVariable.variable} antialiased`}>
         <ThemeProvider>
           <AuthModalProvider>
             <Header />

@@ -1,17 +1,27 @@
 import AddLink from "@/components/dashboard/add-link";
 import LinkHistory from "@/components/dashboard/link-history";
-import { LinksProvider } from "@/components/providers/links-provider";
+import { LinksProvider } from "@/providers/links-provider";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "DashboardL",
+  title: "Dashboard",
 };
 
 export default function DashboardPage() {
   return (
     <LinksProvider>
-      <AddLink />
-      <LinkHistory />
+      <div className="min-h-screen bg-white dark:bg-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="order-1">
+              <AddLink />
+            </div>
+            <div className="order-2">
+              <LinkHistory />
+            </div>
+          </div>
+        </div>
+      </div>
     </LinksProvider>
   );
 }

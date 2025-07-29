@@ -4,7 +4,7 @@ import { AlertTriangle, Download, Save, Trash2, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useLinksContext } from "@/components/providers/links-provider";
+import { useLinksContext } from "@/providers/links-provider";
 import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
 import Input from "@/components/ui/input";
