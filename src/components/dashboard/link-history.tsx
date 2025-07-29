@@ -95,7 +95,7 @@ export default function LinkHistory() {
     <div className="h-full flex flex-col p-4">
       <div className="mb-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-semibold mb-4 text-black dark:text-white">
+          <h2 className="text-3xl mb-4 text-black dark:text-white">
             My Links
           </h2>
           <div className="flex items-center space-x-2">
