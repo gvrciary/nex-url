@@ -10,18 +10,16 @@ export const metadata: Metadata = {
 export default function DashboardPage() {
   return (
     <LinksProvider>
-      <div className="min-h-screen bg-white dark:bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="order-1">
-              <AddLink />
-            </div>
-            <div className="order-2">
-              <LinkHistory />
-            </div>
+      <section className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="order-1">
+            <AddLink />
+          </div>
+          <div className="order-2">
+            <LinkHistory />
           </div>
         </div>
-      </div>
+      </section>
     </LinksProvider>
   );
 }

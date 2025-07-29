@@ -118,7 +118,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
+    <section className="max-w-4xl mx-auto p-6 space-y-8">
       <div className="flex items-center space-x-3 mb-8">
         <User className="h-8 w-8 text-black dark:text-white" />
         <h1 className="text-3xl font-light tracking-tight text-black dark:text-white">
@@ -289,6 +289,6 @@ export default function Settings() {
           </Card>
         </div>
       )}
-    </div>
+    </section>
   );
 }

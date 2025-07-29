@@ -3,7 +3,6 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthModalProvider } from "@/providers/auth-provider";
 import Header from "@/components/layout/header";
-import Footer from "@/components/layout/footer";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
 
@@ -95,8 +94,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthModalProvider>
             <Header />
-            <main className="min-h-screen">{children}</main>
-            <Footer />
+            <main className="h-[calc(100vh-4rem)]">{children}</main>
             <Toaster />
           </AuthModalProvider>
         </ThemeProvider>

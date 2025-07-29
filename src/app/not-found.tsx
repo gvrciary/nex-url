@@ -12,7 +12,7 @@ export default function NotFoundPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <section className="h-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full text-center">
         <div className="mb-8">
           <h1 className="text-9xl font-bold tracking-tight text-black dark:text-white mb-4">
@@ -34,6 +34,6 @@ export default function NotFoundPage() {
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
