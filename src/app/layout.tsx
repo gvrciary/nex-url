@@ -5,9 +5,10 @@ import { AuthModalProvider } from "@/providers/auth-provider";
 import Header from "@/components/layout/header";
 import { Toaster } from "sonner";
 import { generalSansVariable } from "@/fonts";
+import { BASE_URL } from "@/constants/url";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nexurl.vercel.app"),
+  metadataBase: new URL(`${BASE_URL}`),
   title: {
     default: "Nex URL - Shorten your Links",
     template: "%s | Nex URL",
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://nexurl.vercel.app",
+    url: `/`,
     title: "Nex URL - Professional URL Shortener",
     description:
       "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
     creator: "@gvrciary",
   },
   alternates: {
-    canonical: "https://nexurl.vercel.app",
+    canonical: "/",
   },
   robots: {
     index: true,
