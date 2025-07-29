@@ -5,7 +5,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import * as THREE from "three";
 import { Github } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/auth-client";
 import { useRouter } from "next/navigation";
 import { useAuthModal } from "@/providers/auth-provider";
 

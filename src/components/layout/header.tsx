@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import UserMenu from "@/components/auth/user-menu";
 import { useAuthModal } from "@/providers/auth-provider";
 import Button from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/auth-client";
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
@@ -41,15 +41,14 @@ export default function Header() {
         </div>
 
         <div className="flex items-center space-x-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() =>
-              window.open("https://github.com/alexisgxrcia/nex-url", "_blank")
-            }
-          >
-            <Github className="h-4 w-4" />
-          </Button>
+          <a href="https://github.com/gvrciary/nex-url" target="_blank" rel="noopener noreferrer">
+            <Button
+              variant="ghost"
+              size="sm"
+            >
+              <Github className="h-4 w-4" />
+            </Button>
+          </a>
 
           <Button variant="ghost" size="sm" onClick={toggleTheme}>
             {theme === "dark" ? (

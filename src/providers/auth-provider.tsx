@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import Login from "@/components/auth/login";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/auth-client";
 
 interface AuthModalContextType {
   openLogin: () => void;

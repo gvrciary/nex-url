@@ -3,16 +3,8 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthModalProvider } from "@/providers/auth-provider";
 import Header from "@/components/layout/header";
-import localFont from "next/font/local";
 import { Toaster } from "sonner";
-
-const generalSansVariable = localFont({
-  variable: "--font-general-variable",
-  src: "../fonts/GeneralSansVariable.woff2",
-  weight: "100 900",
-  display: "swap",
-  preload: true,
-});
+import { generalSansVariable } from "@/fonts";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexurl.vercel.app"),
@@ -20,27 +12,18 @@ export const metadata: Metadata = {
     default: "Nex URL - Shorten your Links",
     template: "%s | Nex URL",
   },
+  authors: [{ name: "Alexis Garcia", url: "gvrciary.dev" }],
   description:
     "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
   manifest: "/manifest.json",
   icons: [
-    {
-      rel: "icon",
-      type: "image/x-icon",
-      sizes: "32x32",
-      url: "/favicon.ico",
-    },
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "192x192",
-      url: "/images/icon-192.png",
-    },
+    { rel: "icon", url: "/favicon.ico" },
+    { rel: "icon", url: "/icon.svg", type: "image/svg+xml" },
     {
       rel: "apple-touch-icon",
       type: "image/png",
       sizes: "180x180",
-      url: "/images/apple-touch-icon.png",
+      url: "/apple-touch-icon.png",
     },
   ],
   openGraph: {
@@ -65,7 +48,7 @@ export const metadata: Metadata = {
     title: "Nex URL - Professional URL Shortener",
     description:
       "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
-    creator: "@alexisgqrcia",
+    creator: "@gvrciary",
   },
   alternates: {
     canonical: "https://nexurl.vercel.app",

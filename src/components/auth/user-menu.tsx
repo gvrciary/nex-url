@@ -4,7 +4,7 @@ import { LayoutDashboard, LogOut } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/auth-client";
 
 export default function UserMenu() {
   const { data: session } = authClient.useSession();

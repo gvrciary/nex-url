@@ -3,9 +3,9 @@
 import { desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
-import { db } from "@/db";
-import { link, user } from "@/db/schema";
-import { isValidUrl, validateAlias } from "@/lib/validations";
+import { db } from "@/server/db";
+import { link } from "@/server/schema/schema";
+import { isValidUrl, validateAlias } from "@/utils/validations";
 import type { AliasAvailabilityResult } from "@/types/link";
 import { getSession } from "./auth";
 
@@ -134,37 +134,4 @@ export async function incrementLinkClicks(alias: string) {
     .returning();
 
   return updatedLink;
-}
-
-export async function updateUserProfile(name: string) {
-  const session = await getSession();
-
-  if (!session?.user) {
-    throw new Error("Not authenticated");
-  }
-
-  if (!name.trim() || name.length < 2) {
-    throw new Error("Name must be at least 2 characters");
-  }
-
-  const [updatedUser] = await db
-    .update(user)
-    .set({
-      name: name.trim(),
-      updatedAt: new Date(),
-    })
-    .where(eq(user.id, session.user.id))
-    .returning();
-
-  return updatedUser;
-}
-
-export async function deleteUserAccount() {
-  const session = await getSession();
-
-  if (!session?.user) {
-    throw new Error("Not authenticated");
-  }
-
-  await db.delete(user).where(eq(user.id, session.user.id));
 }

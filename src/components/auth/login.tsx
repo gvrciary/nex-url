@@ -4,7 +4,7 @@ import { Chrome, Github } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/auth-client";
 import Button from "@/components/ui/button";
 import Modal from "@/components/ui/modal";
 
