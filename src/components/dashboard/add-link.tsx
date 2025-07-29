@@ -8,10 +8,16 @@ import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
 import CopyButton from "@/components/ui/copy-button";
 import Input from "@/components/ui/input";
+import Modal from "@/components/ui/modal";
 import { BASE_URL } from "@/constants/url";
 import { checkAliasAvailability } from "@/server/actions/user";
 
-export default function AddLink() {
+interface AddLinkProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function AddLink({ isOpen, onClose }: AddLinkProps) {
   const { addLink } = useLinksContext();
   const [url, setUrl] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState<string>("");
@@ -105,10 +111,10 @@ export default function AddLink() {
   };
 
   return (
-    <section className="py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-semibold mb-4 text-black dark:text-white">
+    <Modal isOpen={isOpen} onClose={onClose} size="lg" className="max-w-2xl">
+      <div className="w-full">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-semibold mb-2 text-black dark:text-white">
             Create New Link
           </h2>
           <p className="text-black/70 dark:text-white/70 font-normal">
@@ -116,7 +122,7 @@ export default function AddLink() {
           </p>
         </div>
 
-        <Card className="p-6 mb-8">
+        <Card className="p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-4">
               <div>
@@ -164,7 +170,9 @@ export default function AddLink() {
                   </div>
                 </div>
                 <div className="flex items-center mt-2">
-                  <p className={`text-xs font-normal ${getAliasMessageColor()}`}>
+                  <p
+                    className={`text-xs font-normal ${getAliasMessageColor()}`}
+                  >
                     {getAliasMessage()}
                   </p>
                 </div>
@@ -219,6 +227,6 @@ export default function AddLink() {
           )}
         </Card>
       </div>
-    </section>
+    </Modal>
   );
 }

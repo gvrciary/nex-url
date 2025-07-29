@@ -23,11 +23,6 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSettings = () => {
-    router.push("/settings");
-    setIsOpen(false);
-  };
-
   const handleLogout = async () => {
     await authClient.signOut();
     setIsOpen(false);
@@ -65,16 +60,8 @@ export default function UserMenu() {
             onClick={handleDashboard}
             className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-normal text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
           >
-            <LayoutDashboard size={16} />
+            <LayoutDashboard className="w-4 h-4" />
             <span>Dashboard</span>
-          </button>
-          <button
-            type="button"
-            onClick={handleSettings}
-            className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-normal text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
-          >
-            <Settings size={16} />
-            <span>Settings</span>
           </button>
 
           <hr className="my-2 border-gray-200 dark:border-white/20" />
@@ -84,7 +71,7 @@ export default function UserMenu() {
             onClick={handleLogout}
             className="flex items-center space-x-2 w-full px-4 py-2 text-sm font-normal text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
-            <LogOut size={16} />
+            <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
           </button>
         </div>

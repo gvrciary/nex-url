@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, ExternalLink, Eye, Search } from "lucide-react";
+import { Calendar, Download, ExternalLink, Eye, Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useLinksContext } from "@/providers/links-provider";
@@ -9,12 +9,60 @@ import Card from "@/components/ui/card";
 import CopyButton from "@/components/ui/copy-button";
 import DeleteButton from "@/components/ui/delete-button";
 import Input from "@/components/ui/input";
+import AddLink from "./add-link";
 import { BASE_URL } from "@/constants/url";
 
 export default function LinkHistory() {
   const { links, loading, error, deleteLink } = useLinksContext();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [deletingLinks, setDeletingLinks] = useState<Set<string>>(new Set());
+  const [isAddLinkModalOpen, setIsAddLinkModalOpen] = useState<boolean>(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportLinks = async () => {
+    if (loading || links.length === 0) return;
+
+    setIsExporting(true);
+
+    try {
+      const exportData = links.map((link) => ({
+        id: link.id,
+        originalUrl: link.originalUrl,
+        shortUrl: `${BASE_URL}/${link.customAlias}`,
+        alias: link.customAlias,
+        clicks: link.clicks,
+        createdAt: link.createdAt.toISOString(),
+      }));
+
+      const exportStats = {
+        totalLinks: links.length,
+        totalClicks: links.reduce((sum, link) => sum + link.clicks, 0),
+        exportedAt: new Date().toISOString(),
+      };
+
+      const fullExport = {
+        metadata: exportStats,
+        links: exportData,
+      };
+
+      const dataStr = JSON.stringify(fullExport, null, 2);
+      const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
+
+      const exportFileDefaultName = `nex-url-export-${new Date().toISOString().split("T")[0]}.json`;
+
+      const linkElement = document.createElement("a");
+      linkElement.setAttribute("href", dataUri);
+      linkElement.setAttribute("download", exportFileDefaultName);
+      linkElement.click();
+
+      toast.success("Links exported successfully!");
+    } catch (error) {
+      console.error("Export failed:", error);
+      toast.error("Failed to export links");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const filteredLinks = useMemo(() => {
     if (!searchTerm) return links;
@@ -44,25 +92,44 @@ export default function LinkHistory() {
   };
 
   return (
-    <section className="py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
+    <div className="h-full flex flex-col p-4">
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
           <h2 className="text-3xl font-semibold mb-4 text-black dark:text-white">
             My Links
           </h2>
+          <div className="flex items-center space-x-2">
+            <Button
+              onClick={() => setIsAddLinkModalOpen(true)}
+              className="mb-4"
+            >
+              <Plus className="h-4 w-4" />
+              Add
+            </Button>
+            <Button
+              onClick={handleExportLinks}
+              className="mb-4"
+              disabled={loading || links.length === 0 || isExporting}
+            >
+              <Download className="h-4 w-4" />
+              <span>{isExporting ? "Exporting..." : "Export"}</span>
+            </Button>
+          </div>
         </div>
+      </div>
 
-        <div className="mb-6">
-          <Input
-            type="text"
-            placeholder="Search links..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            icon={<Search className="h-4 w-4" />}
-            className="max-w-md"
-          />
-        </div>
+      <div className="mb-6">
+        <Input
+          type="text"
+          placeholder="Search links..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          icon={<Search className="h-4 w-4" />}
+          className="max-w-md"
+        />
+      </div>
 
+      <div className="flex-1 overflow-y-auto">
         {loading ? (
           <Card className="p-12 text-center">
             <p className="text-black/70 dark:text-white/70 font-normal text-lg">
@@ -98,7 +165,7 @@ export default function LinkHistory() {
             )}
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredLinks.map((link) => {
               const isDeleting = deletingLinks.has(link.id);
 
@@ -113,7 +180,7 @@ export default function LinkHistory() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-4 mb-3">
                         <h3 className="text-lg font-normal text-black dark:text-white truncate">
-                          {BASE_URL}/{link.customAlias}
+                          /{link.customAlias}
                         </h3>
                       </div>
 
@@ -167,15 +234,20 @@ export default function LinkHistory() {
             })}
           </div>
         )}
-
-        {searchTerm && filteredLinks.length > 0 && (
-          <div className="mt-6 text-center">
-            <p className="text-black/50 dark:text-white/50 font-normal text-sm">
-              Showing {filteredLinks.length} of {links.length} links
-            </p>
-          </div>
-        )}
       </div>
-    </section>
+
+      {searchTerm && filteredLinks.length > 0 && (
+        <div className="mt-4 text-center border-t border-gray-200 dark:border-white/10 pt-4">
+          <p className="text-black/50 dark:text-white/50 font-normal text-sm">
+            Showing {filteredLinks.length} of {links.length} links
+          </p>
+        </div>
+      )}
+
+      <AddLink
+        isOpen={isAddLinkModalOpen}
+        onClose={() => setIsAddLinkModalOpen(false)}
+      />
+    </div>
   );
 }

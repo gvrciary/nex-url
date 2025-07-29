@@ -287,7 +287,7 @@ const Button = ({
       <div className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-white dark:bg-gray-950 text-xs font-medium backdrop-blur-3xl">
         <button
           onClick={onClick}
-          className="inline-flex h-14 rounded-full text-center group items-center w-full justify-center bg-gradient-to-tr from-zinc-300/20 via-gray-400/20 to-transparent dark:from-zinc-300/5 dark:via-gray-400/5 text-black dark:text-white border-[2px] border-black/20 dark:border-white/20 hover:bg-gradient-to-tr hover:from-zinc-300/30 hover:via-gray-400/30 hover:to-transparent dark:hover:from-zinc-300/10 dark:hover:via-gray-400/20 transition-all px-10 gap-2 text-sm font-medium whitespace-nowrap outline-none"
+          className="inline-flex h-14 rounded-full text-center group items-center w-full justify-center bg-gradient-to-tr from-zinc-300/20 via-gray-400/20 to-transparent dark:from-zinc-300/5 dark:via-gray-400/5 text-black dark:text-white border-[2px] border-black/20 dark:border-white/20 hover:bg-gradient-to-tr hover:from-zinc-300/30 hover:via-gray-400/30 hover:to-transparent dark:hover:from-zinc-300/10 dark:hover:via-gray-400/20 transition-all px-10 gap-2 text-sm font-medium whitespace-nowrap cursor-pointer outline-none"
         >
           {children}
         </button>
