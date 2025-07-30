@@ -59,10 +59,10 @@ A minimalist URL shortener focused on simplicity, speed, and clean links.
 4. **Database Setup**
   Run database migrations:
 
-    ```bash
-    npm run db:generate
-    npm run db:migrate
-    ```
+  ```bash
+  npm run db:generate
+  npm run db:migrate
+  ```
 3. **Run in development mode**
   ```bash
   npm run dev
