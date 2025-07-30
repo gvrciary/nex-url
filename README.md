@@ -40,7 +40,6 @@ A minimalist URL shortener focused on simplicity, speed, and clean links.
    ```
 
 3. **Environment Setup**
-
   Create a `.env.local` file in the root directory:
 
   ```env
