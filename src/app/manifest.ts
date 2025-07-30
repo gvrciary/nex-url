@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
     start_url: "/",
     display: "standalone",
-    background_color: "#000000",
-    theme_color: "#000000",
+    background_color: "#09090b",
+    theme_color: "#09090b",
     icons: [
       {
         src: "/icon.png",
