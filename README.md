@@ -6,13 +6,12 @@
 ![Next.js](https://img.shields.io/badge/Next.js-111111?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-111111?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8)
 ![TypeScript](https://img.shields.io/badge/TypeScript-111111?style=for-the-badge&logo=typescript&logoColor=3178C6)
-![BetterAuth](https://img.shields.io/badge/Better%20Auth-111111?style=for-the-badge&logo=vercel&logoColor=white)
 
 </div>
 
 ## Whats is nex url?
 
-Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.
+A minimalist URL shortener focused on simplicity, speed, and clean links.
 
 ### Features
 
