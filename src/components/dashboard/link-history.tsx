@@ -10,8 +10,8 @@ import CopyButton from "@/components/ui/copy-button";
 import DeleteButton from "@/components/ui/delete-button";
 import Input from "@/components/ui/input";
 import AddLink from "./add-link";
-import { BASE_URL } from "@/constants/url";
 import LinkHistorySkeleton from "@/components/ui/link-history-skeleton";
+import { appConfig } from "@/config";
 
 export default function LinkHistory() {
   const { links, loading, error, deleteLink } = useLinksContext();
@@ -29,7 +29,7 @@ export default function LinkHistory() {
       const exportData = links.map((link) => ({
         id: link.id,
         originalUrl: link.originalUrl,
-        shortUrl: `${BASE_URL}/${link.customAlias}`,
+        shortUrl: `${appConfig.deployUrl}/${link.customAlias}`,
         alias: link.customAlias,
         clicks: link.clicks,
         createdAt: link.createdAt.toISOString(),
@@ -203,7 +203,7 @@ export default function LinkHistory() {
                       }`}
                     >
                       <CopyButton
-                        textToCopy={`${BASE_URL}/${link.customAlias}`}
+                        textToCopy={`${appConfig.deployUrl}/${link.customAlias}`}
                         disabled={isDeleting}
                       />
 

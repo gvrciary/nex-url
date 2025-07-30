@@ -9,8 +9,8 @@ import Card from "@/components/ui/card";
 import CopyButton from "@/components/ui/copy-button";
 import Input from "@/components/ui/input";
 import Modal from "@/components/ui/modal";
-import { BASE_URL } from "@/constants/url";
 import { checkAliasAvailability } from "@/server/actions/user";
+import { appConfig } from "@/config";
 
 interface AddLinkProps {
   isOpen: boolean;
@@ -65,7 +65,7 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
 
     try {
       const newLink = await addLink(url, customAlias || undefined);
-      setShortenedUrl(`${BASE_URL}/${newLink.customAlias}`);
+      setShortenedUrl(`${appConfig.deployUrl}/${newLink.customAlias}`);
       toast.success("Link created successfully!");
       setUrl("");
       setCustomAlias("");

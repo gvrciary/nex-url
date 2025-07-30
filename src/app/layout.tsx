@@ -5,17 +5,17 @@ import { AuthModalProvider } from "@/providers/auth-provider";
 import Header from "@/components/layout/header";
 import { Toaster } from "sonner";
 import { generalSansVariable } from "@/fonts";
-import { BASE_URL } from "@/constants/url";
+import { appConfig } from "@/config";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(`${BASE_URL}`),
+  metadataBase: new URL(appConfig.deployUrl),
   title: {
-    default: "Nex URL - Shorten your Links",
-    template: "%s | Nex URL",
+    default: `${appConfig.title} - Professional URL Shortener`,
+    template: `%s | ${appConfig.title}`,
   },
+  creator: "gvrciary",
   authors: [{ name: "Alexis Garcia", url: "gvrciary.dev" }],
-  description:
-    "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
+  description: appConfig.description,
   manifest: "/manifest.json",
   icons: [
     { rel: "icon", url: "/favicon.ico" },
@@ -30,25 +30,23 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: `/`,
-    title: "Nex URL - Professional URL Shortener",
-    description:
-      "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
-    siteName: "Nex URL",
+    url: "/",
+    title: `${appConfig.title} - Professional URL Shortener`,
+    description: appConfig.description,
+    siteName: appConfig.title,
     images: [
       {
         url: "/images/og-image.png",
         width: 1024,
         height: 1024,
-        alt: "Nex URL - URL Shortener Platform",
+        alt: `${appConfig.title} - URL Shortener Platform`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nex URL - Professional URL Shortener",
-    description:
-      "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
+    title: `${appConfig.title} - Professional URL Shortener`,
+    description: appConfig.description,
     creator: "@gvrciary",
   },
   alternates: {

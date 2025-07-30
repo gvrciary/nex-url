@@ -1,10 +1,11 @@
+import { appConfig } from "@/config";
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "NexURL",
-    short_name: "NexURL",
-    description: "Transform long URLs into short and elegant links. Track clicks, analyze audience and manage your links professionally.",
+    name: appConfig.title,
+    short_name: appConfig.title,
+    description: appConfig.description,
     start_url: "/",
     display: "standalone",
     background_color: "#09090b",
