@@ -6,6 +6,9 @@
 ![Next.js](https://img.shields.io/badge/Next.js-111111?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-111111?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8)
 ![TypeScript](https://img.shields.io/badge/TypeScript-111111?style=for-the-badge&logo=typescript&logoColor=3178C6)
+![BetterAuth](https://img.shields.io/badge/Better%20Auth-111111?style=for-the-badge&logo=vercel&logoColor=white)
+![Drizzle](https://img.shields.io/badge/Drizzle-111111?style=for-the-badge&logo=drizzle&logoColor=00D8FF)
+![Turso](https://img.shields.io/badge/Turso-111111?style=for-the-badge&logo=planet&logoColor=white)
 
 </div>
 
@@ -44,7 +47,7 @@ A minimalist URL shortener focused on simplicity, speed, and clean links.
   # Database Configuration (Turso)
   TURSO_CONNECTION_URL=your_turso_database_url
   TURSO_AUTH_TOKEN=your_turso_auth_token
-  
+
   # Authentication
   BETTER_AUTH_SECRET=your_random_secret_key
   BETTER_AUTH_URL=http://localhost:3000
@@ -56,7 +59,7 @@ A minimalist URL shortener focused on simplicity, speed, and clean links.
 
 4. **Database Setup**
   Run database migrations:
-  
+
   ```bash
   npm run db:generate
   npm run db:migrate
