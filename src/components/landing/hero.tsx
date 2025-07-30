@@ -316,8 +316,7 @@ export default function Hero() {
           Shorten your Links
         </h1>
         <p className="my-6 max-w-xl text-center text-base leading-relaxed md:text-lg md:leading-relaxed text-gray-800 dark:text-gray-200">
-          Transform long URLs into short and elegant links. Track clicks,
-          analyze audience and manage your links professionally.
+          Clean and efficient link shortening tool. Just drop a long URL and get a sleek short one.
         </p>
         <div className="flex gap-4">
           <Button onClick={handleGetStarted} variant="primary">

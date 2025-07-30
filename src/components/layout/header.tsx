@@ -35,7 +35,7 @@ export default function Header() {
               <Image src="/icon.svg" alt="Nex URL" width={32} height={32} />
             </div>
             <span className="text-xl font-semibold tracking-wide text-black dark:text-white">
-              NexURL
+              nexurl
             </span>
           </Link>
         </div>
