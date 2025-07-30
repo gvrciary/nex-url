@@ -36,9 +36,9 @@ export const metadata: Metadata = {
     siteName: appConfig.title,
     images: [
       {
-        url: "/images/og-image.png",
-        width: 1024,
-        height: 1024,
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
         alt: `${appConfig.title} - URL Shortener Platform`,
       },
     ],
