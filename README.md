@@ -29,15 +29,15 @@ A minimalist URL shortener focused on simplicity, speed, and clean links.
 ## Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/gvrciary/nex-url.git
-   cd nex-url
-   ```
+  ```bash
+  git clone https://github.com/gvrciary/nex-url.git
+  cd nex-url
+  ```
 
 2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+  ```bash
+  npm install
+  ```
 
 3. **Environment Setup**
   Create a `.env.local` file in the root directory:
@@ -59,10 +59,10 @@ A minimalist URL shortener focused on simplicity, speed, and clean links.
 4. **Database Setup**
   Run database migrations:
 
-  ```bash
-  npm run db:generate
-  npm run db:migrate
-  ```
+    ```bash
+    npm run db:generate
+    npm run db:migrate
+    ```
 3. **Run in development mode**
   ```bash
   npm run dev
