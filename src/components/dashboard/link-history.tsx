@@ -27,7 +27,6 @@ export default function LinkHistory() {
 
     try {
       const exportData = links.map((link) => ({
-        id: link.id,
         originalUrl: link.originalUrl,
         shortUrl: `${appConfig.deployUrl}/${link.customAlias}`,
         alias: link.customAlias,
