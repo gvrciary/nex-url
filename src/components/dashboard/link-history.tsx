@@ -56,8 +56,7 @@ export default function LinkHistory() {
       linkElement.click();
 
       toast.success("Links exported successfully!");
-    } catch (error) {
-      console.error("Export failed:", error);
+    } catch {
       toast.error("Failed to export links");
     } finally {
       setIsExporting(false);
@@ -76,19 +75,20 @@ export default function LinkHistory() {
 
   const handleDeleteLink = async (linkId: string) => {
     setDeletingLinks((prev) => new Set([...prev, linkId]));
-
-    try {
-      await deleteLink(linkId);
-      toast.success("Link deleted successfully");
-    } catch {
-      toast.error("Failed to delete link");
-    } finally {
-      setDeletingLinks((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(linkId);
-        return newSet;
-      });
-    }
+    
+    toast.promise(deleteLink(linkId), {
+      loading: "Deleting link...",
+      success: () => {
+        setDeletingLinks((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(linkId);
+          return newSet;
+        });
+        
+        return "Link deleted successfully";
+      },
+      error: "Failed to delete link",
+    });
   };
 
   return (

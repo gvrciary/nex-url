@@ -3,9 +3,9 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthModalProvider } from "@/providers/auth-provider";
 import Header from "@/components/layout/header";
-import { Toaster } from "sonner";
 import { generalSansVariable } from "@/fonts";
 import { appConfig } from "@/config";
+import { ToasterComponent } from "@/components/ui/toast";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appConfig.deployUrl),
@@ -76,8 +76,8 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthModalProvider>
             <Header />
-            <main className="h-[calc(100vh-4rem)]">{children}</main>
-            <Toaster />
+            <main className="h-[calc(100dvh-4rem)]">{children}</main>
+            <ToasterComponent />
           </AuthModalProvider>
         </ThemeProvider>
       </body>
