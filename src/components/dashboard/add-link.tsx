@@ -19,7 +19,7 @@ interface AddLinkProps {
 
 export default function AddLink({ isOpen, onClose }: AddLinkProps) {
   const { addLink } = useLinksContext();
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState<string>("");
   const [shortenedUrl, setShortenedUrl] = useState<string>("");
   const [customAlias, setCustomAlias] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);

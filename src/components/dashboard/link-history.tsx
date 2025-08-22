@@ -1,6 +1,13 @@
 "use client";
 
-import { Calendar, Download, ExternalLink, Eye, Plus, Search } from "lucide-react";
+import {
+  Calendar,
+  Download,
+  ExternalLink,
+  Eye,
+  Plus,
+  Search,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useLinksContext } from "@/providers/links-provider";
@@ -20,49 +27,53 @@ export default function LinkHistory() {
   const [isAddLinkModalOpen, setIsAddLinkModalOpen] = useState<boolean>(false);
   const [isExporting, setIsExporting] = useState(false);
 
-  const handleExportLinks = async () => {
+  const handleExportLinks = () => {
     if (loading || links.length === 0) return;
 
-    setIsExporting(true);
+    toast.promise(
+      new Promise((resolve) => {
+        setIsExporting(true);
+        const exportData = links.map((link) => ({
+          originalUrl: link.originalUrl,
+          shortUrl: `${appConfig.deployUrl}/${link.customAlias}`,
+          alias: link.customAlias,
+          clicks: link.clicks,
+          createdAt: link.createdAt.toISOString(),
+        }));
 
-    try {
-      const exportData = links.map((link) => ({
-        originalUrl: link.originalUrl,
-        shortUrl: `${appConfig.deployUrl}/${link.customAlias}`,
-        alias: link.customAlias,
-        clicks: link.clicks,
-        createdAt: link.createdAt.toISOString(),
-      }));
+        const exportStats = {
+          totalLinks: links.length,
+          totalClicks: links.reduce((sum, link) => sum + link.clicks, 0),
+          exportedAt: new Date().toISOString(),
+        };
 
-      const exportStats = {
-        totalLinks: links.length,
-        totalClicks: links.reduce((sum, link) => sum + link.clicks, 0),
-        exportedAt: new Date().toISOString(),
-      };
+        const fullExport = {
+          metadata: exportStats,
+          links: exportData,
+        };
 
-      const fullExport = {
-        metadata: exportStats,
-        links: exportData,
-      };
+        const dataStr = JSON.stringify(fullExport, null, 2);
+        const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
 
-      const dataStr = JSON.stringify(fullExport, null, 2);
-      const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
+        const exportFileDefaultName = `nex-url-export-${new Date().toISOString().split("T")[0]}.json`;
 
-      const exportFileDefaultName = `nex-url-export-${new Date().toISOString().split("T")[0]}.json`;
-
-      const linkElement = document.createElement("a");
-      linkElement.setAttribute("href", dataUri);
-      linkElement.setAttribute("download", exportFileDefaultName);
-      linkElement.click();
-
-      toast.success("Links exported successfully!");
-    } catch {
-      toast.error("Failed to export links");
-    } finally {
-      setIsExporting(false);
-    }
+        const linkElement = document.createElement("a");
+        linkElement.setAttribute("href", dataUri);
+        linkElement.setAttribute("download", exportFileDefaultName);
+        linkElement.click();
+        resolve("Links exported successfully!");
+      }),
+      {
+        loading: "Exporting links...",
+        success: () => {
+          setIsExporting(false);
+          return "Links exported successfully!";
+        },
+        error: "Failed to export links",
+      },
+    );
   };
-
+  
   const filteredLinks = useMemo(() => {
     if (!searchTerm) return links;
 
@@ -75,7 +86,7 @@ export default function LinkHistory() {
 
   const handleDeleteLink = async (linkId: string) => {
     setDeletingLinks((prev) => new Set([...prev, linkId]));
-    
+
     toast.promise(deleteLink(linkId), {
       loading: "Deleting link...",
       success: () => {
@@ -84,7 +95,7 @@ export default function LinkHistory() {
           newSet.delete(linkId);
           return newSet;
         });
-        
+
         return "Link deleted successfully";
       },
       error: "Failed to delete link",
@@ -95,9 +106,7 @@ export default function LinkHistory() {
     <div className="h-full flex flex-col p-4">
       <div className="mb-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl mb-4 text-black dark:text-white">
-            My Links
-          </h2>
+          <h2 className="text-3xl mb-4 text-black dark:text-white">My Links</h2>
           <div className="flex items-center space-x-2">
             <Button
               onClick={() => setIsAddLinkModalOpen(true)}
