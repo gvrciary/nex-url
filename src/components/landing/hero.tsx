@@ -59,8 +59,9 @@ export default function Hero() {
   return (
     <motion.section className="relative h-full grid place-content-center overflow-hidden px-4 py-24 text-gray-200">
       <div className="relative z-10 flex flex-col items-center w-full px-4">
-        <h1 className="w-full max-w-xs sm:max-w-3xl break-words bg-gradient-to-br from-black to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-center text-2xl sm:text-5xl md:text-7xl font-medium leading-snug sm:leading-tight md:leading-tight text-transparent selection:text-black selection:bg-white dark:selection:text-white dark:selection:bg-black">
-          Shorten your Links
+        <h1 className="bg-gradient-to-br from-black to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-center text-5xl md:text-7xl font-medium text-transparent selection:text-black selection:bg-white dark:selection:text-white dark:selection:bg-black">
+          Shorten <br />
+          your Links
         </h1>
         <p className="my-6 w-full max-w-sm sm:max-w-xl text-center text-sm sm:text-base md:text-lg leading-relaxed text-gray-800 dark:text-gray-200">
           Clean and efficient link shortening tool. Just drop a long URL and get
