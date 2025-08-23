@@ -70,10 +70,11 @@ export default function LinkHistory() {
           return "Links exported successfully!";
         },
         error: "Failed to export links",
+        finally: () => setIsExporting(false)
       },
     );
   };
-  
+
   const filteredLinks = useMemo(() => {
     if (!searchTerm) return links;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Link, Loader2, Plus, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useLinksContext } from "@/providers/links-provider";
 import Button from "@/components/ui/button";
@@ -11,6 +11,7 @@ import Input from "@/components/ui/input";
 import Modal from "@/components/ui/modal";
 import { checkAliasAvailability } from "@/server/actions/user";
 import { appConfig } from "@/config";
+import { useDebouncedCallback } from "use-debounce";
 
 interface AddLinkProps {
   isOpen: boolean;
@@ -29,7 +30,9 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
   );
   const [aliasMessage, setAliasMessage] = useState<string>("");
 
-  useEffect(() => {
+  const checkAlias = useDebouncedCallback(async (alias: string) => {
+    setCustomAlias(alias);
+    
     if (!customAlias.trim()) {
       setAliasStatus(null);
       setAliasChecking(false);
@@ -41,41 +44,35 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
     setAliasStatus(null);
     setAliasMessage("");
 
-    const timer = setTimeout(async () => {
-      try {
-        const result = await checkAliasAvailability(customAlias);
-        setAliasStatus(result.available ? "available" : "taken");
-        setAliasMessage(result.message);
-      } catch {
-        setAliasStatus("taken");
-        setAliasMessage("Error checking alias availability");
-      } finally {
-        setAliasChecking(false);
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [customAlias]);
+    try {
+      const result = await checkAliasAvailability(customAlias);
+      setAliasStatus(result.available ? "available" : "taken");
+      setAliasMessage(result.message);
+    } catch {
+      setAliasStatus("taken");
+      setAliasMessage("Error checking alias availability");
+    } finally {
+      setAliasChecking(false);
+    }
+  }, 500);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (customAlias && aliasStatus === "taken") return;
 
     setIsLoading(true);
-
-    try {
-      const newLink = await addLink(url, customAlias || undefined);
-      setShortenedUrl(`${appConfig.deployUrl}/${newLink.customAlias}`);
-      toast.success("Link created successfully!");
-      setUrl("");
-      setCustomAlias("");
-    } catch (error) {
-      toast.error(
+    toast.promise(addLink(url, customAlias || undefined), {
+      loading: "Creating link...",
+      success: () => {
+        setShortenedUrl(`${appConfig.deployUrl}/${customAlias || "generated"}`);
+        setUrl("");
+        setCustomAlias("");
+        return "Link created successfully!";
+      },
+      error: (error) =>
         error instanceof Error ? error.message : "Failed to create link",
-      );
-    } finally {
-      setIsLoading(false);
-    }
+      finally: () => setIsLoading(false),
+    });
   };
 
   const resetForm = () => {
@@ -162,7 +159,7 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
                     type="text"
                     placeholder="my-custom-link"
                     value={customAlias}
-                    onChange={(e) => setCustomAlias(e.target.value)}
+                    onChange={(e) => checkAlias(e.target.value)}
                     className="pr-10"
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
