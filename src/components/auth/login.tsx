@@ -1,12 +1,12 @@
 "use client";
 
 import { Chrome, Github } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { authClient } from "@/auth-client";
 import Button from "@/components/ui/button";
 import Modal from "@/components/ui/modal";
+import { appConfig } from "@/config";
 
 interface LoginProps {
   onClose: () => void;
@@ -14,19 +14,18 @@ interface LoginProps {
 
 export default function Login({ onClose }: LoginProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const handleSocialLogin = async (provider: "github" | "google") => {
     setIsLoading(true);
 
     try {
       if (provider === "github") {
-        await authClient.signIn.social({ provider: "github" });
+        await authClient.signIn.social({ provider: "github", callbackURL: "/dashboard" });
       } else {
-        await authClient.signIn.social({ provider: "google" });
+        await authClient.signIn.social({ provider: "google", callbackURL: "/dashboard" });
       }
+
       onClose();
-      router.push("/dashboard");
     } catch {
       toast.error(`Failed to sign in with ${provider}. Please try again.`);
     } finally {
