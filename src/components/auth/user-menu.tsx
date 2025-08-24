@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { authClient } from "@/auth-client";
 
-export default function UserMenu() {
-  const { data: session } = authClient.useSession();
+export default function UserMenu({ name }: { name: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -26,15 +25,13 @@ export default function UserMenu() {
   const handleLogout = async () => {
     await authClient.signOut();
     setIsOpen(false);
-    router.push("/");
+    router.refresh();
   };
 
   const handleDashboard = () => {
     router.push("/dashboard");
     setIsOpen(false);
   };
-
-  if (!session?.user) return null;
 
   return (
     <div className="relative" ref={menuRef}>
@@ -45,12 +42,12 @@ export default function UserMenu() {
       >
         <Image
           src={"/images/profile.webp"}
-          alt={session.user.name || "User"}
+          alt={`${name} avatar`}
           className="w-8 h-8 rounded-full"
           width={32}
           height={32}
         />
-        <span>{session.user.name}</span>
+        <span>{name}</span>
       </button>
 
       {isOpen && (

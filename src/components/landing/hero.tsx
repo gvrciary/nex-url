@@ -3,9 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Github } from "lucide-react";
-import { authClient } from "@/auth-client";
 import { useRouter } from "next/navigation";
-import { useAuthModal } from "@/providers/auth-provider";
+import { useAuthModal } from "@/providers/auth-modal-provider";
 import { Particles } from "@/components/ui/particles";
 
 const Button = ({
@@ -43,9 +42,8 @@ const Button = ({
   );
 };
 
-export default function Hero() {
+export default function Hero({ session }: { session: boolean }) {
   const router = useRouter();
-  const { data: session } = authClient.useSession();
   const { openLogin } = useAuthModal();
 
   const handleGetStarted = () => {
@@ -71,15 +69,17 @@ export default function Hero() {
           <Button onClick={handleGetStarted} variant="primary">
             Get Started
           </Button>
-          <Button
-            onClick={() =>
-              window.open("https://github.com/gvrciary/nex-url", "_blank")
-            }
-            variant="outline"
+
+          <a
+            href="https://github.com/gvrciary/nex-url"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <Github className="h-4 w-4 mr-2" />
-            View Repository
-          </Button>
+            <Button variant="outline">
+              <Github className="h-4 w-4 mr-2" />
+              View Repository
+            </Button>
+          </a>
         </div>
       </div>
 

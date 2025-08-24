@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { authClient } from "@/auth-client";
 import Button from "@/components/ui/button";
 import Modal from "@/components/ui/modal";
+import { appConfig } from "@/config";
 
 interface LoginProps {
   onClose: () => void;
@@ -21,7 +22,7 @@ export default function Login({ onClose }: LoginProps) {
 
     try {
       if (provider === "github") {
-        await authClient.signIn.social({ provider: "github" });
+        await authClient.signIn.social({ provider: "github", callbackURL: `${appConfig.deployUrl}/dashboard` });
       } else {
         await authClient.signIn.social({ provider: "google" });
       }

@@ -1,31 +1,11 @@
-"use client";
-
-import { Github, Moon, Sun } from "lucide-react";
+import { Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import UserMenu from "@/components/auth/user-menu";
-import { useAuthModal } from "@/providers/auth-provider";
 import Button from "@/components/ui/button";
-import { authClient } from "@/auth-client";
+import ToggleMode from "../ui/toggle-mode";
+import UserButton from "../auth/user-button";
 
 export default function Header() {
-  const { theme, setTheme } = useTheme();
-  const { data: session } = authClient.useSession();
-  const { openLogin } = useAuthModal();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
-  if (!mounted) return null;
-
   return (
     <header className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
       <div className="flex justify-between items-center h-16">
@@ -41,7 +21,11 @@ export default function Header() {
         </div>
 
         <div className="flex items-center space-x-4">
-          <a href="https://github.com/gvrciary/nex-url" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://github.com/gvrciary/nex-url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Button
               variant="ghost"
               size="sm"
@@ -49,22 +33,8 @@ export default function Header() {
               <Github className="h-4 w-4" />
             </Button>
           </a>
-
-          <Button variant="ghost" size="sm" onClick={toggleTheme}>
-            {theme === "dark" ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
-          </Button>
-
-          {session ? (
-            <UserMenu />
-          ) : (
-            <Button variant="outline" onClick={openLogin}>
-              Sign In
-            </Button>
-          )}
+          <ToggleMode />
+          <UserButton />
         </div>
       </div>
     </header>

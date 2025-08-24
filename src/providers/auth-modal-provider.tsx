@@ -5,11 +5,9 @@ import {
   type ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from "react";
 import Login from "@/components/auth/login";
-import { authClient } from "@/auth-client";
 
 interface AuthModalContextType {
   openLogin: () => void;
@@ -21,7 +19,6 @@ export const AuthModalContext = createContext<AuthModalContextType | undefined>(
 );
 
 export function AuthModalProvider({ children }: { children: ReactNode }) {
-  const { data: session } = authClient.useSession();
   const [showLogin, setShowLogin] = useState(false);
 
   const openLogin = () => {
@@ -31,12 +28,6 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
   const closeModal = useCallback(() => {
     setShowLogin(false);
   }, [])
-
-  useEffect(() => {
-    if (session) {
-      closeModal();
-    }
-  }, [session, closeModal]);
 
   return (
     <AuthModalContext.Provider value={{ openLogin, closeModal }}>

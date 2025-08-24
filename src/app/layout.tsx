@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { AuthModalProvider } from "@/providers/auth-provider";
+import { AuthModalProvider } from "@/providers/auth-modal-provider";
 import Header from "@/components/layout/header";
 import { generalSansVariable } from "@/fonts";
 import { appConfig } from "@/config";
