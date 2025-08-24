@@ -25,8 +25,9 @@ export const Particles: React.FC<ParticlesProps> = ({
   vy = 0,
 }) => {
   const { theme } = useTheme();
-  const [particleColor, setParticleColor] =
-    useState<string>("#ffffff");
+  const [particleColor, setParticleColor] = useState<string>(
+    theme === "dark" ? "#ffffff" : "#000000"
+  );
   
   useEffect(() => {
     setParticleColor(() => {
