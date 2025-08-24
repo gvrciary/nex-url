@@ -14,7 +14,7 @@ export default function Header() {
             <div className="w-8 h-8 rounded-lg flex items-center justify-center">
               <Image src="/icon.svg" alt="Nex URL" width={32} height={32} />
             </div>
-            <span className="text-xl font-semibold tracking-wide text-black dark:text-white">
+            <span className="text-xl sm:text-lg tracking-widest text-black dark:text-white">
               nexurl
             </span>
           </Link>

@@ -22,7 +22,7 @@ export const Particles: React.FC<ParticlesProps> = ({
   size = 0.4,
   refresh = false,
   vx = 0,
-  vy = 0,
+  vy = -0.200,
 }) => {
   const { resolvedTheme } = useTheme();
   const [particleColor, setParticleColor] = useState<string>(
@@ -150,16 +150,16 @@ export const Particles: React.FC<ParticlesProps> = ({
     }
   };
  
-  const circleParams = (): Circle => {
+  const circleParams = (fromBottom = false): Circle => {
     const x = Math.floor(Math.random() * canvasSize.current.w);
-    const y = Math.floor(Math.random() * canvasSize.current.h);
+    const y = fromBottom ? canvasSize.current.h + 10 : Math.floor(Math.random() * canvasSize.current.h);
     const translateX = 0;
     const translateY = 0;
     const pSize = Math.floor(Math.random() * 2) + size;
     const alpha = 0;
     const targetAlpha = parseFloat((Math.random() * 0.6 + 0.1).toFixed(1));
-    const dx = (Math.random() - 0.5) * 0.1;
-    const dy = (Math.random() - 0.5) * 0.1;
+    const dx = (Math.random() - 0.5) * 0.05;
+    const dy = -Math.random() * 0.3 - 0.2;
     const magnetism = 0.1 + Math.random() * 4;
     return {
       x,
@@ -260,14 +260,25 @@ export const Particles: React.FC<ParticlesProps> = ({
       if (
         circle.x < -circle.size ||
         circle.x > canvasSize.current.w + circle.size ||
-        circle.y < -circle.size ||
-        circle.y > canvasSize.current.h + circle.size
+        circle.y < -circle.size - 50
       ) {
         circles.current.splice(i, 1);
-        const newCircle = circleParams();
+        const newCircle = circleParams(true);
+        drawCircle(newCircle);
+      }
+      
+      if (circle.y > canvasSize.current.h + circle.size + 50) {
+        circles.current.splice(i, 1);
+        const newCircle = circleParams(true);
         drawCircle(newCircle);
       }
     });
+    
+    if (Math.random() < 0.02 && circles.current.length < quantity * 1.2) {
+      const newCircle = circleParams(true);
+      drawCircle(newCircle);
+    }
+    
     window.requestAnimationFrame(animate);
   };
  
