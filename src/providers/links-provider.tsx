@@ -2,14 +2,14 @@
 
 import { createContext, type ReactNode, useContext } from "react";
 import { useLinks } from "@/hooks/useLinks";
-import type { Link } from "@/types/link";
+import type { LinkResponse } from "@/types/link";
 
 interface LinksContextType {
-  links: Link[];
+  links: LinkResponse[];
   loading: boolean;
   error: string;
   deleteLink: (linkId: string) => Promise<void>;
-  addLink: (originalUrl: string, customAlias?: string) => Promise<Link>;
+  addLink: (originalUrl: string, customAlias?: string) => Promise<LinkResponse>;
   refetch: () => Promise<void>;
 }
 
