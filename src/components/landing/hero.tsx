@@ -20,7 +20,7 @@ const Button = ({
     return (
       <button
         onClick={onClick}
-        className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-tr from-zinc-300/20 via-gray-400/20 to-transparent dark:from-zinc-300/5 dark:via-gray-400/5 border-[2px] border-black/20 dark:border-white/20 px-10 text-sm font-medium whitespace-nowrap transition-all duration-300 outline-none hover:bg-gradient-to-tr hover:from-zinc-300/30 hover:via-gray-400/30 hover:to-transparent dark:hover:from-zinc-300/10 dark:hover:via-gray-400/20 text-black dark:text-white"
+        className="inline-flex w-full h-14 cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-tr from-zinc-300/20 via-gray-400/20 to-transparent dark:from-zinc-300/5 dark:via-gray-400/5 border-[2px] border-black/20 dark:border-white/20 px-10 text-sm font-medium whitespace-nowrap transition-all duration-300 outline-none hover:bg-gradient-to-tr hover:from-zinc-300/30 hover:via-gray-400/30 hover:to-transparent dark:hover:from-zinc-300/10 dark:hover:via-gray-400/20 text-black dark:text-white"
       >
         {children}
       </button>
