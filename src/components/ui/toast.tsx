@@ -11,7 +11,6 @@ export const ToasterComponent = () => {
       position="bottom-right"
       theme={theme === "dark" ? "dark" : "light"}
       toastOptions={{
-        unstyled: true,
         classNames: {
           toast: `
                   flex gap-2 p-4 rounded-xl text-sm border border-gray-200 dark:border-white/10

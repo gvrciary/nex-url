@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
 import { type NextRequest, NextResponse } from "next/server";
 import { ROUTES } from "@/constants/route";
-import { link } from "@/server/schema/schema";
+import { link } from "@/server/schemas/db";
 import { isValidAlias } from "@/utils/validations";
 
 const db = drizzle({

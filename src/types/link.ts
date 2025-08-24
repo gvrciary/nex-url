@@ -1,11 +1,11 @@
-export interface Link {
+export interface LinkResponse {
   id: string;
   originalUrl: string;
   customAlias: string;
   clicks: number;
   createdAt: Date;
   updatedAt: Date;
-  userId: string;
+  url: string;
 }
 
 export interface CreateLinkRequest {

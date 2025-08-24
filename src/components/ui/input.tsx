@@ -1,5 +1,5 @@
 import type { InputHTMLAttributes, ReactNode } from "react";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: ReactNode;

@@ -4,10 +4,10 @@ import {
   deleteLink as deleteUserLink,
   getUserLinks,
 } from "@/server/actions/user";
-import type { Link } from "@/types/link";
+import type { LinkResponse } from "@/types/link";
 
 export function useLinks() {
-  const [links, setLinks] = useState<Link[]>([]);
+  const [links, setLinks] = useState<LinkResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 

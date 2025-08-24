@@ -4,10 +4,11 @@ import { desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
 import { db } from "@/server/db";
-import { link } from "@/server/schema/schema";
+import { link } from "@/server/schemas/db";
 import { isValidUrl, validateAlias } from "@/utils/validations";
 import type { AliasAvailabilityResult } from "@/types/link";
 import { getSession } from "./auth";
+import { appConfig } from "@/config";
 
 export async function createLink(originalUrl: string, customAlias?: string) {
   const session = await getSession();
@@ -41,10 +42,21 @@ export async function createLink(originalUrl: string, customAlias?: string) {
       customAlias: alias,
       userId: session.user.id,
     })
-    .returning();
+    .returning({
+      id: link.id,
+      originalUrl: link.originalUrl,
+      customAlias: link.customAlias,
+      clicks: link.clicks,
+      createdAt: link.createdAt,
+      updatedAt: link.updatedAt,
+    });
 
   revalidatePath("/dashboard");
-  return newLink;
+
+  return {
+    ...newLink,
+    url: `${appConfig.deployUrl}/${newLink.customAlias}`,
+  };
 }
 
 export async function getUserLinks() {
@@ -55,7 +67,15 @@ export async function getUserLinks() {
   }
 
   const userLinks = await db
-    .select()
+    .select({
+      id: link.id,
+      originalUrl: link.originalUrl,
+      customAlias: link.customAlias,
+      createdAt: link.createdAt,
+      updatedAt: link.updatedAt,
+      clicks: link.clicks,
+      url: link.customAlias,
+    })
     .from(link)
     .where(eq(link.userId, session.user.id))
     .orderBy(desc(link.createdAt));
@@ -133,5 +153,5 @@ export async function incrementLinkClicks(alias: string) {
     .where(eq(link.customAlias, alias))
     .returning();
 
-  return updatedLink;
+  return { status: "success", clicks: updatedLink.clicks };
 }
