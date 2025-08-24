@@ -24,20 +24,20 @@ export const Particles: React.FC<ParticlesProps> = ({
   vx = 0,
   vy = 0,
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [particleColor, setParticleColor] = useState<string>(
-    theme === "dark" ? "#ffffff" : "#000000"
+    resolvedTheme === "dark" ? "#ffffff" : "#000000"
   );
   
   useEffect(() => {
     setParticleColor(() => {
-      if (theme === "dark") {
+      if (resolvedTheme === "dark") {
         return "#ffffff";
       } else {
         return "#000000";
       }
     })
-  }, [theme]);
+  }, [resolvedTheme]);
  
   interface MousePosition {
     x: number;

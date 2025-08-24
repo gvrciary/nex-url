@@ -6,7 +6,7 @@ import Button from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 export default function ToggleMode() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -14,14 +14,14 @@ export default function ToggleMode() {
   }, []);
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
   
   if (!mounted) return null;
   
   return (
     <Button variant="ghost" size="sm" onClick={toggleTheme}>
-      {theme === "dark" ? (
+      {resolvedTheme === "dark" ? (
         <Sun className="h-4 w-4" />
       ) : (
         <Moon className="h-4 w-4" />
