@@ -30,7 +30,7 @@ A minimalist URL shortener focused on simplicity, speed, and clean links.
 
 1. **Clone the repository**
   ```bash
-  git clone https://github.com/gvrciary/nex-url.git
+  git clone https://github.com/alexisgvrcia/nex-url.git
   cd nex-url
   ```
 
@@ -70,4 +70,4 @@ A minimalist URL shortener focused on simplicity, speed, and clean links.
 
 ## License
 
-[![LICENSE - MIT by gvrciary](https://img.shields.io/badge/LICENSE-MIT-111111?style=for-the-badge&labelColor=111111&logo=open-source-initiative&logoColor=white)](LICENSE)
+[![LICENSE - MIT by alexisgvrcia](https://img.shields.io/badge/LICENSE-MIT-111111?style=for-the-badge&labelColor=111111&logo=open-source-initiative&logoColor=white)](LICENSE)

@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     default: `${appConfig.title} - Professional URL Shortener`,
     template: `%s | ${appConfig.title}`,
   },
-  creator: "gvrciary",
-  authors: [{ name: "Alexis Garcia", url: "gvrciary.dev" }],
+  creator: "alexisgvrcia",
+  authors: [{ name: "Alexis Garcia", url: "alexisgvrcia.dev" }],
   description: appConfig.description,
   manifest: "/manifest.json",
   icons: [
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${appConfig.title} - Professional URL Shortener`,
     description: appConfig.description,
-    creator: "@gvrciary",
+    creator: "@alexisgvrcia",
   },
   alternates: {
     canonical: "/",
@@ -76,7 +76,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthModalProvider>
             <Header />
-            <main className="h-[calc(100dvh-4rem)]">{children}</main>
+            <main className="h-[calc(svh-4rem)]">{children}</main>
             <ToasterComponent />
           </AuthModalProvider>
         </ThemeProvider>

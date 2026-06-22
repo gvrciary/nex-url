@@ -108,7 +108,7 @@ export default function Hero({ session }: { session: boolean }) {
           </Button>
 
           <a
-            href="https://github.com/gvrciary/nex-url"
+            href="https://github.com/alexisgvrcia/nex-url"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full"

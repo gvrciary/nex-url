@@ -22,7 +22,7 @@ export default function Header() {
 
         <div className="flex items-center space-x-4">
           <a
-            href="https://github.com/gvrciary/nex-url"
+            href="https://github.com/alexisgvrcia/nex-url"
             target="_blank"
             rel="noopener noreferrer"
           >

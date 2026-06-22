@@ -36,17 +36,16 @@ const ditherMaterial = new THREE.ShaderMaterial({
     uniform vec2 uResolution;
     varying vec2 vUv;
 
-    // --- Simplex 2D noise (Ashima Arts) ---
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec3 permute(vec3 x) { return mod289(((x * 34.0) + 1.0) * x); }
 
     float snoise(vec2 v) {
       const vec4 C = vec4(
-        0.211324865405187,   // (3.0-sqrt(3.0))/6.0
-        0.366025403784439,   // 0.5*(sqrt(3.0)-1.0)
-       -0.577350269189626,   // -1.0 + 2.0 * C.x
-        0.024390243902439    // 1.0 / 41.0
+        0.211324865405187,
+        0.366025403784439,
+       -0.577350269189626,
+        0.024390243902439
       );
       vec2 i = floor(v + dot(v, C.yy));
       vec2 x0 = v - i + dot(i, C.xx);
@@ -69,12 +68,10 @@ const ditherMaterial = new THREE.ShaderMaterial({
       return 130.0 * dot(m, g);
     }
 
-    // --- Fractional Brownian Motion ---
     float fbm(vec2 p, float t) {
       float value = 0.0;
       float amplitude = 0.5;
       float frequency = 1.0;
-      // 5 octaves for rich detail
       for (int i = 0; i < 5; i++) {
         value += amplitude * snoise(p * frequency + t);
         frequency *= 2.1;
@@ -83,7 +80,6 @@ const ditherMaterial = new THREE.ShaderMaterial({
       return value;
     }
 
-    // --- Bayer 4x4 dither matrix ---
     float bayer4(vec2 cell) {
       vec2 p = mod(cell, 4.0);
       float index = p.x + p.y * 4.0;
@@ -117,29 +113,19 @@ const ditherMaterial = new THREE.ShaderMaterial({
 
       float field = 0.0;
 
-      // Layer 1: Large sweeping diagonal waves
       float wave1 = fbm(p * 2.2 + vec2(time * 0.15, time * 0.08), time * 0.06);
-      
-      // Layer 2: Medium flowing shapes moving in a different direction
       float wave2 = fbm(p * 3.5 + vec2(-time * 0.12, time * 0.18), time * 0.09 + 10.0);
-      
-      // Layer 3: Fine detail ripples
       float wave3 = fbm(p * 5.8 + vec2(time * 0.22, -time * 0.1), time * 0.12 + 25.0);
-      
-      // Layer 4: Very large slow-moving shapes for macro structure
       float wave4 = snoise(p * 1.2 + vec2(time * 0.05, time * 0.03));
 
-      // Combine layers with different weights
       field = wave1 * 0.4 + wave2 * 0.3 + wave3 * 0.15 + wave4 * 0.25;
 
-      // Add sharp diagonal wave bands like in the reference
       float diag1 = sin((p.x + p.y) * 4.0 + time * 0.3) * 0.3;
       float diag2 = sin((p.x - p.y * 0.7) * 3.2 - time * 0.2) * 0.25;
       float diag3 = sin((p.x * 0.5 + p.y) * 5.5 + time * 0.15) * 0.15;
       
       field += diag1 + diag2 + diag3;
 
-      // Edge density: reference shows denser dots near edges (top, bottom, corners)
       float edgeTop = smoothstep(0.3, 0.0, uv.y) * 0.5;
       float edgeBottom = smoothstep(0.7, 1.0, uv.y) * 0.4;
       float edgeLeft = smoothstep(0.2, 0.0, uv.x) * 0.35;
@@ -147,7 +133,6 @@ const ditherMaterial = new THREE.ShaderMaterial({
       
       field += edgeTop + edgeBottom + edgeLeft + edgeRight;
 
-      // Normalize to 0-1 range with contrast
       field = field * 0.5 + 0.5;
       field = smoothstep(0.25, 0.85, field);
 
@@ -159,22 +144,18 @@ const ditherMaterial = new THREE.ShaderMaterial({
       vec2 cell = floor(pixelUv);
       vec2 local = fract(pixelUv) - 0.5;
       
-      // Square dot shape (slightly smaller gap for crisp look)
       float square = step(max(abs(local.x), abs(local.y)), 0.33);
       
       vec2 sampleUv = (cell + 0.5) * uCellSize / uResolution;
       float time = uTime;
       float field = waveField(sampleUv, time);
       
-      // Bayer dithering threshold
       float threshold = bayer4(cell);
       float dithered = step(threshold, field);
       
-      // Sparse twinkling background dots
       float noise = hash12(cell + floor(time * 0.4));
       float sparse = step(0.993, noise) * 0.15;
       
-      // Combined: full opacity dithered dots + faint sparse dots
       float alpha = max(dithered * mix(0.35, 1.0, field), sparse) * square * uOpacity;
       
       if (alpha <= 0.001) discard;

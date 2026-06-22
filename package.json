@@ -1,7 +1,7 @@
 {
   "name": "nex-url",
   "version": "0.1.0",
-  "author": "@gvrciary",
+  "author": "@alexisgvrcia",
   "description": "Transform long URLs into short and elegant links",
   "license": "MIT",
   "private": true,
