@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthModalProvider } from "@/providers/auth-modal-provider";
 import Header from "@/components/layout/header";
+import MainFrame from "@/components/layout/main-frame";
 import { generalSansVariable } from "@/fonts";
 import { appConfig } from "@/config";
 import { ToasterComponent } from "@/components/ui/toast";
@@ -76,7 +77,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthModalProvider>
             <Header />
-            <main className="h-[calc(svh-4rem)]">{children}</main>
+            <MainFrame>{children}</MainFrame>
             <ToasterComponent />
           </AuthModalProvider>
         </ThemeProvider>

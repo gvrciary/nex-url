@@ -20,7 +20,12 @@ export default function ToggleMode() {
   if (!mounted) return null;
   
   return (
-    <Button variant="ghost" size="sm" onClick={toggleTheme}>
+    <Button
+      data-header-icon="true"
+      variant="ghost"
+      size="sm"
+      onClick={toggleTheme}
+    >
       {resolvedTheme === "dark" ? (
         <Sun className="h-4 w-4" />
       ) : (

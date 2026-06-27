@@ -4,9 +4,5 @@ import { getSession } from "@/server/actions/auth";
 export default async function Home() {
   const session = await getSession();
 
-  return (
-    <>
-      <Hero session={!!session?.user}  />
-    </>
-  );
+  return <Hero session={!!session?.user} />;
 }

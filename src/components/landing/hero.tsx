@@ -55,7 +55,7 @@ export default function Hero({ session }: { session: boolean }) {
   };
 
   return (
-    <motion.section className="relative h-full grid place-content-center overflow-hidden px-4 py-24 text-gray-200">
+    <motion.section className="relative min-h-svh grid place-content-center overflow-hidden px-4 py-24 text-gray-200">
       <div className="relative z-10 flex flex-col items-center w-full px-4">
         <motion.h1
           className="text-center text-5xl md:text-7xl font-medium"
@@ -72,7 +72,7 @@ export default function Hero({ session }: { session: boolean }) {
           {["Shorten", "Your", "Links"].map((word, i) => (
             <React.Fragment key={i}>
               <motion.span
-                className="inline-block bg-linear-to-br from-black to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent pb-1"
+                className="inline-block pb-1 text-black dark:text-white"
                 variants={{
                   hidden: { opacity: 0, y: 10, filter: "blur(10px)" },
                   visible: {
