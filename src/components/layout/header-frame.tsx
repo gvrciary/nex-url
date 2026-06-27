@@ -11,7 +11,7 @@ export default function HeaderFrame({ children }: { children: ReactNode }) {
       className={`relative z-20 w-full ${
         isHome
           ? "-mb-16 bg-transparent [&_button[data-header-icon='true']]:hover:bg-transparent [&_button[data-header-icon='true']]:active:bg-transparent [&_button[data-header-icon='true']]:focus:bg-transparent"
-          : "bg-[var(--background)]"
+          : "`bg-(--background)"
       }`}
     >
       {children}

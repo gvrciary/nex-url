@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTheme } from "next-themes";
@@ -165,13 +165,22 @@ const ditherMaterial = new THREE.ShaderMaterial({
   `,
 });
 
+const Primitive = "primitive" as unknown as React.ComponentType<{
+  object: THREE.Object3D;
+}>;
+
 const DitherPlane: React.FC<DitherConfig> = ({
   color = "#888888",
   opacity = 0.4,
   cellSize = 12,
 }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
   const material = useMemo(() => ditherMaterial.clone(), []);
+  const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
+  const mesh = useMemo(() => {
+    const nextMesh = new THREE.Mesh(geometry, material);
+    nextMesh.frustumCulled = false;
+    return nextMesh;
+  }, [geometry, material]);
   const { size } = useThree();
 
   useEffect(() => {
@@ -183,9 +192,11 @@ const DitherPlane: React.FC<DitherConfig> = ({
 
   useEffect(() => {
     return () => {
+      mesh.removeFromParent();
+      geometry.dispose();
       material.dispose();
     };
-  }, [material]);
+  }, [geometry, material, mesh]);
 
   useFrame((state) => {
     material.uniforms.uTime.value = state.clock.elapsedTime;
@@ -193,9 +204,7 @@ const DitherPlane: React.FC<DitherConfig> = ({
   });
 
   return (
-    <mesh ref={meshRef} material={material} frustumCulled={false}>
-      <planeGeometry args={[2, 2]} />
-    </mesh>
+    <Primitive object={mesh} />
   );
 };
 

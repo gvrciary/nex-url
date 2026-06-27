@@ -112,6 +112,12 @@ export async function deleteLink(linkId: string) {
 export async function checkAliasAvailability(
   alias: string,
 ): Promise<AliasAvailabilityResult> {
+  const session = await getSession();
+
+  if (!session?.user) {
+    throw new Error("Not authenticated");
+  }
+
   const validation = validateAlias(alias);
 
   if (!validation.valid) {
@@ -131,27 +137,4 @@ export async function checkAliasAvailability(
         ? "Alias is available"
         : "Alias is already taken",
   };
-}
-
-export async function incrementLinkClicks(alias: string) {
-  const [currentLink] = await db
-    .select()
-    .from(link)
-    .where(eq(link.customAlias, alias))
-    .limit(1);
-
-  if (!currentLink) {
-    throw new Error("Link not found");
-  }
-
-  const [updatedLink] = await db
-    .update(link)
-    .set({
-      clicks: currentLink.clicks + 1,
-      updatedAt: new Date(),
-    })
-    .where(eq(link.customAlias, alias))
-    .returning();
-
-  return { status: "success", clicks: updatedLink.clicks };
 }

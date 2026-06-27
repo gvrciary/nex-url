@@ -17,10 +17,11 @@ const LinksContext = createContext<LinksContextType | undefined>(undefined);
 
 interface LinksProviderProps {
   children: ReactNode;
+  initialLinks: LinkResponse[];
 }
 
-export function LinksProvider({ children }: LinksProviderProps) {
-  const linksData = useLinks();
+export function LinksProvider({ children, initialLinks }: LinksProviderProps) {
+  const linksData = useLinks(initialLinks);
 
   return (
     <LinksContext.Provider value={linksData}>{children}</LinksContext.Provider>

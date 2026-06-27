@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   createLink,
   deleteLink as deleteUserLink,
@@ -6,22 +6,12 @@ import {
 } from "@/server/actions/user";
 import type { LinkResponse } from "@/types/link";
 
-export function useLinks() {
-  const [links, setLinks] = useState<LinkResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+export function useLinks(initialLinks: LinkResponse[]) {
+  const [links, setLinks] = useState<LinkResponse[]>(initialLinks);
 
   const fetchLinks = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const userLinks = await getUserLinks();
-      setLinks(userLinks);
-    } catch {
-      setError("Failed to load links");
-    } finally {
-      setLoading(false);
-    }
+    const userLinks = await getUserLinks();
+    setLinks(userLinks);
   }, []);
 
   const deleteLink = useCallback(async (linkId: string) => {
@@ -38,14 +28,10 @@ export function useLinks() {
     [],
   );
 
-  useEffect(() => {
-    fetchLinks();
-  }, [fetchLinks]);
-
   return {
     links,
-    loading,
-    error,
+    loading: false,
+    error: "",
     deleteLink,
     addLink,
     refetch: fetchLinks,
