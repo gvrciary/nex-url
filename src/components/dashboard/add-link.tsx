@@ -5,7 +5,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useLinksContext } from "@/providers/links-provider";
 import Button from "@/components/ui/button";
-import Card from "@/components/ui/card";
 import CopyButton from "@/components/ui/copy-button";
 import Input from "@/components/ui/input";
 import Modal from "@/components/ui/modal";
@@ -133,7 +132,7 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
           </p>
         </div>
 
-        <Card className="p-6">
+        <div className="p-6">
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-4">
               <div>
@@ -227,7 +226,7 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
               </div>
             </div>
           )}
-        </Card>
+        </div>
       </div>
     </Modal>
   );
