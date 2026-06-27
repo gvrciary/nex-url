@@ -132,101 +132,99 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
           </p>
         </div>
 
-        <div className="p-6">
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-4">
-              <div>
-                <label
-                  htmlFor=""
-                  className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
-                >
-                  URL to shorten *
-                </label>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor=""
+                className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
+              >
+                URL to shorten *
+              </label>
+              <Input
+                placeholder="https://example.com/very-long-link"
+                {...form.register("url")}
+                icon={<Link className="h-4 w-4" />}
+              />
+              {form.formState.errors.url && (
+                <p className="text-red-600 text-xs mt-1">
+                  {form.formState.errors.url.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor=""
+                className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
+              >
+                Custom alias (optional)
+              </label>
+              <div className="relative">
                 <Input
-                  placeholder="https://example.com/very-long-link"
-                  {...form.register("url")}
-                  icon={<Link className="h-4 w-4" />}
+                  type="text"
+                  placeholder="my-custom-alias"
+                  {...form.register("customAlias", {
+                    onChange: () => checkAlias(),
+                  })}
+                  className="pr-10"
                 />
-                {form.formState.errors.url && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  {getAliasIcon()}
+                </div>
+              </div>
+              <div className="flex items-center mt-2">
+                {form.formState.errors.customAlias && (
                   <p className="text-red-600 text-xs mt-1">
-                    {form.formState.errors.url.message}
+                    {form.formState.errors.customAlias.message}
                   </p>
                 )}
               </div>
+            </div>
+          </div>
 
-              <div>
-                <label
-                  htmlFor=""
-                  className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
-                >
-                  Custom alias (optional)
-                </label>
-                <div className="relative">
-                  <Input
-                    type="text"
-                    placeholder="my-custom-alias"
-                    {...form.register("customAlias", {
-                      onChange: () => checkAlias(),
-                    })}
-                    className="pr-10"
+          <div className="flex gap-4">
+            <Button
+              type="submit"
+              disabled={
+                !url ||
+                isLoading ||
+                aliasStatus.checking ||
+                (!aliasStatus.available &&
+                  !aliasStatus.checking &&
+                  !!customAlias)
+              }
+              className="flex-1"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              {isLoading ? "Creating..." : "Create Link"}
+            </Button>
+          </div>
+        </form>
+
+        {shortenedUrl && (
+          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-white/10">
+            <div className="bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-sm text-black/70 dark:text-white/70 mb-1">
+                    Your shortened link:
+                  </p>
+                  <p className="text-lg font-normal text-black dark:text-white break-all">
+                    {shortenedUrl}
+                  </p>
+                </div>
+                <div className="ml-4">
+                  <CopyButton
+                    textToCopy={shortenedUrl}
+                    size="md"
+                    className="px-4 py-2"
                   />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    {getAliasIcon()}
-                  </div>
-                </div>
-                <div className="flex items-center mt-2">
-                  {form.formState.errors.customAlias && (
-                    <p className="text-red-600 text-xs mt-1">
-                      {form.formState.errors.customAlias.message}
-                    </p>
-                  )}
                 </div>
               </div>
             </div>
-
-            <div className="flex gap-4">
-              <Button
-                type="submit"
-                disabled={
-                  !url ||
-                  isLoading ||
-                  aliasStatus.checking ||
-                  (!aliasStatus.available &&
-                    !aliasStatus.checking &&
-                    !!customAlias)
-                }
-                className="flex-1"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                {isLoading ? "Creating..." : "Create Link"}
-              </Button>
-            </div>
-          </form>
-
-          {shortenedUrl && (
-            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-white/10">
-              <div className="bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <p className="text-sm text-black/70 dark:text-white/70 mb-1">
-                      Your shortened link:
-                    </p>
-                    <p className="text-lg font-normal text-black dark:text-white break-all">
-                      {shortenedUrl}
-                    </p>
-                  </div>
-                  <div className="ml-4">
-                    <CopyButton
-                      textToCopy={shortenedUrl}
-                      size="md"
-                      className="px-4 py-2"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </Modal>
   );
