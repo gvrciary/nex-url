@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, type ReactNode, useContext } from "react";
+import { createContext, type ReactNode, use } from "react";
 import { useLinks } from "@/hooks/useLinks";
 import type { LinkResponse } from "@/types/link";
 
@@ -29,7 +29,7 @@ export function LinksProvider({ children, initialLinks }: LinksProviderProps) {
 }
 
 export function useLinksContext() {
-  const context = useContext(LinksContext);
+  const context = use(LinksContext);
   if (context === undefined) {
     throw new Error("useLinksContext must be used within a LinksProvider");
   }

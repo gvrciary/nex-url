@@ -5,6 +5,13 @@ import { useEffect, useEffectEvent, type ReactNode } from "react";
 import { cn } from "@/utils";
 import Button from "./button";
 
+const MODAL_SIZES = {
+  sm: "max-w-md",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+  xl: "max-w-4xl",
+} as const;
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -44,13 +51,6 @@ export default function Modal({
 
   if (!isOpen) return null;
 
-  const sizes = {
-    sm: "max-w-md",
-    md: "max-w-lg",
-    lg: "max-w-2xl",
-    xl: "max-w-4xl",
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <button
@@ -63,7 +63,7 @@ export default function Modal({
       <div
         className={cn(
           "relative bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg shadow-lg w-full mx-4",
-          sizes[size],
+          MODAL_SIZES[size],
           className
         )}
       >

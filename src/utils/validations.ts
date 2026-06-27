@@ -60,7 +60,7 @@ export function validateAlias(alias: string): {
   return { valid: true, message: "Valid alias" };
 }
 
-export function validateUrl(url: string): { valid: boolean; message: string } {
+function validateUrl(url: string): { valid: boolean; message: string } {
   if (!url.trim()) {
     return { valid: false, message: "URL cannot be empty" };
   }

@@ -4,7 +4,8 @@ import {
   createContext,
   type ReactNode,
   useCallback,
-  useContext,
+  use,
+  useMemo,
   useState,
 } from "react";
 import Login from "@/components/auth/login";
@@ -14,23 +15,28 @@ interface AuthModalContextType {
   closeModal: () => void;
 }
 
-export const AuthModalContext = createContext<AuthModalContextType | undefined>(
+const AuthModalContext = createContext<AuthModalContextType | undefined>(
   undefined,
 );
 
 export function AuthModalProvider({ children }: { children: ReactNode }) {
   const [showLogin, setShowLogin] = useState(false);
 
-  const openLogin = () => {
+  const openLogin = useCallback(() => {
     setShowLogin(true);
-  };
+  }, []);
 
   const closeModal = useCallback(() => {
     setShowLogin(false);
-  }, [])
+  }, []);
+
+  const value = useMemo(
+    () => ({ openLogin, closeModal }),
+    [closeModal, openLogin],
+  );
 
   return (
-    <AuthModalContext.Provider value={{ openLogin, closeModal }}>
+    <AuthModalContext.Provider value={value}>
       {children}
 
       {showLogin && <Login onClose={closeModal} />}
@@ -39,7 +45,7 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
 }
 
 export function useAuthModal() {
-  const context = useContext(AuthModalContext);
+  const context = use(AuthModalContext);
   if (context === undefined) {
     throw new Error("useAuthModal must be used within an AuthModalProvider");
   }
