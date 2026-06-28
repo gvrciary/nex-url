@@ -35,6 +35,34 @@ const HERO_SECTION_VARIANTS: Variants = {
   },
 };
 
+const HERO_DESCRIPTION_VARIANTS: Variants = {
+  hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.5,
+      delay: 0.24,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const HERO_ACTIONS_VARIANTS: Variants = {
+  hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.5,
+      delay: 0.34,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 const HERO_WORD_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 10, filter: "blur(10px)" },
   visible: {
@@ -112,8 +140,7 @@ export default function Hero({ session }: { session: boolean }) {
             className="my-6 w-full max-w-sm text-pretty text-center text-sm leading-relaxed text-gray-800 sm:max-w-xl sm:text-base md:text-lg dark:text-gray-200"
             initial="hidden"
             animate="visible"
-            variants={HERO_SECTION_VARIANTS}
-            transition={{ delay: 0.24 }}
+            variants={HERO_DESCRIPTION_VARIANTS}
           >
             Clean and efficient link shortening tool. Just drop a long URL and
             get a sleek short one.
@@ -122,8 +149,7 @@ export default function Hero({ session }: { session: boolean }) {
             className="flex w-full max-w-xs flex-col justify-center gap-y-4 sm:max-w-none sm:flex-row sm:gap-x-4 sm:gap-y-0"
             initial="hidden"
             animate="visible"
-            variants={HERO_SECTION_VARIANTS}
-            transition={{ delay: 0.34 }}
+            variants={HERO_ACTIONS_VARIANTS}
           >
             <Button
               onClick={handleGetStarted}
