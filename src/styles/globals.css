@@ -5,11 +5,41 @@
 :root {
     --foreground: oklch(0.1408 0.0044 285.82);
     --background: oklch(0.9851 0 0);
+    --shadow-border:
+        0px 0px 0px 1px rgba(0, 0, 0, 0.06),
+        0px 1px 2px -1px rgba(0, 0, 0, 0.06),
+        0px 2px 4px 0px rgba(0, 0, 0, 0.04);
+    --shadow-border-hover:
+        0px 0px 0px 1px rgba(0, 0, 0, 0.08),
+        0px 1px 2px -1px rgba(0, 0, 0, 0.08),
+        0px 2px 4px 0px rgba(0, 0, 0, 0.06);
+    --duration-stagger: 40ms;
+    --duration-quick: 150ms;
+    --duration-fast: 250ms;
+    --duration-very-slow: 500ms;
+    --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: ease-in-out;
+    --modal-open-dur: 250ms;
+    --modal-close-dur: 150ms;
+    --modal-scale: 0.96;
+    --modal-scale-close: 0.96;
+    --modal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --icon-swap-dur: 250ms;
+    --icon-swap-blur: 2px;
+    --icon-swap-start-scale: 0.25;
+    --icon-swap-ease: ease-in-out;
+    --stagger-dur: 500ms;
+    --stagger-distance: 12px;
+    --stagger-stagger: 40ms;
+    --stagger-blur: 3px;
+    --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dark {
     --foreground: oklch(0.9851 0 0);
     --background: oklch(0.1408 0.0044 285.82);
+    --shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.08);
+    --shadow-border-hover: 0 0 0 1px rgba(255, 255, 255, 0.13);
 }
 
 @layer base {
@@ -36,5 +66,121 @@
     .dark ::selection {
         background-color: white;
         color: black;
+    }
+}
+
+@layer components {
+    .surface-shadow {
+        box-shadow: var(--shadow-border);
+        transition-property:
+            box-shadow, border-color, transform, opacity, filter;
+        transition-duration: var(--duration-fast);
+        transition-timing-function: var(--ease-smooth-out);
+    }
+
+    .surface-shadow:hover {
+        box-shadow: var(--shadow-border-hover);
+    }
+
+    .t-modal {
+        transform-origin: center;
+        transform: scale(var(--modal-scale));
+        opacity: 0;
+        pointer-events: none;
+        transition:
+            transform var(--modal-open-dur) var(--modal-ease),
+            opacity var(--modal-open-dur) var(--modal-ease);
+        will-change: transform, opacity;
+    }
+
+    .t-modal.is-open {
+        transform: scale(1);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .t-modal.is-closing {
+        transform: scale(var(--modal-scale-close));
+        opacity: 0;
+        pointer-events: none;
+        transition:
+            transform var(--modal-close-dur) var(--modal-ease),
+            opacity var(--modal-close-dur) var(--modal-ease);
+    }
+
+    .t-icon-swap {
+        position: relative;
+        display: inline-grid;
+    }
+
+    .t-icon-swap .t-icon {
+        grid-area: 1 / 1;
+        transition:
+            opacity var(--icon-swap-dur) var(--icon-swap-ease),
+            filter var(--icon-swap-dur) var(--icon-swap-ease),
+            transform var(--icon-swap-dur) var(--icon-swap-ease);
+        will-change: opacity, filter, transform;
+    }
+
+    .t-icon-swap[data-state="a"] .t-icon[data-icon="a"],
+    .t-icon-swap[data-state="b"] .t-icon[data-icon="b"] {
+        opacity: 1;
+        filter: blur(0);
+        transform: scale(1);
+    }
+
+    .t-icon-swap[data-state="a"] .t-icon[data-icon="b"],
+    .t-icon-swap[data-state="b"] .t-icon[data-icon="a"] {
+        opacity: 0;
+        filter: blur(var(--icon-swap-blur));
+        transform: scale(var(--icon-swap-start-scale));
+    }
+
+    .t-stagger-line {
+        display: block;
+        opacity: 0;
+        transform: translateY(var(--stagger-distance));
+        filter: blur(var(--stagger-blur));
+        transition:
+            opacity var(--stagger-dur) var(--stagger-ease),
+            transform var(--stagger-dur) var(--stagger-ease),
+            filter var(--stagger-dur) var(--stagger-ease);
+        will-change: transform, opacity, filter;
+    }
+
+    .t-stagger-line--2 {
+        transition-delay: var(--stagger-stagger);
+    }
+
+    .t-stagger-line--3 {
+        transition-delay: calc(var(--stagger-stagger) * 2);
+    }
+
+    .t-stagger.is-shown .t-stagger-line {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+
+    .t-stagger.is-hiding .t-stagger-line {
+        opacity: 0;
+        transform: translateY(0);
+        filter: blur(0);
+        transition:
+            opacity 200ms ease,
+            transform 0s linear,
+            filter 0s linear;
+        transition-delay: 0s;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .surface-shadow,
+    .t-modal,
+    .t-icon-swap .t-icon,
+    .t-stagger-line {
+        transition: none !important;
+        animation: none !important;
+        will-change: auto;
     }
 }

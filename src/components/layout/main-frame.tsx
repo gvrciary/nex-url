@@ -7,7 +7,7 @@ export default function MainFrame({ children }: { children: ReactNode }) {
   const isHome = usePathname() === "/";
 
   return (
-    <main className={isHome ? "min-h-svh" : "h-[calc(100svh-4rem)]"}>
+    <main className={isHome ? "min-h-svh" : "min-h-[calc(100svh-4rem)]"}>
       {children}
     </main>
   );

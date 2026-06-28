@@ -40,42 +40,41 @@ export default function CopyButton({
       disabled={disabled}
       title={disabled ? "Deleting..." : copied ? "Copied!" : "Copy link"}
       className={cn(
-        "transition-all duration-300 relative overflow-hidden",
+        "relative overflow-hidden transition-[color,background-color,box-shadow,transform] duration-300",
         copied && "text-green-600 dark:text-green-400",
         disabled && "opacity-50 cursor-not-allowed",
         className,
       )}
     >
-      <div
-        className={cn(
-          "transition-all duration-300 flex items-center",
-          copied ? "scale-110" : "scale-100",
-        )}
-      >
-        {copied ? (
-          <Check
-            className={cn(
-              "h-4 w-4 animate-in zoom-in-50 duration-300",
-              size === "sm" && "h-4 w-4",
-              size === "md" && "h-5 w-5",
-              size === "lg" && "h-6 w-6",
-            )}
-          />
-        ) : (
+      <span className="t-icon-swap" data-state={copied ? "b" : "a"}>
+        <span className="t-icon flex items-center" data-icon="a">
           <Copy
             className={cn(
-              "h-4 w-4 transition-transform duration-200 hover:scale-110",
+              "h-4 w-4",
               size === "sm" && "h-4 w-4",
               size === "md" && "h-5 w-5",
               size === "lg" && "h-6 w-6",
             )}
           />
-        )}
-      </div>
+        </span>
+        <span className="t-icon flex items-center" data-icon="b">
+          <Check
+            className={cn(
+              "h-4 w-4",
+              size === "sm" && "h-4 w-4",
+              size === "md" && "h-5 w-5",
+              size === "lg" && "h-6 w-6",
+            )}
+          />
+        </span>
+      </span>
 
-      {copied && (
-        <div className="absolute inset-0 bg-green-600/10 dark:bg-green-400/10 rounded-md animate-in fade-in-0 duration-300" />
-      )}
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-0 rounded-md bg-green-600/10 opacity-0 transition-opacity duration-300 dark:bg-green-400/10",
+          copied && "opacity-100",
+        )}
+      />
     </Button>
   );
 }

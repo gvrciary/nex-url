@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect, useEffectEvent, type ReactNode } from "react";
+import { useEffect, useEffectEvent, useState, type ReactNode } from "react";
 import { cn } from "@/utils";
 import Button from "./button";
 
@@ -30,6 +30,33 @@ export default function Modal({
   size = "md",
 }: ModalProps) {
   const handleClose = useEffectEvent(onClose);
+  const [isRendered, setIsRendered] = useState(isOpen);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsRendered(true);
+      setIsClosing(false);
+      return;
+    }
+
+    if (!isRendered) return;
+
+    const closeMs =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--modal-close-dur",
+        ),
+      ) || 150;
+
+    setIsClosing(true);
+    const timeoutId = window.setTimeout(() => {
+      setIsClosing(false);
+      setIsRendered(false);
+    }, closeMs);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isOpen, isRendered]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -38,7 +65,7 @@ export default function Modal({
       }
     };
 
-    if (isOpen) {
+    if (isRendered) {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
     }
@@ -47,24 +74,28 @@ export default function Modal({
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "unset";
     };
-  }, [isOpen]);
+  }, [isRendered]);
 
-  if (!isOpen) return null;
+  if (!isRendered) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <button
         type="button"
         aria-label="Close modal"
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className={cn(
+          "absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-150 ease-out",
+          isClosing ? "opacity-0" : "opacity-100",
+        )}
         onClick={onClose}
       />
 
       <div
         className={cn(
-          "relative bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg shadow-lg w-full mx-4",
+          "t-modal relative w-full rounded-2xl bg-white mx-4 dark:bg-black surface-shadow",
+          isClosing ? "is-closing" : "is-open",
           MODAL_SIZES[size],
-          className
+          className,
         )}
       >
         {title && (
@@ -96,9 +127,7 @@ export default function Modal({
           </div>
         )}
 
-        <div className={cn("p-6", title && "pt-4")}>
-          {children}
-        </div>
+        <div className={cn("p-6", title && "pt-4")}>{children}</div>
       </div>
     </div>
   );

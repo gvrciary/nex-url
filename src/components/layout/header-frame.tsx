@@ -8,10 +8,10 @@ export default function HeaderFrame({ children }: { children: ReactNode }) {
 
   return (
     <header
-      className={`relative z-20 w-full ${
+      className={`w-full ${
         isHome
-          ? "-mb-16 bg-transparent [&_button[data-header-icon='true']]:hover:bg-transparent [&_button[data-header-icon='true']]:active:bg-transparent [&_button[data-header-icon='true']]:focus:bg-transparent"
-          : "`bg-(--background)"
+          ? "absolute inset-x-0 top-0 z-[100] bg-transparent [&_button[data-header-icon='true']]:hover:bg-transparent [&_button[data-header-icon='true']]:active:bg-transparent [&_button[data-header-icon='true']]:focus:bg-transparent"
+          : "relative z-50 bg-(--background)"
       }`}
     >
       {children}

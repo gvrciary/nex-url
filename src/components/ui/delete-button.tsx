@@ -36,7 +36,7 @@ export default function DeleteButton({
 
   if (showConfirm) {
     return (
-      <div className="flex items-center space-x-1 animate-in slide-in-from-right-2 duration-300">
+      <div className="flex items-center space-x-1">
         <Button
           variant="ghost"
           size={size}
@@ -44,7 +44,7 @@ export default function DeleteButton({
           disabled={disabled}
           title="Confirm deletion"
           className={cn(
-            "text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-green-100 dark:hover:bg-green-400/10 transition-all duration-200",
+            "text-green-600 transition-[color,background-color,box-shadow,transform] duration-200 hover:bg-green-100 hover:text-green-700 dark:text-green-400 dark:hover:bg-green-400/10 dark:hover:text-green-300",
             className,
           )}
         >
@@ -65,7 +65,7 @@ export default function DeleteButton({
           disabled={disabled}
           title="Cancel"
           className={cn(
-            "text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-400/10 transition-all duration-200",
+            "text-red-600 transition-[color,background-color,box-shadow,transform] duration-200 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-400/10 dark:hover:text-red-300",
             className,
           )}
         >
@@ -90,7 +90,7 @@ export default function DeleteButton({
       disabled={disabled}
       title={disabled ? "Deleting..." : "Delete link"}
       className={cn(
-        "text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-400/10 transition-all duration-200 hover:scale-105",
+        "text-red-600 transition-[color,background-color,box-shadow,transform] duration-200 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-400/10 dark:hover:text-red-300",
         disabled && "opacity-50 cursor-not-allowed",
         className,
       )}

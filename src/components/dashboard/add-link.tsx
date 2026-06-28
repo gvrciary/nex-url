@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Link, Loader2, Plus, X } from "lucide-react";
+import { AnimatePresence, m } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useLinksContext } from "@/providers/links-provider";
@@ -72,7 +73,7 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
       });
       return;
     }
-    
+
     setAliasStatus({
       checking: true,
       available: false,
@@ -111,6 +112,8 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
       return <X className="h-4 w-4 text-red-600 dark:text-red-400" />;
   };
 
+  const aliasIcon = getAliasIcon();
+
   return (
     <Modal
       isOpen={isOpen}
@@ -123,11 +126,11 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
       className="max-w-2xl"
     >
       <div className="w-full">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-semibold mb-2 text-black dark:text-white">
+        <div className="t-stagger is-shown mb-6 text-center">
+          <h2 className="t-stagger-line t-stagger-line--1 text-balance text-2xl font-semibold text-black dark:text-white">
             Create New Link
           </h2>
-          <p className="text-black/70 dark:text-white/70 font-normal">
+          <p className="t-stagger-line t-stagger-line--2 mt-2 text-pretty font-normal text-black/70 dark:text-white/70">
             Transform your long URL into a short and elegant link
           </p>
         </div>
@@ -146,11 +149,19 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
                 {...form.register("url")}
                 icon={<Link className="h-4 w-4" />}
               />
-              {form.formState.errors.url && (
-                <p className="text-red-600 text-xs mt-1">
-                  {form.formState.errors.url.message}
-                </p>
-              )}
+              <AnimatePresence initial={false}>
+                {form.formState.errors.url && (
+                  <m.p
+                    className="mt-1 text-xs text-red-600"
+                    initial={{ opacity: 0, y: -6, filter: "blur(4px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    {form.formState.errors.url.message}
+                  </m.p>
+                )}
+              </AnimatePresence>
             </div>
 
             <div>
@@ -170,15 +181,50 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
                   className="pr-10"
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  {getAliasIcon()}
+                  <AnimatePresence mode="popLayout" initial={false}>
+                    {aliasIcon && (
+                      <m.span
+                        key={
+                          aliasStatus.checking
+                            ? "checking"
+                            : aliasStatus.available
+                              ? "available"
+                              : "taken"
+                        }
+                        className="flex items-center"
+                        initial={{
+                          opacity: 0,
+                          scale: 0.25,
+                          filter: "blur(4px)",
+                        }}
+                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                        exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+                        transition={{
+                          type: "spring",
+                          duration: 0.3,
+                          bounce: 0,
+                        }}
+                      >
+                        {aliasIcon}
+                      </m.span>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
               <div className="flex items-center mt-2">
-                {form.formState.errors.customAlias && (
-                  <p className="text-red-600 text-xs mt-1">
-                    {form.formState.errors.customAlias.message}
-                  </p>
-                )}
+                <AnimatePresence initial={false}>
+                  {form.formState.errors.customAlias && (
+                    <m.p
+                      className="mt-1 text-xs text-red-600"
+                      initial={{ opacity: 0, y: -6, filter: "blur(4px)" }}
+                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      {form.formState.errors.customAlias.message}
+                    </m.p>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </div>
@@ -202,29 +248,37 @@ export default function AddLink({ isOpen, onClose }: AddLinkProps) {
           </div>
         </form>
 
-        {shortenedUrl && (
-          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-white/10">
-            <div className="bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-sm text-black/70 dark:text-white/70 mb-1">
-                    Your shortened link:
-                  </p>
-                  <p className="text-lg font-normal text-black dark:text-white break-all">
-                    {shortenedUrl}
-                  </p>
-                </div>
-                <div className="ml-4">
-                  <CopyButton
-                    textToCopy={shortenedUrl}
-                    size="md"
-                    className="px-4 py-2"
-                  />
+        <AnimatePresence initial={false}>
+          {shortenedUrl && (
+            <m.div
+              className="mt-6 border-t border-gray-200 pt-6 dark:border-white/10"
+              initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="surface-shadow rounded-xl bg-gray-50 p-4 dark:bg-white/5">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm text-black/70 dark:text-white/70 mb-1">
+                      Your shortened link:
+                    </p>
+                    <p className="text-lg font-normal text-black dark:text-white break-all">
+                      {shortenedUrl}
+                    </p>
+                  </div>
+                  <div className="ml-4">
+                    <CopyButton
+                      textToCopy={shortenedUrl}
+                      size="md"
+                      className="px-4 py-2"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            </m.div>
+          )}
+        </AnimatePresence>
       </div>
     </Modal>
   );

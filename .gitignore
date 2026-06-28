@@ -12,6 +12,8 @@
 pnpm-lock.yaml
 yarn.lock
 package-lock.json
+.agents
+skills-lock.json
 
 # testing
 /coverage
