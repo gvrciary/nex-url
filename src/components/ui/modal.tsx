@@ -1,7 +1,13 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect, useEffectEvent, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { cn } from "@/utils";
 import Button from "./button";
 
@@ -30,17 +36,23 @@ export default function Modal({
   size = "md",
 }: ModalProps) {
   const handleClose = useEffectEvent(onClose);
-  const [isRendered, setIsRendered] = useState(isOpen);
-  const [isClosing, setIsClosing] = useState(false);
+  const initialClosedRef = useRef(!isOpen);
+  const previousIsOpenRef = useRef(isOpen);
+  const [isClosed, setIsClosed] = useState(initialClosedRef.current);
+
+  if (isOpen !== previousIsOpenRef.current) {
+    previousIsOpenRef.current = isOpen;
+
+    if (isOpen) {
+      setIsClosed(false);
+    }
+  }
+
+  const isRendered = isOpen || !isClosed;
+  const isClosing = !isOpen && !isClosed;
 
   useEffect(() => {
-    if (isOpen) {
-      setIsRendered(true);
-      setIsClosing(false);
-      return;
-    }
-
-    if (!isRendered) return;
+    if (!isClosing) return;
 
     const closeMs =
       parseFloat(
@@ -49,14 +61,12 @@ export default function Modal({
         ),
       ) || 150;
 
-    setIsClosing(true);
     const timeoutId = window.setTimeout(() => {
-      setIsClosing(false);
-      setIsRendered(false);
+      setIsClosed(true);
     }, closeMs);
 
     return () => window.clearTimeout(timeoutId);
-  }, [isOpen, isRendered]);
+  }, [isClosing]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
