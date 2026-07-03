@@ -1,6 +1,6 @@
-import { Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { GitHub } from "@/components/assets/github";
 import Button from "@/components/ui/button";
 import HeaderFrame from "./header-frame";
 import ToggleMode from "../ui/toggle-mode";
@@ -33,7 +33,7 @@ export default async function Header() {
                 variant="ghost"
                 size="sm"
               >
-                <Github className="h-4 w-4" />
+                <GitHub className="h-4 w-4" />
               </Button>
             </a>
             <ToggleMode />

@@ -2,8 +2,8 @@
 
 import React from "react";
 import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
-import { Github } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { GitHub } from "@/components/assets/github";
 import { useAuthModal } from "@/providers/auth-modal-provider";
 import { Particles } from "@/components/landing/background/particles";
 
@@ -166,7 +166,7 @@ export default function Hero({ session }: { session: boolean }) {
               className="w-full"
             >
               <Button variant="outline" className="w-full">
-                <Github className="h-4 w-4 mr-2" />
+                <GitHub className="mr-2 h-4 w-4" />
                 View Repository
               </Button>
             </a>

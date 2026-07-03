@@ -40,7 +40,7 @@ export default function UserMenu({ name }: { name: string }) {
   };
 
   return (
-    <details ref={detailsRef} className="relative z-[9999]">
+    <details ref={detailsRef} className="relative z-9999">
       <summary
         className="flex cursor-pointer list-none items-center space-x-2 text-sm font-normal text-black transition-colors hover:text-black/70 marker:content-[''] dark:text-white dark:hover:text-white/70 [&::-webkit-details-marker]:hidden"
       >
@@ -54,7 +54,7 @@ export default function UserMenu({ name }: { name: string }) {
         <span>{name}</span>
       </summary>
 
-      <div className="surface-shadow absolute right-0 top-full z-[9999] mt-2 w-48 rounded-xl border border-black/10 bg-white py-2 shadow-2xl dark:border-white/20 dark:bg-black">
+      <div className="surface-shadow absolute right-0 top-full z-9999 mt-2 w-48 rounded-xl border border-black/10 bg-white py-2 shadow-2xl dark:border-white/20 dark:bg-black">
         <Link
           href="/dashboard"
           onClick={() => detailsRef.current?.removeAttribute("open")}

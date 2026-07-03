@@ -1,9 +1,10 @@
 "use client";
 
-import { Chrome, Github } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { authClient } from "@/auth-client";
+import { GitHub } from "@/components/assets/github";
+import { Google } from "@/components/assets/google";
 import Button from "@/components/ui/button";
 import Modal from "@/components/ui/modal";
 import { appConfig } from "@/config";
@@ -51,7 +52,7 @@ export default function Login({ onClose }: LoginProps) {
           variant="outline"
           className="w-full font-normal"
         >
-          <Github size={18} className="mr-3" />
+          <GitHub className="mr-3 h-[18px] w-[18px]" />
           Continue with GitHub
         </Button>
 
@@ -61,7 +62,7 @@ export default function Login({ onClose }: LoginProps) {
           variant="outline"
           className="w-full font-normal"
         >
-          <Chrome size={18} className="mr-3" />
+          <Google className="mr-3 h-[18px] w-[18px]" />
           Continue with Google
         </Button>
       </div>
