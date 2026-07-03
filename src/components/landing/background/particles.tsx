@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTheme } from "next-themes";
@@ -174,6 +174,7 @@ const DitherPlane: React.FC<DitherConfig> = ({
   opacity = 0.4,
   cellSize = 12,
 }) => {
+  const elapsedTime = useRef(0);
   const material = useMemo(() => ditherMaterial.clone(), []);
   const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
   const mesh = useMemo(() => {
@@ -198,8 +199,9 @@ const DitherPlane: React.FC<DitherConfig> = ({
     };
   }, [geometry, material, mesh]);
 
-  useFrame((state) => {
-    material.uniforms.uTime.value = state.clock.elapsedTime;
+  useFrame((state, delta) => {
+    elapsedTime.current += delta;
+    material.uniforms.uTime.value = elapsedTime.current;
     material.uniforms.uResolution.value.set(size.width, size.height);
   });
 
