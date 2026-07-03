@@ -5,7 +5,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: appConfig.deployUrl,
-      lastModified: new Date(),
     },
   ];
 }

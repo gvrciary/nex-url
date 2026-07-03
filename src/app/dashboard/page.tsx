@@ -5,6 +5,17 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Dashboard",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+      "max-image-preview": "none",
+      "max-snippet": 0,
+      "max-video-preview": 0,
+    },
+  },
 };
 
 export default async function DashboardPage() {

@@ -8,16 +8,35 @@ import { generalSansVariable } from "@/fonts";
 import { appConfig } from "@/config";
 import { ToasterComponent } from "@/components/ui/toast";
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: appConfig.title,
+  url: appConfig.deployUrl,
+  creator: {
+    "@type": "Person",
+    name: "alexisgvrcia",
+    url: "https://alexisgvrcia.dev",
+  },
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: appConfig.title,
+  url: appConfig.deployUrl,
+  description: appConfig.description,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(appConfig.deployUrl),
   title: {
-    default: `${appConfig.title} - Professional URL Shortener`,
+    default: `${appConfig.title} | Clean, Fast URL Shortener`,
     template: `%s | ${appConfig.title}`,
   },
   creator: "alexisgvrcia",
-  authors: [{ name: "Alexis Garcia", url: "alexisgvrcia.dev" }],
+  authors: [{ name: "alexisgvrcia", url: "https://alexisgvrcia.dev" }],
   description: appConfig.description,
-  manifest: "/manifest.json",
   icons: [
     { rel: "icon", url: "/favicon.ico" },
     { rel: "icon", url: "/icon.svg", type: "image/svg+xml" },
@@ -32,7 +51,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "/",
-    title: `${appConfig.title} - Professional URL Shortener`,
+    title: `${appConfig.title} | Clean, Fast URL Shortener`,
     description: appConfig.description,
     siteName: appConfig.title,
     images: [
@@ -46,9 +65,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${appConfig.title} - Professional URL Shortener`,
+    title: `${appConfig.title} | Clean, Fast URL Shortener`,
     description: appConfig.description,
     creator: "@alexisgvrcia",
+    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "/",
@@ -74,6 +94,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${generalSansVariable.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
+          }}
+        />
         <ThemeProvider>
           <AuthModalProvider>
             <Header />

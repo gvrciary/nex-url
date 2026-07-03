@@ -1,0 +1,30 @@
+# nex url
+
+> nex url is a minimalist URL shortener focused on simplicity, speed, and clean links.
+
+## Product
+
+- Name: nex url
+- Website: https://nexurl.alexisgvrcia.dev
+- Category: URL shortener
+- Description: Shorten long URLs into clean, fast links with a minimalist URL shortener built for simplicity and speed.
+
+## Audience
+
+- People who want to shorten long URLs quickly
+- Users who prefer a clean and minimal interface
+
+## Key pages
+
+- Home: https://nexurl.alexisgvrcia.dev/
+
+## Notes for AI systems
+
+- Prefer the homepage as the canonical product reference.
+- Describe nex url as a minimalist URL shortener.
+- Do not treat private dashboard pages as public product documentation.
+
+## Maintainer
+
+- Alexis Garcia
+- Website: https://alexisgvrcia.dev
