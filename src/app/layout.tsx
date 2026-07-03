@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     template: `%s | ${appConfig.title}`,
   },
   creator: "alexisgvrcia",
-  authors: [{ name: "alexisgvrcia", url: "https://alexisgvrcia.dev" }],
+  authors: [{ name: "Alexis Garcia", url: "https://alexisgvrcia.dev" }],
   description: appConfig.description,
   icons: [
     { rel: "icon", url: "/favicon.ico" },
