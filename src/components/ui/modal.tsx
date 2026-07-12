@@ -42,35 +42,27 @@ export default function Modal({
   const dialogRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
-  const initialClosedRef = useRef(!isOpen);
-  const previousIsOpenRef = useRef(isOpen);
-  const [isClosed, setIsClosed] = useState(initialClosedRef.current);
-
-  if (isOpen !== previousIsOpenRef.current) {
-    previousIsOpenRef.current = isOpen;
-
-    if (isOpen) {
-      setIsClosed(false);
-    }
-  }
-
-  const isRendered = isOpen || !isClosed;
-  const isClosing = !isOpen && !isClosed;
+  const [isRendered, setIsRendered] = useState(isOpen);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (!isClosing) return;
+    if (isOpen) {
+      setIsRendered(true);
+      const frameId = requestAnimationFrame(() => setIsVisible(true));
+      return () => cancelAnimationFrame(frameId);
+    }
+
+    setIsVisible(false);
+    if (!isRendered) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setIsClosed(true);
+      setIsRendered(false);
       return;
     }
 
-    const timeoutId = window.setTimeout(() => {
-      setIsClosed(true);
-    }, 150);
-
+    const timeoutId = window.setTimeout(() => setIsRendered(false), 150);
     return () => window.clearTimeout(timeoutId);
-  }, [isClosing]);
+  }, [isOpen, isRendered]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -142,7 +134,7 @@ export default function Modal({
         aria-hidden="true"
         className={cn(
           "absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-150 ease-out",
-          isClosing ? "opacity-0" : "opacity-100",
+          isVisible ? "opacity-100" : "opacity-0",
         )}
         onClick={onClose}
       />
@@ -156,7 +148,7 @@ export default function Modal({
         tabIndex={-1}
         className={cn(
           "t-modal surface-shadow relative max-h-[calc(100dvh-1rem)] w-full overflow-y-auto rounded-2xl bg-white dark:bg-black sm:max-h-[calc(100dvh-2rem)]",
-          isClosing ? "is-closing" : "is-open",
+          isVisible ? "is-open" : "is-closing",
           MODAL_SIZES[size],
           className,
         )}

@@ -111,6 +111,12 @@
     }
 }
 
+@media (hover: none), (max-width: 639px) {
+    .app-tooltip {
+        display: none;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;

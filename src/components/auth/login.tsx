@@ -9,10 +9,11 @@ import Button from "@/components/ui/button";
 import Modal from "@/components/ui/modal";
 
 interface LoginProps {
+  isOpen: boolean;
   onClose: () => void;
 }
 
-export default function Login({ onClose }: LoginProps) {
+export default function Login({ isOpen, onClose }: LoginProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSocialLogin = async (provider: "github" | "google") => {
@@ -35,7 +36,7 @@ export default function Login({ onClose }: LoginProps) {
 
   return (
     <Modal
-      isOpen={true}
+      isOpen={isOpen}
       onClose={onClose}
       ariaLabel="Sign in"
       size="sm"

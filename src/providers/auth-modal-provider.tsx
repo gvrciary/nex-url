@@ -39,7 +39,7 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
     <AuthModalContext.Provider value={value}>
       {children}
 
-      {showLogin && <Login onClose={closeModal} />}
+      <Login isOpen={showLogin} onClose={closeModal} />
     </AuthModalContext.Provider>
   );
 }
