@@ -23,7 +23,7 @@ export default async function DashboardPage() {
 
   return (
     <LinksProvider initialLinks={initialLinks}>
-      <section className="mx-auto max-w-7xl py-4 sm:py-8">
+      <section className="mx-auto max-w-7xl">
         <LinkHistory />
       </section>
     </LinksProvider>

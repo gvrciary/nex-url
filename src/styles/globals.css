@@ -39,6 +39,14 @@
         color: var(--background);
         background: var(--primary);
     }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--foreground) !important;
+        -webkit-box-shadow: 0 0 0 1000px var(--background) inset !important;
+        caret-color: var(--foreground) !important;
+    }
 }
 
 @layer components {

@@ -130,7 +130,7 @@ function LinkCard({
 
   return (
     <Card
-      className={`group rounded-xl p-4 transition-[border-color,opacity] hover:border-black/25 focus-within:border-black/25 dark:hover:border-white/25 dark:focus-within:border-white/25 sm:p-5 ${
+      className={`group rounded-xl p-4 shadow-none transition-[border-color,opacity] hover:border-black/25 hover:shadow-none focus-within:border-black/25 dark:hover:border-white/25 dark:focus-within:border-white/25 sm:p-5 ${
         isDeleting ? "pointer-events-none opacity-50" : ""
       }`}
       aria-busy={isDeleting}
@@ -266,7 +266,7 @@ export default function LinkHistory() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="px-4 pb-6 pt-3 sm:px-6 sm:pb-8 sm:pt-5 lg:px-8 lg:pt-6">
       <LinkHistoryHeader
         loading={loading}
         linksCount={links.length}
