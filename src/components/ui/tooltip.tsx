@@ -91,8 +91,6 @@ export default function Tooltip({
       className={cn("inline-flex", className)}
       onPointerEnter={show}
       onPointerLeave={hide}
-      onFocus={show}
-      onBlur={hide}
     >
       {children}
       {mounted && enabled && rendered &&
