@@ -1,13 +1,6 @@
 "use client";
 
 import {
-  AnimatePresence,
-  LazyMotion,
-  domAnimation,
-  m,
-  type Variants,
-} from "framer-motion";
-import {
   Calendar,
   Download,
   ExternalLink,
@@ -17,48 +10,16 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { useLinksContext } from "@/providers/links-provider";
+import AddLink from "./add-link";
+import LinkHistorySkeleton from "@/components/skeleton/link-history-skeleton";
 import Button from "@/components/ui/button";
 import Card from "@/components/ui/card";
 import CopyButton from "@/components/ui/copy-button";
 import DeleteButton from "@/components/ui/delete-button";
 import Input from "@/components/ui/input";
-import AddLink from "./add-link";
-import LinkHistorySkeleton from "@/components/skeleton/link-history-skeleton";
 import { appConfig } from "@/config";
+import { useLinksContext } from "@/providers/links-provider";
 import type { LinkResponse } from "@/types/link";
-
-const DASHBOARD_SECTION_VARIANTS: Variants = {
-  hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const LINK_CARD_VARIANTS: Variants = {
-  hidden: { opacity: 0, y: 16, scale: 0.98, filter: "blur(4px)" },
-  visible: (index: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    filter: "blur(0px)",
-    transition: {
-      delay: index * 0.06,
-      duration: 0.38,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  }),
-  exit: {
-    opacity: 0,
-    y: -12,
-    scale: 0.98,
-    filter: "blur(4px)",
-    transition: { duration: 0.15, ease: "easeIn" },
-  },
-};
 
 interface LinkHistoryHeaderProps {
   loading: boolean;
@@ -76,348 +37,298 @@ function LinkHistoryHeader({
   onExport,
 }: LinkHistoryHeaderProps) {
   return (
-    <m.div
-      className="mb-6"
-      initial="hidden"
-      animate="visible"
-      variants={DASHBOARD_SECTION_VARIANTS}
-    >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p className="mb-2 text-sm font-medium text-black/50 dark:text-white/50">
-            Dashboard
-          </p>
-          <h2 className="text-balance text-3xl font-medium tracking-[-0.03em] text-black dark:text-white">
-            My Links
-          </h2>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Button onClick={onAdd}>
-            <Plus className="h-4 w-4" />
-            Add
-          </Button>
-          <Button onClick={onExport} disabled={loading || linksCount === 0 || isExporting}>
-            <Download className="h-4 w-4" />
-            <span>{isExporting ? "Exporting..." : "Export"}</span>
-          </Button>
-        </div>
+    <header className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 className="font-[family-name:var(--font-lastik)] text-balance text-4xl font-normal tracking-[-0.04em] text-black dark:text-white sm:text-5xl">
+          My links
+        </h1>
+        <p className="mt-2 max-w-xl text-sm text-black/55 dark:text-white/55">
+          Create, review, and manage every short link in one place.
+        </p>
       </div>
-    </m.div>
+      <div className="flex items-center gap-2">
+        <Button onClick={onAdd} className="min-h-11">
+          <Plus className="h-4 w-4" aria-hidden="true" />
+          Create link
+        </Button>
+        <Button
+          variant="outline"
+          onClick={onExport}
+          disabled={loading || linksCount === 0 || isExporting}
+          className="min-h-11"
+        >
+          <Download className="h-4 w-4" aria-hidden="true" />
+          {isExporting ? "Exporting..." : "Export"}
+        </Button>
+      </div>
+    </header>
   );
 }
 
-interface LinkHistoryStatsProps {
+function LinkHistoryStats({
+  linksCount,
+  totalClicks,
+}: {
   linksCount: number;
   totalClicks: number;
-}
-
-function LinkHistoryStats({ linksCount, totalClicks }: LinkHistoryStatsProps) {
+}) {
   return (
-    <m.div
-      className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2"
-      initial="hidden"
-      animate="visible"
-      variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
-    >
+    <dl className="mb-10 flex gap-12 sm:gap-20">
       {[
         ["Total links", linksCount.toLocaleString()],
         ["Total clicks", totalClicks.toLocaleString()],
       ].map(([label, value]) => (
-        <m.div key={label} variants={DASHBOARD_SECTION_VARIANTS}>
-          <Card className="rounded-2xl p-4">
-            <p className="text-sm text-black/50 dark:text-white/50">{label}</p>
-            <p className="mt-1 text-2xl font-medium tabular-nums tracking-[-0.03em] text-black dark:text-white">
-              {value}
-            </p>
-          </Card>
-        </m.div>
+        <div key={label}>
+          <dt className="text-xs uppercase tracking-[0.12em] text-black/45 dark:text-white/45">
+            {label}
+          </dt>
+          <dd className="mt-1 text-2xl font-medium tabular-nums tracking-[-0.03em] text-black dark:text-white">
+            {value}
+          </dd>
+        </div>
       ))}
-    </m.div>
+    </dl>
   );
 }
 
-interface LinkHistoryEmptyStateProps {
+function LinkHistoryEmptyState({
+  hasSearch,
+  onAction,
+}: {
   hasSearch: boolean;
-}
-
-function LinkHistoryEmptyState({ hasSearch }: LinkHistoryEmptyStateProps) {
+  onAction: () => void;
+}) {
   return (
-    <m.div
-      className="t-stagger is-shown px-4 py-12 text-center"
-      initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {hasSearch ? (
-        <>
-          <p className="t-stagger-line t-stagger-line--1 text-pretty text-lg font-normal text-black/70 dark:text-white/70">
-            No links found
-          </p>
-          <p className="t-stagger-line t-stagger-line--2 mt-2 text-pretty text-sm font-normal text-black/50 dark:text-white/50">
-            Try different search terms
-          </p>
-        </>
-      ) : (
-        <>
-          <p className="t-stagger-line t-stagger-line--1 text-pretty text-lg font-normal text-black/70 dark:text-white/70">
-            You haven&apos;t created any links yet
-          </p>
-          <p className="t-stagger-line t-stagger-line--2 mt-2 text-pretty text-sm font-normal text-black/50 dark:text-white/50">
-            Create your first link using the form above
-          </p>
-        </>
+    <div className="px-5 py-14 text-center">
+      <h2 className="text-lg font-medium text-black dark:text-white">
+        {hasSearch ? "No matching links" : "Create your first short link"}
+      </h2>
+      <p className="mx-auto mt-2 max-w-sm text-sm text-black/55 dark:text-white/55">
+        {hasSearch
+          ? "Try another URL or alias, or clear the search to see every link."
+          : "Shorten a URL, choose an alias, and start tracking visits."}
+      </p>
+      {hasSearch && (
+        <Button variant="outline" onClick={onAction} className="mt-5 min-h-11">
+          Clear search
+        </Button>
       )}
-    </m.div>
+    </div>
   );
 }
 
-interface LinkCardProps {
+function LinkCard({
+  link,
+  isDeleting,
+  onDelete,
+}: {
   link: LinkResponse;
-  index: number;
   isDeleting: boolean;
   onDelete: (linkId: string) => void;
-}
+}) {
+  const shortUrl = `${appConfig.deployUrl}/${link.customAlias}`;
 
-function LinkCard({ link, index, isDeleting, onDelete }: LinkCardProps) {
   return (
-    <m.div
-      custom={index}
-      layout
-      variants={LINK_CARD_VARIANTS}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
+    <Card
+      className={`group rounded-xl p-4 transition-[border-color,opacity] hover:border-black/25 focus-within:border-black/25 dark:hover:border-white/25 dark:focus-within:border-white/25 sm:p-5 ${
+        isDeleting ? "pointer-events-none opacity-50" : ""
+      }`}
+      aria-busy={isDeleting}
     >
-      <Card
-        className={`group overflow-hidden rounded-2xl p-6 transition-opacity duration-200 hover:border-black/15 dark:hover:border-white/20 ${
-          isDeleting ? "opacity-50 pointer-events-none" : ""
-        }`}
-      >
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex-1 min-w-0">
-            <div className="mb-3 flex items-center">
-              <h3 className="min-w-0 truncate text-lg font-normal text-black dark:text-white">
-                /{link.customAlias}
-              </h3>
-            </div>
-
-            <p className="mb-3 break-all text-sm font-normal text-black/70 dark:text-white/70 sm:text-base sm:truncate">
-              {link.originalUrl}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-normal text-black/50 dark:text-white/50">
-              <span className="flex items-center">
-                <Calendar className="h-4 w-4 mr-2" />
-                {new Date(link.createdAt).toLocaleDateString("en-US")}
-              </span>
-              <span className="flex items-center tabular-nums">
-                <Eye className="h-4 w-4 mr-2" />
-                {link.clicks.toLocaleString()} clicks
-              </span>
-            </div>
-          </div>
-
-          <div
-            className={`flex w-full items-center justify-end space-x-2 opacity-100 transition-opacity duration-200 sm:ml-4 sm:w-auto sm:opacity-60 sm:group-hover:opacity-100 ${
-              isDeleting ? "pointer-events-none opacity-30" : ""
-            }`}
+      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <a
+            href={shortUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 max-w-full items-center gap-2 rounded-md text-lg font-medium text-black underline-offset-4 hover:underline focus:outline-none focus:ring-2 focus:ring-black/30 dark:text-white dark:focus:ring-white/30"
           >
-            <CopyButton
-              textToCopy={`${appConfig.deployUrl}/${link.customAlias}`}
-              disabled={isDeleting}
-            />
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => window.open(link.originalUrl, "_blank")}
-              disabled={isDeleting}
-              title={isDeleting ? "Deleting..." : "Open original link"}
-            >
-              <ExternalLink className="h-4 w-4" />
-            </Button>
-
-            <DeleteButton onDelete={() => onDelete(link.id)} disabled={isDeleting} />
+            <span className="truncate">/{link.customAlias}</span>
+            <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          </a>
+          <p className="truncate text-sm text-black/60 dark:text-white/60">
+            {link.originalUrl}
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-black/45 dark:text-white/45">
+            <span className="flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+              {new Date(link.createdAt).toLocaleDateString("en-US")}
+            </span>
+            <span className="flex items-center gap-1.5 tabular-nums">
+              <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+              {link.clicks.toLocaleString()} {link.clicks === 1 ? "click" : "clicks"}
+            </span>
           </div>
         </div>
-      </Card>
-    </m.div>
-  );
-}
 
-interface LinkHistoryListProps {
-  links: LinkResponse[];
-  deletingLinks: Set<string>;
-  onDelete: (linkId: string) => void;
-}
-
-function LinkHistoryList({ links, deletingLinks, onDelete }: LinkHistoryListProps) {
-  return (
-    <m.div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <AnimatePresence mode="popLayout">
-        {links.map((link, index) => (
-          <LinkCard
-            key={link.id}
-            link={link}
-            index={index}
-            isDeleting={deletingLinks.has(link.id)}
-            onDelete={onDelete}
+        <div className="flex items-center justify-end gap-1 opacity-100 transition-opacity sm:opacity-50 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
+          <CopyButton
+            textToCopy={shortUrl}
+            disabled={isDeleting}
+            className="h-10 w-10 p-0"
           />
-        ))}
-      </AnimatePresence>
-    </m.div>
+          <a
+            href={link.originalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open original URL for ${link.customAlias}`}
+            title="Open original link"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-black transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:text-white dark:hover:bg-white/10 dark:focus:ring-white/20 dark:focus:ring-offset-black"
+          >
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
+          </a>
+          <DeleteButton
+            onDelete={() => onDelete(link.id)}
+            disabled={isDeleting}
+            className="h-10 min-w-10 p-0"
+          />
+        </div>
+      </div>
+    </Card>
   );
 }
 
 export default function LinkHistory() {
   const { links, loading, error, deleteLink } = useLinksContext();
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [deletingLinks, setDeletingLinks] = useState<Set<string>>(new Set());
-  const [isAddLinkModalOpen, setIsAddLinkModalOpen] = useState<boolean>(false);
+  const [isAddLinkModalOpen, setIsAddLinkModalOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+
   const handleExportLinks = () => {
     if (loading || links.length === 0) return;
 
     toast.promise(
       new Promise((resolve) => {
         setIsExporting(true);
-        const exportData = links.map((link) => ({
-          originalUrl: link.originalUrl,
-          shortUrl: `${appConfig.deployUrl}/${link.customAlias}`,
-          alias: link.customAlias,
-          clicks: link.clicks,
-          createdAt: link.createdAt.toISOString(),
-        }));
-
-        const exportStats = {
-          totalLinks: links.length,
-          totalClicks: links.reduce((sum, link) => sum + link.clicks, 0),
-          exportedAt: new Date().toISOString(),
-        };
-
         const fullExport = {
-          metadata: exportStats,
-          links: exportData,
+          metadata: {
+            totalLinks: links.length,
+            totalClicks: links.reduce((sum, link) => sum + link.clicks, 0),
+            exportedAt: new Date().toISOString(),
+          },
+          links: links.map((link) => ({
+            originalUrl: link.originalUrl,
+            shortUrl: `${appConfig.deployUrl}/${link.customAlias}`,
+            alias: link.customAlias,
+            clicks: link.clicks,
+            createdAt: link.createdAt.toISOString(),
+          })),
         };
-
-        const dataStr = JSON.stringify(fullExport, null, 2);
-        const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
-
-        const exportFileDefaultName = `nex-url-export-${new Date().toISOString().split("T")[0]}.json`;
-
+        const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(fullExport, null, 2))}`;
         const linkElement = document.createElement("a");
-        linkElement.setAttribute("href", dataUri);
-        linkElement.setAttribute("download", exportFileDefaultName);
+        linkElement.href = dataUri;
+        linkElement.download = `nex-url-export-${new Date().toISOString().split("T")[0]}.json`;
         linkElement.click();
         resolve("Links exported successfully!");
       }),
       {
         loading: "Exporting links...",
-        success: () => {
-          setIsExporting(false);
-          return "Links exported successfully!";
-        },
+        success: "Links exported successfully!",
         error: "Failed to export links",
         finally: () => setIsExporting(false),
       },
     );
   };
 
-  const filteredLinks = useMemo(() => {
-    if (!searchTerm) return links;
-
-    return links.filter(
-      (link) =>
-        link.originalUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        link.customAlias.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-  }, [links, searchTerm]);
-
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const filteredLinks = normalizedSearch
+    ? links.filter(
+        (link) =>
+          link.originalUrl.toLowerCase().includes(normalizedSearch) ||
+          link.customAlias.toLowerCase().includes(normalizedSearch),
+      )
+    : links;
   const totalClicks = useMemo(
     () => links.reduce((sum, link) => sum + link.clicks, 0),
     [links],
   );
 
   const handleDeleteLink = async (linkId: string) => {
-    setDeletingLinks((prev) => new Set([...prev, linkId]));
+    if (deletingLinks.has(linkId)) return;
+    setDeletingLinks((previous) => new Set(previous).add(linkId));
 
-    toast.promise(deleteLink(linkId), {
-      loading: "Deleting link...",
-      success: () => {
-        setDeletingLinks((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(linkId);
-          return newSet;
-        });
-
-        return "Link deleted successfully";
-      },
-      error: "Failed to delete link",
-    });
+    try {
+      await toast.promise(deleteLink(linkId), {
+        loading: "Deleting link...",
+        success: "Link deleted successfully",
+        error: "Failed to delete link",
+      });
+    } catch {
+      // The toast reports the error; the local state is restored below.
+    } finally {
+      setDeletingLinks((previous) => {
+        const next = new Set(previous);
+        next.delete(linkId);
+        return next;
+      });
+    }
   };
 
   return (
-    <LazyMotion features={domAnimation}>
-      <div className="p-4">
-        <LinkHistoryHeader
-          loading={loading}
-          linksCount={links.length}
-          isExporting={isExporting}
-          onAdd={() => setIsAddLinkModalOpen(true)}
-          onExport={handleExportLinks}
-        />
+    <div className="p-4 sm:p-6 lg:p-8">
+      <LinkHistoryHeader
+        loading={loading}
+        linksCount={links.length}
+        isExporting={isExporting}
+        onAdd={() => setIsAddLinkModalOpen(true)}
+        onExport={handleExportLinks}
+      />
+      <LinkHistoryStats linksCount={links.length} totalClicks={totalClicks} />
 
-        <LinkHistoryStats linksCount={links.length} totalClicks={totalClicks} />
-
-        <m.div
-          className="mb-6"
-          initial="hidden"
-          animate="visible"
-          variants={DASHBOARD_SECTION_VARIANTS}
+      <div className="mb-6 max-w-lg">
+        <label
+          htmlFor="link-search"
+          className="mb-2 block text-sm font-medium text-black/70 dark:text-white/70"
         >
-          <Input
-            type="text"
-            placeholder="Search links..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            icon={<Search className="h-4 w-4" />}
-            className="max-w-md"
-          />
-        </m.div>
-
-        <div>
-          {loading ? (
-            <LinkHistorySkeleton />
-          ) : error ? (
-            <Card className="p-12 text-center">
-              <p className="text-red-600 dark:text-red-400 font-normal text-lg">
-                {error}
-              </p>
-            </Card>
-          ) : filteredLinks.length === 0 ? (
-            <LinkHistoryEmptyState hasSearch={Boolean(searchTerm)} />
-          ) : (
-            <LinkHistoryList
-              links={filteredLinks}
-              deletingLinks={deletingLinks}
-              onDelete={handleDeleteLink}
-            />
-          )}
-        </div>
-
-        {searchTerm && filteredLinks.length > 0 && (
-          <div className="mt-4 text-center border-t border-gray-200 dark:border-white/10 pt-4">
-            <p className="text-black/50 dark:text-white/50 font-normal text-sm">
-              Showing {filteredLinks.length} of {links.length} links
-            </p>
-          </div>
-        )}
-
-        <AddLink
-          isOpen={isAddLinkModalOpen}
-          onClose={() => setIsAddLinkModalOpen(false)}
+          Search your links
+        </label>
+        <Input
+          id="link-search"
+          type="search"
+          placeholder="Search by URL or alias"
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+          icon={<Search className="h-4 w-4" aria-hidden="true" />}
         />
       </div>
-    </LazyMotion>
+
+      {loading ? (
+        <LinkHistorySkeleton />
+      ) : error ? (
+        <div role="alert" className="rounded-xl border border-red-500/25 p-8 text-center">
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+        </div>
+      ) : filteredLinks.length === 0 ? (
+        <LinkHistoryEmptyState
+          hasSearch={Boolean(normalizedSearch)}
+          onAction={() =>
+            normalizedSearch ? setSearchTerm("") : setIsAddLinkModalOpen(true)
+          }
+        />
+      ) : (
+        <div className="grid grid-cols-1 gap-3">
+          {filteredLinks.map((link) => (
+            <LinkCard
+              key={link.id}
+              link={link}
+              isDeleting={deletingLinks.has(link.id)}
+              onDelete={handleDeleteLink}
+            />
+          ))}
+        </div>
+      )}
+
+      {normalizedSearch && filteredLinks.length > 0 && (
+        <p role="status" aria-live="polite" className="mt-4 border-t border-black/10 pt-4 text-center text-xs text-black/45 dark:border-white/10 dark:text-white/45">
+          Showing {filteredLinks.length} of {links.length} links
+        </p>
+      )}
+
+      <AddLink
+        isOpen={isAddLinkModalOpen}
+        onClose={() => setIsAddLinkModalOpen(false)}
+      />
+    </div>
   );
 }

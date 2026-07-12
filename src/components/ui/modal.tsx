@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import {
   useEffect,
   useEffectEvent,
+  useId,
   useRef,
   useState,
   type ReactNode,
@@ -22,6 +23,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  ariaLabel?: string;
   children: ReactNode;
   className?: string;
   size?: "sm" | "md" | "lg" | "xl";
@@ -31,11 +33,15 @@ export default function Modal({
   isOpen,
   onClose,
   title,
+  ariaLabel,
   children,
   className,
   size = "md",
 }: ModalProps) {
   const handleClose = useEffectEvent(onClose);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const titleId = useId();
   const initialClosedRef = useRef(!isOpen);
   const previousIsOpenRef = useRef(isOpen);
   const [isClosed, setIsClosed] = useState(initialClosedRef.current);
@@ -54,45 +60,86 @@ export default function Modal({
   useEffect(() => {
     if (!isClosing) return;
 
-    const closeMs =
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--modal-close-dur",
-        ),
-      ) || 150;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsClosed(true);
+      return;
+    }
 
     const timeoutId = window.setTimeout(() => {
       setIsClosed(true);
-    }, closeMs);
+    }, 150);
 
     return () => window.clearTimeout(timeoutId);
   }, [isClosing]);
 
   useEffect(() => {
+    if (!isOpen) return;
+
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        e.preventDefault();
         handleClose();
+      }
+
+      if (e.key !== "Tab" || !dialogRef.current) return;
+
+      const focusable = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      const first = focusable[0];
+      const last = focusable.at(-1);
+
+      if (!first || !last) {
+        e.preventDefault();
+        dialogRef.current.focus();
+      } else if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     };
 
-    if (isRendered) {
-      document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden";
-    }
+    document.addEventListener("keydown", handleEscape);
+    requestAnimationFrame(() => {
+      const initialFocus =
+        dialogRef.current?.querySelector<HTMLElement>("[data-autofocus]") ??
+        dialogRef.current?.querySelector<HTMLElement>(
+          'button:not([disabled]), a[href], input:not([disabled])',
+        );
+      (initialFocus ?? dialogRef.current)?.focus();
+    });
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isRendered) previouslyFocusedRef.current?.focus();
+  }, [isRendered]);
+
+  useEffect(() => {
+    if (!isRendered) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
     };
   }, [isRendered]);
 
   if (!isRendered) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <button
-        type="button"
-        aria-label="Close modal"
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
+      <div
+        aria-hidden="true"
         className={cn(
           "absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-150 ease-out",
           isClosing ? "opacity-0" : "opacity-100",
@@ -101,8 +148,14 @@ export default function Modal({
       />
 
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
+        aria-label={title ? undefined : (ariaLabel ?? "Dialog")}
+        tabIndex={-1}
         className={cn(
-          "t-modal relative w-full rounded-2xl bg-white mx-4 dark:bg-black surface-shadow",
+          "t-modal surface-shadow relative max-h-[calc(100dvh-1rem)] w-full overflow-y-auto rounded-2xl bg-white dark:bg-black sm:max-h-[calc(100dvh-2rem)]",
           isClosing ? "is-closing" : "is-open",
           MODAL_SIZES[size],
           className,
@@ -110,14 +163,15 @@ export default function Modal({
       >
         {title && (
           <div className="flex items-center justify-between p-6 pb-0">
-            <h2 className="text-xl font-semibold text-black dark:text-white">
+            <h2 id={titleId} className="text-xl font-semibold text-black dark:text-white">
               {title}
             </h2>
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-8 w-8 p-0"
+              aria-label="Close dialog"
+              className="h-10 w-10 p-0"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -130,7 +184,8 @@ export default function Modal({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-8 w-8 p-0"
+              aria-label="Close dialog"
+              className="h-10 w-10 p-0"
             >
               <X className="h-4 w-4" />
             </Button>

@@ -9,13 +9,13 @@ export default function Input({ className, icon, ...props }: InputProps) {
   return (
     <div className="relative">
       {icon && (
-        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black/50 dark:text-white/50">
+        <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/45 dark:text-white/45">
           {icon}
         </div>
       )}
       <input
         className={cn(
-          "flex h-10 w-full rounded-md border border-gray-300 dark:border-white/20 bg-transparent px-3 py-2 text-sm text-black transition-[border-color,box-shadow,transform] duration-150 ease-out placeholder:text-black/50 focus:border-black focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:text-white dark:placeholder:text-white/50 dark:focus:border-white dark:focus:ring-white/20 dark:focus:ring-offset-black",
+          "flex h-11 w-full rounded-md border border-black/15 bg-transparent px-3 py-2 text-sm text-black transition-[border-color,box-shadow] duration-150 ease-out placeholder:text-black/40 focus:border-black/50 focus:outline-none focus:ring-2 focus:ring-black/15 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/20 dark:text-white dark:placeholder:text-white/40 dark:focus:border-white/50 dark:focus:ring-white/15",
           icon && "pl-10",
           className,
         )}

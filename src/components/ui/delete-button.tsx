@@ -43,6 +43,7 @@ export default function DeleteButton({
           onClick={handleConfirm}
           disabled={disabled}
           title="Confirm deletion"
+          aria-label="Confirm deletion"
           className={cn(
             "text-green-600 transition-[color,background-color,box-shadow,transform] duration-200 hover:bg-green-100 hover:text-green-700 dark:text-green-400 dark:hover:bg-green-400/10 dark:hover:text-green-300",
             className,
@@ -50,7 +51,6 @@ export default function DeleteButton({
         >
           <Check
             className={cn(
-              "h-4 w-4 animate-in zoom-in-50 duration-200",
               size === "sm" && "h-4 w-4",
               size === "md" && "h-5 w-5",
               size === "lg" && "h-6 w-6",
@@ -64,6 +64,7 @@ export default function DeleteButton({
           onClick={handleCancel}
           disabled={disabled}
           title="Cancel"
+          aria-label="Cancel deletion"
           className={cn(
             "text-red-600 transition-[color,background-color,box-shadow,transform] duration-200 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-400/10 dark:hover:text-red-300",
             className,
@@ -71,7 +72,6 @@ export default function DeleteButton({
         >
           <X
             className={cn(
-              "h-4 w-4 animate-in zoom-in-50 duration-200",
               size === "sm" && "h-4 w-4",
               size === "md" && "h-5 w-5",
               size === "lg" && "h-6 w-6",
@@ -89,6 +89,7 @@ export default function DeleteButton({
       onClick={handleDelete}
       disabled={disabled}
       title={disabled ? "Deleting..." : "Delete link"}
+      aria-label={disabled ? "Link is being deleted" : "Delete link"}
       className={cn(
         "text-red-600 transition-[color,background-color,box-shadow,transform] duration-200 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-400/10 dark:hover:text-red-300",
         disabled && "opacity-50 cursor-not-allowed",
@@ -97,7 +98,6 @@ export default function DeleteButton({
     >
       <Trash2
         className={cn(
-          "h-4 w-4 transition-transform duration-200",
           size === "sm" && "h-4 w-4",
           size === "md" && "h-5 w-5",
           size === "lg" && "h-6 w-6",

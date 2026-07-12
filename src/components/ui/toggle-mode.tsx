@@ -13,6 +13,7 @@ export default function ToggleMode() {
   const { resolvedTheme, setTheme } = useTheme();
   const isMounted = useSyncExternalStore(subscribe, () => true, () => false);
   const isDark = resolvedTheme === "dark";
+  const toggleLabel = isMounted && isDark ? "Switch to light mode" : "Switch to dark mode";
 
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark");
@@ -24,6 +25,9 @@ export default function ToggleMode() {
       variant="ghost"
       size="sm"
       onClick={toggleTheme}
+      aria-label={toggleLabel}
+      title={toggleLabel}
+      className="size-11 p-0"
     >
       {isMounted && isDark ? (
         <Sun className="h-4 w-4" />

@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthModalProvider } from "@/providers/auth-modal-provider";
 import Header from "@/components/layout/header";
 import MainFrame from "@/components/layout/main-frame";
-import { generalSansVariable } from "@/fonts";
+import { generalSansVariable, lastik } from "@/fonts";
 import { appConfig } from "@/config";
 import { ToasterComponent } from "@/components/ui/toast";
 
@@ -93,7 +93,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${generalSansVariable.variable} antialiased`}>
+      <body
+        className={`${generalSansVariable.variable} ${lastik.variable} antialiased`}
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

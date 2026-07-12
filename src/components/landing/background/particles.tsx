@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
 
 interface DitherConfig {
@@ -174,6 +175,7 @@ const DitherPlane: React.FC<DitherConfig> = ({
   opacity = 0.4,
   cellSize = 12,
 }) => {
+  const shouldReduceMotion = useReducedMotion();
   const elapsedTime = useRef(0);
   const material = useMemo(() => ditherMaterial.clone(), []);
   const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -182,14 +184,15 @@ const DitherPlane: React.FC<DitherConfig> = ({
     nextMesh.frustumCulled = false;
     return nextMesh;
   }, [geometry, material]);
-  const { size } = useThree();
+  const { invalidate, size } = useThree();
 
   useEffect(() => {
     material.uniforms.uColor.value.set(color);
     material.uniforms.uOpacity.value = opacity;
     material.uniforms.uCellSize.value = cellSize;
     material.uniforms.uResolution.value.set(size.width, size.height);
-  }, [cellSize, color, material, opacity, size.height, size.width]);
+    invalidate();
+  }, [cellSize, color, invalidate, material, opacity, size.height, size.width]);
 
   useEffect(() => {
     return () => {
@@ -200,6 +203,8 @@ const DitherPlane: React.FC<DitherConfig> = ({
   }, [geometry, material, mesh]);
 
   useFrame((state, delta) => {
+    if (shouldReduceMotion) return;
+
     elapsedTime.current += delta;
     material.uniforms.uTime.value = elapsedTime.current;
     material.uniforms.uResolution.value.set(size.width, size.height);
@@ -216,6 +221,7 @@ interface ParticlesProps {
 
 export const Particles: React.FC<ParticlesProps> = ({ className = "" }) => {
   const { resolvedTheme } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
   const [config, setConfig] = useState({
     color: "#888888",
     opacity: 0.35,
@@ -243,6 +249,7 @@ export const Particles: React.FC<ParticlesProps> = ({ className = "" }) => {
     <div className={className} aria-hidden="true">
       <Canvas
         orthographic
+        frameloop={shouldReduceMotion ? "demand" : "always"}
         camera={{ position: [0, 0, 5], zoom: 100 }}
         gl={{ alpha: true, antialias: false }}
       >

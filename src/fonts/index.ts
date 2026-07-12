@@ -7,3 +7,11 @@ export const generalSansVariable = localFont({
   display: "swap",
   preload: true,
 });
+
+export const lastik = localFont({
+  variable: "--font-lastik",
+  src: "./Lastik.woff2",
+  weight: "400",
+  display: "swap",
+  preload: true,
+});

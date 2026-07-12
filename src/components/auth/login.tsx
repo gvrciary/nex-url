@@ -7,7 +7,6 @@ import { GitHub } from "@/components/assets/github";
 import { Google } from "@/components/assets/google";
 import Button from "@/components/ui/button";
 import Modal from "@/components/ui/modal";
-import { appConfig } from "@/config";
 
 interface LoginProps {
   onClose: () => void;
@@ -35,9 +34,15 @@ export default function Login({ onClose }: LoginProps) {
   };
 
   return (
-    <Modal isOpen={true} onClose={onClose} size="sm" className="max-w-md">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-light tracking-tight mb-3 text-black dark:text-white">
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      ariaLabel="Sign in"
+      size="sm"
+      className="max-w-md"
+    >
+      <div className="mb-6 text-center">
+        <h2 className="font-[family-name:var(--font-lastik)] mb-2 text-3xl text-black dark:text-white">
           Sign In
         </h2>
         <p className="text-black/70 dark:text-white/70 font-normal">
@@ -45,12 +50,13 @@ export default function Login({ onClose }: LoginProps) {
         </p>
       </div>
 
-      <div className="space-y-4 mb-8">
+      <div className="space-y-3">
         <Button
           onClick={() => handleSocialLogin("github")}
           disabled={isLoading}
           variant="outline"
-          className="w-full font-normal"
+          className="h-11 w-full font-normal"
+          data-autofocus
         >
           <GitHub className="mr-3 h-[18px] w-[18px]" />
           Continue with GitHub
@@ -60,7 +66,7 @@ export default function Login({ onClose }: LoginProps) {
           onClick={() => handleSocialLogin("google")}
           disabled={isLoading}
           variant="outline"
-          className="w-full font-normal"
+          className="h-11 w-full font-normal"
         >
           <Google className="mr-3 h-[18px] w-[18px]" />
           Continue with Google

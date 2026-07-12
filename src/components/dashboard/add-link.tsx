@@ -1,20 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Link, Loader2, Plus, X } from "lucide-react";
-import { AnimatePresence, m } from "framer-motion";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useLinksContext } from "@/providers/links-provider";
+import { useDebouncedCallback } from "use-debounce";
+import { z } from "zod";
 import Button from "@/components/ui/button";
 import CopyButton from "@/components/ui/copy-button";
 import Input from "@/components/ui/input";
 import Modal from "@/components/ui/modal";
-import { checkAliasAvailability } from "@/server/actions/user";
 import { appConfig } from "@/config";
-import { useDebouncedCallback } from "use-debounce";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useLinksContext } from "@/providers/links-provider";
+import { checkAliasAvailability } from "@/server/actions/user";
 import { CreateLinkSchema } from "@/server/schemas";
 
 interface AddLinkProps {
@@ -22,263 +21,244 @@ interface AddLinkProps {
   onClose: () => void;
 }
 
+const EMPTY_ALIAS_STATUS = {
+  checking: false,
+  available: false,
+  message: "",
+};
+
 export default function AddLink({ isOpen, onClose }: AddLinkProps) {
   const { addLink } = useLinksContext();
-  const [shortenedUrl, setShortenedUrl] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [aliasStatus, setAliasStatus] = useState<{
-    checking: boolean;
-    available: boolean;
-  }>({
-    checking: false,
-    available: false,
-  });
-
+  const [shortenedUrl, setShortenedUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [aliasStatus, setAliasStatus] = useState(EMPTY_ALIAS_STATUS);
+  const aliasRequest = useRef(0);
+  const submissionRequest = useRef(0);
   const form = useForm<z.infer<typeof CreateLinkSchema>>({
     resolver: zodResolver(CreateLinkSchema),
-    defaultValues: {
-      url: "",
-      customAlias: "",
-    },
+    defaultValues: { url: "", customAlias: "" },
   });
 
+  const customAlias = form.watch("customAlias")?.trim() || "";
+  const url = form.watch("url")?.trim() || "";
+
+  const checkAlias = useDebouncedCallback(
+    async (alias: string, request: number) => {
+      try {
+        const result = await checkAliasAvailability(alias);
+        if (request !== aliasRequest.current) return;
+        setAliasStatus({
+          checking: false,
+          available: result.available,
+          message: result.available ? "Alias is available." : result.message,
+        });
+      } catch (error) {
+        if (request !== aliasRequest.current) return;
+        setAliasStatus({
+          checking: false,
+          available: false,
+          message:
+            error instanceof Error ? error.message : "Could not check this alias.",
+        });
+      }
+    },
+    500,
+  );
+
+  const reset = () => {
+    aliasRequest.current += 1;
+    submissionRequest.current += 1;
+    checkAlias.cancel();
+    setAliasStatus(EMPTY_ALIAS_STATUS);
+    setShortenedUrl("");
+    setIsLoading(false);
+    form.reset();
+  };
+
   const onSubmit = async (values: z.infer<typeof CreateLinkSchema>) => {
-    let url = `${appConfig.deployUrl}/${values.customAlias}`;
-    if ((values.customAlias && !aliasStatus.available) || url === values.url)
+    let newUrl = `${appConfig.deployUrl}/${values.customAlias}`;
+    if ((values.customAlias && !aliasStatus.available) || newUrl === values.url)
       return;
 
+    const request = ++submissionRequest.current;
+    aliasRequest.current += 1;
+    checkAlias.cancel();
     setIsLoading(true);
     toast.promise(addLink(values.url, values.customAlias), {
       loading: "Creating link...",
       success: (link) => {
-        url = `${appConfig.deployUrl}/${link.customAlias}`;
-        setShortenedUrl(url);
+        if (request !== submissionRequest.current) return "Link created successfully!";
+        newUrl = `${appConfig.deployUrl}/${link.customAlias}`;
+        setShortenedUrl(newUrl);
+        setAliasStatus(EMPTY_ALIAS_STATUS);
         form.reset();
         return "Link created successfully!";
       },
       error: (error) =>
         error instanceof Error ? error.message : "Failed to create link",
-      finally: () => setIsLoading(false),
+      finally: () => {
+        if (request === submissionRequest.current) setIsLoading(false);
+      },
     });
   };
 
-  const customAlias = form.watch("customAlias")?.trim() || "";
-  const url = form.watch("url")?.trim() || "";
-
-  const checkAlias = useDebouncedCallback(async () => {
-    if (customAlias === "") {
-      setAliasStatus({
-        checking: false,
-        available: false,
-      });
-      return;
-    }
-
-    setAliasStatus({
-      checking: true,
-      available: false,
-    });
-
-    toast.promise(checkAliasAvailability(customAlias), {
-      loading: "Checking alias availability...",
-      success: (result) => {
-        setAliasStatus({
-          checking: false,
-          available: result.available,
-        });
-
-        if (result.available) {
-          return "Alias is available!";
-        } else {
-          throw new Error("Alias is already taken.");
-        }
-      },
-      error: (error) => {
-        setAliasStatus({
-          checking: false,
-          available: false,
-        });
-        return error instanceof Error ? error.message : "Failed to check alias";
-      },
-    });
-  }, 500);
-
-  const getAliasIcon = () => {
-    if (aliasStatus.checking)
-      return <Loader2 className="h-4 w-4 animate-spin" />;
-    if (aliasStatus.available)
-      return <Check className="h-4 w-4 text-green-600 dark:text-green-400" />;
-    else if (!aliasStatus.available && !aliasStatus.checking && !!customAlias)
-      return <X className="h-4 w-4 text-red-600 dark:text-red-400" />;
-  };
-
-  const aliasIcon = getAliasIcon();
+  const aliasMessageId = "custom-alias-status";
+  const aliasError = form.formState.errors.customAlias;
+  const urlError = form.formState.errors.url;
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={() => {
-        setShortenedUrl("");
-        form.reset();
+        reset();
         onClose();
       }}
       size="lg"
       className="max-w-2xl"
+      ariaLabel="Create a short link"
     >
       <div className="w-full">
-        <div className="t-stagger is-shown mb-6 text-center">
-          <h2 className="t-stagger-line t-stagger-line--1 text-balance text-2xl font-semibold text-black dark:text-white">
-            Create New Link
+        <div className="mb-7 pr-8">
+          <h2 className="font-[family-name:var(--font-lastik)] text-balance text-3xl font-normal tracking-[-0.035em] text-black dark:text-white">
+            Create a short link
           </h2>
-          <p className="t-stagger-line t-stagger-line--2 mt-2 text-pretty font-normal text-black/70 dark:text-white/70">
-            Transform your long URL into a short and elegant link
+          <p className="mt-2 text-pretty text-sm text-black/60 dark:text-white/60">
+            Add a destination and optionally choose a memorable alias.
           </p>
         </div>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-4">
-            <div>
-              <label
-                htmlFor=""
-                className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
-              >
-                URL to shorten *
-              </label>
-              <Input
-                placeholder="https://example.com/very-long-link"
-                {...form.register("url")}
-                icon={<Link className="h-4 w-4" />}
-              />
-              <AnimatePresence initial={false}>
-                {form.formState.errors.url && (
-                  <m.p
-                    className="mt-1 text-xs text-red-600"
-                    initial={{ opacity: 0, y: -6, filter: "blur(4px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    {form.formState.errors.url.message}
-                  </m.p>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div>
-              <label
-                htmlFor=""
-                className="block text-sm font-normal text-black/70 dark:text-white/70 mb-2"
-              >
-                Custom alias (optional)
-              </label>
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="my-custom-alias"
-                  {...form.register("customAlias", {
-                    onChange: () => checkAlias(),
-                  })}
-                  className="pr-10"
-                />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <AnimatePresence mode="popLayout" initial={false}>
-                    {aliasIcon && (
-                      <m.span
-                        key={
-                          aliasStatus.checking
-                            ? "checking"
-                            : aliasStatus.available
-                              ? "available"
-                              : "taken"
-                        }
-                        className="flex items-center"
-                        initial={{
-                          opacity: 0,
-                          scale: 0.25,
-                          filter: "blur(4px)",
-                        }}
-                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                        exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-                        transition={{
-                          type: "spring",
-                          duration: 0.3,
-                          bounce: 0,
-                        }}
-                      >
-                        {aliasIcon}
-                      </m.span>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-              <div className="flex items-center mt-2">
-                <AnimatePresence initial={false}>
-                  {form.formState.errors.customAlias && (
-                    <m.p
-                      className="mt-1 text-xs text-red-600"
-                      initial={{ opacity: 0, y: -6, filter: "blur(4px)" }}
-                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      {form.formState.errors.customAlias.message}
-                    </m.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <Button
-              type="submit"
-              disabled={
-                !url ||
-                isLoading ||
-                aliasStatus.checking ||
-                (!aliasStatus.available &&
-                  !aliasStatus.checking &&
-                  !!customAlias)
-              }
-              className="flex-1"
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <div>
+            <label
+              htmlFor="destination-url"
+              className="mb-2 block text-sm font-medium text-black/70 dark:text-white/70"
             >
-              <Plus className="h-4 w-4 mr-2" />
-              {isLoading ? "Creating..." : "Create Link"}
-            </Button>
+              Destination URL <span aria-hidden="true">*</span>
+            </label>
+            <Input
+              id="destination-url"
+              data-autofocus
+              type="url"
+              placeholder="https://example.com/very-long-link"
+              {...form.register("url")}
+              disabled={isLoading}
+              icon={<Link className="h-4 w-4" aria-hidden="true" />}
+              aria-invalid={Boolean(urlError)}
+              aria-describedby={urlError ? "destination-url-error" : undefined}
+            />
+            {urlError && (
+              <p id="destination-url-error" role="alert" className="mt-2 text-xs text-red-600 dark:text-red-400">
+                {urlError.message}
+              </p>
+            )}
           </div>
+
+          <div>
+            <label
+              htmlFor="custom-alias"
+              className="mb-2 block text-sm font-medium text-black/70 dark:text-white/70"
+            >
+              Custom alias <span className="font-normal text-black/45 dark:text-white/45">(optional)</span>
+            </label>
+            <div className="relative">
+              <Input
+                id="custom-alias"
+                type="text"
+                placeholder="my-custom-alias"
+                {...form.register("customAlias", {
+                  onChange: (event) => {
+                    const alias = event.target.value.trim();
+                    const request = ++aliasRequest.current;
+                    checkAlias.cancel();
+                    if (!alias) {
+                      setAliasStatus(EMPTY_ALIAS_STATUS);
+                      return;
+                    }
+                    setAliasStatus({
+                      checking: true,
+                      available: false,
+                      message: "Checking availability...",
+                    });
+                    checkAlias(alias, request);
+                  },
+                })}
+                disabled={isLoading}
+                className="pr-10"
+                aria-invalid={Boolean(aliasError) || (Boolean(customAlias) && !aliasStatus.checking && !aliasStatus.available)}
+                aria-describedby={aliasError ? "custom-alias-error" : aliasStatus.message ? aliasMessageId : undefined}
+              />
+              {customAlias && (
+                <span className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center" aria-hidden="true">
+                  {aliasStatus.checking ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-black/45 dark:text-white/45" />
+                  ) : aliasStatus.available ? (
+                    <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  ) : (
+                    <X className="h-4 w-4 text-red-600 dark:text-red-400" />
+                  )}
+                </span>
+              )}
+            </div>
+            {aliasError ? (
+              <p id="custom-alias-error" role="alert" className="mt-2 text-xs text-red-600 dark:text-red-400">
+                {aliasError.message}
+              </p>
+            ) : aliasStatus.message ? (
+              <p
+                id={aliasMessageId}
+                role="status"
+                className={`mt-2 text-xs ${
+                  aliasStatus.checking
+                    ? "text-black/50 dark:text-white/50"
+                    : aliasStatus.available
+                      ? "text-green-700 dark:text-green-400"
+                      : "text-red-600 dark:text-red-400"
+                }`}
+              >
+                {aliasStatus.message}
+              </p>
+            ) : (
+              <p className="mt-2 text-xs text-black/45 dark:text-white/45">
+                Letters, numbers, hyphens, and underscores only.
+              </p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={
+              !url ||
+              isLoading ||
+              aliasStatus.checking ||
+              (!aliasStatus.available && Boolean(customAlias))
+            }
+            className="min-h-11 w-full sm:w-auto"
+          >
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            {isLoading ? "Creating..." : "Create link"}
+          </Button>
         </form>
 
-        <AnimatePresence initial={false}>
-          {shortenedUrl && (
-            <m.div
-              className="mt-6 border-t border-gray-200 pt-6 dark:border-white/10"
-              initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="surface-shadow rounded-xl bg-gray-50 p-4 dark:bg-white/5">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <p className="text-sm text-black/70 dark:text-white/70 mb-1">
-                      Your shortened link:
-                    </p>
-                    <p className="text-lg font-normal text-black dark:text-white break-all">
-                      {shortenedUrl}
-                    </p>
-                  </div>
-                  <div className="ml-4">
-                    <CopyButton
-                      textToCopy={shortenedUrl}
-                      size="md"
-                      className="px-4 py-2"
-                    />
-                  </div>
-                </div>
+        {shortenedUrl && (
+          <div className="mt-7 border-t border-black/10 pt-6 dark:border-white/10">
+            <div className="rounded-xl border border-black/10 p-4 dark:border-white/10">
+              <p className="text-xs uppercase tracking-[0.1em] text-black/45 dark:text-white/45">
+                Short link created
+              </p>
+              <div className="mt-2 flex items-center gap-3">
+                <a
+                  href={shortenedUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="min-w-0 flex-1 break-all text-sm font-medium text-black underline-offset-4 hover:underline dark:text-white"
+                >
+                  {shortenedUrl}
+                </a>
+                <CopyButton textToCopy={shortenedUrl} size="md" className="h-10 w-10 shrink-0 p-0" />
               </div>
-            </m.div>
-          )}
-        </AnimatePresence>
+            </div>
+          </div>
+        )}
       </div>
     </Modal>
   );

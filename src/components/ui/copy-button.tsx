@@ -2,6 +2,7 @@
 
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { cn } from "@/utils";
 import Button from "./button";
 
@@ -27,8 +28,8 @@ export default function CopyButton({
       await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Error copying:", err);
+    } catch {
+      toast.error("Could not copy the link.");
     }
   };
 
@@ -39,8 +40,9 @@ export default function CopyButton({
       onClick={handleCopy}
       disabled={disabled}
       title={disabled ? "Deleting..." : copied ? "Copied!" : "Copy link"}
+      aria-label={disabled ? "Link is being deleted" : copied ? "Link copied" : "Copy link"}
       className={cn(
-        "relative overflow-hidden transition-[color,background-color,box-shadow,transform] duration-300",
+        "relative overflow-hidden transition-[color,background-color,box-shadow,transform] duration-150",
         copied && "text-green-600 dark:text-green-400",
         disabled && "opacity-50 cursor-not-allowed",
         className,
@@ -50,7 +52,6 @@ export default function CopyButton({
         <span className="t-icon flex items-center" data-icon="a">
           <Copy
             className={cn(
-              "h-4 w-4",
               size === "sm" && "h-4 w-4",
               size === "md" && "h-5 w-5",
               size === "lg" && "h-6 w-6",
@@ -60,7 +61,6 @@ export default function CopyButton({
         <span className="t-icon flex items-center" data-icon="b">
           <Check
             className={cn(
-              "h-4 w-4",
               size === "sm" && "h-4 w-4",
               size === "md" && "h-5 w-5",
               size === "lg" && "h-6 w-6",
@@ -71,7 +71,7 @@ export default function CopyButton({
 
       <div
         className={cn(
-          "pointer-events-none absolute inset-0 rounded-md bg-green-600/10 opacity-0 transition-opacity duration-300 dark:bg-green-400/10",
+          "pointer-events-none absolute inset-0 rounded-md bg-green-600/10 opacity-0 transition-opacity duration-150 dark:bg-green-400/10",
           copied && "opacity-100",
         )}
       />

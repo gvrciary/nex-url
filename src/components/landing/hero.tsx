@@ -1,37 +1,26 @@
 "use client";
 
-import React from "react";
-import { LazyMotion, domAnimation, m, type Variants } from "framer-motion";
-import { useRouter } from "next/navigation";
+import {
+  LazyMotion,
+  domAnimation,
+  m,
+  type Variants,
+  useReducedMotion,
+} from "framer-motion";
+import Link from "next/link";
 import { GitHub } from "@/components/assets/github";
 import { useAuthModal } from "@/providers/auth-modal-provider";
 import { Particles } from "@/components/landing/background/particles";
+import Button from "@/components/ui/button";
 
-const HERO_BUTTON_BASE_CLASSES =
-  "inline-flex cursor-pointer items-center justify-center rounded-full px-8 h-12 text-sm font-medium transition-[background-color,color,box-shadow,transform] duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background";
-
-const HERO_BUTTON_VARIANTS = {
-  primary:
-    "bg-black text-white hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200 border border-transparent",
-  outline:
-    "border border-black text-black hover:bg-black/5 dark:border-white dark:text-white dark:hover:bg-white/10 bg-transparent",
-} as const;
+const HERO_LINK_CLASSES =
+  "inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-sm font-normal transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-white/20 dark:focus:ring-offset-black";
 
 const HERO_TITLE_VARIANTS: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: { staggerChildren: 0.1 },
-  },
-};
-
-const HERO_SECTION_VARIANTS: Variants = {
-  hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
@@ -77,106 +66,83 @@ const HERO_WORD_VARIANTS: Variants = {
   },
 };
 
-const Button = ({
-  children,
-  onClick,
-  variant = "primary",
-  className = "",
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: "primary" | "outline";
-  className?: string;
-}) => {
-  return (
-    <m.button
-      onClick={onClick}
-      className={`${HERO_BUTTON_BASE_CLASSES} ${HERO_BUTTON_VARIANTS[variant]} ${className}`}
-      whileTap={{ scale: 0.96 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      {children}
-    </m.button>
-  );
-};
-
 export default function Hero({ session }: { session: boolean }) {
-  const router = useRouter();
   const { openLogin } = useAuthModal();
-
-  const handleGetStarted = () => {
-    if (session) {
-      router.push("/dashboard");
-    } else {
-      openLogin();
-    }
-  };
+  const shouldReduceMotion = useReducedMotion();
+  const initial = shouldReduceMotion ? false : "hidden";
 
   return (
     <LazyMotion features={domAnimation}>
-      <m.section className="relative min-h-svh grid place-content-center overflow-hidden px-4 py-24 text-gray-200">
-        <div className="relative z-10 flex flex-col items-center w-full px-4">
+      <section className="relative isolate min-h-svh overflow-hidden px-5 text-black dark:text-white sm:px-8">
+        <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-4xl flex-col items-center justify-center py-28 text-center">
           <m.h1
-            className="text-balance text-center text-5xl md:text-7xl font-medium tracking-[-0.04em]"
-            initial="hidden"
+            className="font-[family-name:var(--font-lastik)] text-balance text-5xl font-normal leading-[0.92] tracking-[-0.045em] sm:text-6xl md:text-7xl"
+            initial={initial}
             animate="visible"
             variants={HERO_TITLE_VARIANTS}
           >
-            {["Shorten", "Your", "Links"].map((word, i) => (
-              <React.Fragment key={i}>
-                <m.span
-                  className="inline-block pb-1 text-black dark:text-white"
-                  variants={HERO_WORD_VARIANTS}
-                >
-                  {word}
-                </m.span>
-                {i === 0 ? <br /> : " "}
-              </React.Fragment>
-            ))}
+            <m.span className="block" variants={HERO_WORD_VARIANTS}>
+              Shorten
+            </m.span>
+            <span className="block">
+              <m.span className="inline-block" variants={HERO_WORD_VARIANTS}>
+                Your
+              </m.span>{" "}
+              <m.span className="inline-block" variants={HERO_WORD_VARIANTS}>
+                Links
+              </m.span>
+            </span>
           </m.h1>
-          <m.p
-            className="my-6 w-full max-w-sm text-pretty text-center text-sm leading-relaxed text-gray-800 sm:max-w-xl sm:text-base md:text-lg dark:text-gray-200"
-            initial="hidden"
-            animate="visible"
-            variants={HERO_DESCRIPTION_VARIANTS}
-          >
-            Clean and efficient link shortening tool. Just drop a long URL and
-            get a sleek short one.
-          </m.p>
-          <m.div
-            className="flex w-full max-w-xs flex-col justify-center gap-y-4 sm:max-w-none sm:flex-row sm:gap-x-4 sm:gap-y-0"
-            initial="hidden"
-            animate="visible"
-            variants={HERO_ACTIONS_VARIANTS}
-          >
-            <Button
-              onClick={handleGetStarted}
-              variant="primary"
-              className="w-full"
-            >
-              Get Started
-            </Button>
 
-            <a
-              href="https://github.com/alexisgvrcia/nex-url"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full"
+          <div className="mt-6 flex w-full flex-col items-center">
+            <m.p
+              className="max-w-xl text-pretty text-sm leading-relaxed text-black/70 dark:text-white/70 sm:text-base md:text-lg"
+              initial={initial}
+              animate="visible"
+              variants={HERO_DESCRIPTION_VARIANTS}
             >
-              <Button variant="outline" className="w-full">
+              Clean and efficient link shortening tool. Just drop a long URL
+              and get a sleek short one.
+            </m.p>
+            <m.div
+              className="mt-7 flex w-full max-w-xs flex-col justify-center gap-3 sm:max-w-none sm:flex-row"
+              initial={initial}
+              animate="visible"
+              variants={HERO_ACTIONS_VARIANTS}
+            >
+              {session ? (
+                <Link
+                  href="/dashboard"
+                  className={`${HERO_LINK_CLASSES} bg-black text-white hover:bg-black/80 dark:bg-white dark:text-black dark:hover:bg-white/80 sm:min-w-36`}
+                >
+                  Get Started
+                </Link>
+              ) : (
+                <Button
+                  onClick={openLogin}
+                  size="lg"
+                  className="h-12 rounded-full px-8 sm:min-w-36"
+                >
+                  Get Started
+                </Button>
+              )}
+              <a
+                href="https://github.com/alexisgvrcia/nex-url"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${HERO_LINK_CLASSES} border border-black text-black hover:bg-black hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black`}
+              >
                 <GitHub className="mr-2 h-4 w-4" />
                 View Repository
-              </Button>
-            </a>
-          </m.div>
+              </a>
+            </m.div>
+          </div>
         </div>
 
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 -z-10 opacity-70">
           <Particles className="h-full" />
         </div>
-      </m.section>
+      </section>
     </LazyMotion>
   );
 }
