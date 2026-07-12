@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { authClient } from "@/auth-client";
+import profileImage from "@/assets/profile.webp";
 
 export default function UserMenu({
   name,
@@ -67,7 +68,7 @@ export default function UserMenu({
         className="flex min-h-11 max-w-40 cursor-pointer list-none items-center gap-2 rounded-md px-1 text-sm font-normal text-black outline-none transition-colors hover:bg-black/5 focus-visible:ring-2 focus-visible:ring-black/40 marker:content-[''] dark:text-white dark:hover:bg-white/10 dark:focus-visible:ring-white/50 sm:max-w-56 sm:px-2 [&::-webkit-details-marker]:hidden"
       >
         <Image
-          src={image && !imageFailed ? image : "/images/profile.webp"}
+          src={image && !imageFailed ? image : profileImage}
           alt=""
           className="size-8 shrink-0 rounded-full object-cover"
           width={32}
